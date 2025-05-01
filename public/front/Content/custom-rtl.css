@@ -1,0 +1,75 @@
+﻿h1, h2, h3, h4, h5, h6 {color: #000;font-weight: 700;}
+.footer-bottom .social-links {text-align: left;}
+.app-download-content .download-btn {padding: 15px 85px 8px 30px;}
+.app-download-content .download-btn i { right: 20px; }
+.app-download-content .download-btn span { text-align: right; }
+.subscribe-form .subscribe-btn { left: -1px; }
+.subscribe-form .subscribe-btn i {     transform: rotateY(180deg); display: block; }
+.single-features {padding: 25px 60px 25px 25px;}
+.single-features h3 i { right: 20px; left: 0px; }
+.sayer_logo { padding: 40px; }
+.navbar-right { margin-top: 10px; }
+.video-demo-content{ margin:12px 10% auto auto ;max-width:440px;position:relative;}
+.single-hiw-feature {padding: 10px 80px 0 0;}
+.single-hiw-feature i {right: 0px; left: auto;}
+#toTop { left: 30px; right: auto; }
+.navbar-white {background-color: #fff;}
+.navbar-white .navbar-nav > li > a {color: #000000;}
+.top-banner-area .breadcrumb { text-align: left; }
+.contact_country_img h2 { padding-right: 20px; }
+.contact-info ul li i {float: right; padding-left: 5px;}
+.minput label { right: 5px; }
+
+/* intl tel input css */
+.intl-tel-input .selected-flag .iti-arrow {
+    left: 3px;
+    right: auto !important;
+}
+.intl-tel-input.separate-dial-code .selected-dial-code {
+    padding-right: 28px;
+    text-align: right !important;
+    padding-left: 0px !important;
+}
+.intl-tel-input.separate-dial-code .selected-flag {
+    padding-left: 0px;
+    padding-right: 10px;
+}
+.intl-tel-input .country-list {
+    left: 0px;
+}
+.intl-tel-input .country-list .country {
+    text-align: right;
+}
+
+/* materialize custom rtl */
+.side-nav.fixed {
+    width: 380px;
+}
+.lang_selector a, .side-nav.fixed a {
+    line-height: 24px;
+}
+
+
+
+@media only screen and (max-width: 767px) {
+    .footer-bottom .social-links {
+        text-align: center;
+    }
+    .top-banner-area .breadcrumb {
+        text-align: center;
+    }
+}
+
+/* Heart Icon
+--------------------------------------------- */
+
+.site-footer .icon {
+	font-size: 20px;
+}
+
+.site-footer .love .icon {
+	font-size: 12px;
+	margin-left: 2px;
+	margin-right: 2px;
+}
+

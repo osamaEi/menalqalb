@@ -1,0 +1,322 @@
+.sayer_logo {
+	display: inline-block;
+	/*width: 55px;
+    height: 60px;*/
+    background: url(../images/sayer_logo_light.png) no-repeat center center;
+    background-size: cover;
+    padding: 40px;
+}
+.menu-shrink .sayer_logo {
+	padding: 25px;
+}
+.sayer_logo_color {
+	display: inline-block;
+	width: 55px;
+    height: 60px;
+    background: url(../images/sayer_logo.png) no-repeat center center;
+    background-size: cover;
+}
+.pt100 {
+	padding-top: 100px !important;
+}
+
+.mb20 {
+	margin-bottom: 20px;
+}
+.mb50 {
+	margin-bottom: 50px !important;
+}
+.mt120 {
+	margin-top: 120px;
+}
+.pt0 {
+	padding-top: 0px;
+}
+.pad-L100 {
+    padding-left: 100px !important;
+}
+.mar-b50 {
+    margin-bottom: 50px;
+}
+.app-about_logo {
+    max-width: 100px;
+}
+.app-about-text h5 {
+	line-height: 22px;
+}
+.template-features-section{background-color:#fff;padding:100px 0 70px;}
+.template-features-section .section-title{color:#2b323f;font-size:28px;font-weight:600;margin:0 0 40px;text-align:center;text-transform:uppercase;}
+.single-features{background:#ffffff none repeat scroll 0 0;border-radius:5px;box-shadow:0 5px 10px rgba(0, 0, 0, 0.1);padding:25px 0 25px 60px;position:relative;margin-bottom:30px;}
+.single-features h3{color:#000000;font-size:17px;margin:0; font-weight: 400;}
+.single-features h3 i{color:#b62227;font-size:30px;left:20px;position:absolute;top:18px;}
+.contact-info ul li {
+	padding: 40px;
+}
+.third_section_text {
+    padding-top: 120px;
+	padding-bottom: 120px;
+}
+.vision-logo {
+    margin-left: 10px;
+}
+.vision-logo > a {
+    margin: 0px !important;
+    padding: 0px !important;
+}
+.vision-logo img {
+    max-width: 90px !important;
+    margin-top: -5px;
+    transition: all .45s ease;
+}
+.top-menu .navbar-nav li.no_border a:hover::before {
+    display: none;
+}
+.menu-shrink .vision-logo img {
+    max-width: 60px !important;
+    margin-top: 0px;
+}
+
+
+@media only screen and (min-width:992px) and (max-width:1199px){
+    .single-demo h2{font-size:18px;}
+    .single-features h3{font-size:16px;}
+    .single-features h3 i{font-size:28px;left:8px;top:20px;}
+    .single-features{padding:25px 0 25px 35px;}
+    .single-features h3 i{font-size:20px;top:22px;}
+}
+@media only screen and (max-width:767px){
+    .text-content a.see-demo{margin-right:5px;}
+	.template-features-section{padding:50px 0 30px;}
+    .sayer_logo {
+        background: url(../images/sayer_logo.png) no-repeat center center;
+        background-size: cover;
+        padding: 30px;
+    }
+}
+@media only screen and (min-width:768px) and (max-width:991px){.page-preview-section{padding:60px 0 10px;}
+	.template-features-section{padding:60px 0 30px;}
+}
+
+
+
+/* materialize input styles */
+/* form starting stylings ------------------------------- */
+.minput .group { 
+  position:relative; 
+  margin-bottom:45px; 
+}
+.minput input,
+.minput textarea {
+  font-size:14px;
+  padding:10px 10px 10px 5px;
+  display:block;
+  width:100%;
+  border:none;
+  border-bottom:1px solid #ccc;
+}
+.minput input:focus, .minput textarea:focus { outline:none; }
+
+/* LABEL ======================================= */
+.minput label {
+  color:#999; 
+  font-size:14px;
+  font-weight:normal;
+  position:absolute;
+  pointer-events:none;
+  left:5px;
+  top:10px;
+  transition:0.2s ease all; 
+  -moz-transition:0.2s ease all; 
+  -webkit-transition:0.2s ease all;
+}
+
+/* active state */
+.minput input:focus ~ label, .minput textarea:valid ~ label,
+.minput input:focus ~ label, .minput textarea:valid ~ label {
+  top:-20px;
+  font-size:14px;
+  color:#b62227;
+}
+
+/* BOTTOM BARS ================================= */
+.minput .bar { position:relative; display:block; width:100%; }
+.minput .bar:before, .bar:after 	{
+  content:'';
+  height:2px; 
+  width:0;
+  bottom:1px; 
+  position:absolute;
+  background:#b62227; 
+  transition:0.2s ease all; 
+  -moz-transition:0.2s ease all; 
+  -webkit-transition:0.2s ease all;
+}
+.minput .bar:before {
+  left:50%;
+}
+.minput .bar:after {
+  right:50%; 
+}
+
+/* active state */
+.minput input:focus ~ .bar:before, .minput input:focus ~ .bar:after,
+.minput textarea:focus ~ .bar:before, .minput textarea:focus ~ .bar:after {
+  width:50%;
+}
+
+/* HIGHLIGHTER ================================== */
+.minput .highlight {
+  position:absolute;
+  height:60%; 
+  width:100px; 
+  top:25%; 
+  left:0;
+  pointer-events:none;
+  opacity:0.5;
+}
+
+/* active state */
+.minput input:focus ~ .highlight,
+.minput textarea:focus ~ .highlight {
+  -webkit-animation:inputHighlighter 0.3s ease;
+  -moz-animation:inputHighlighter 0.3s ease;
+  animation:inputHighlighter 0.3s ease;
+}
+
+/* ANIMATIONS ================ */
+@-webkit-keyframes inputHighlighter {
+	from { background:#fff; }
+  to 	{ width:0; background:transparent; }
+}
+@-moz-keyframes inputHighlighter {
+	from { background:#fff; }
+  to 	{ width:0; background:transparent; }
+}
+@keyframes inputHighlighter {
+	from { background:#fff; }
+  to 	{ width:0; background:transparent; }
+}
+
+/* contact page */
+.contact_country_img {
+	width: 360px;
+	height: 200px;
+	border-top-left-radius: 2px;
+	border-top-right-radius: 2px;
+	position: relative;
+}
+.contact_country_img:after {
+	content: '';
+	position: absolute;
+	width: 100%;
+	height: 100px;
+	background: -moz-linear-gradient(top, rgba(5,171,224,0) 0%, rgba(42,156,182,1) 100%); /* FF3.6-15 */
+	background: -webkit-linear-gradient(top, rgba(5,171,224,0) 0%,rgba(42,156,182,1) 100%); /* Chrome10-25,Safari5.1-6 */
+	background: linear-gradient(to bottom, rgba(5,171,224,0) 0%,rgba(42,156,182,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0005abe0', endColorstr='#b62227',GradientType=0 ); /* IE6-9 */
+	bottom: 0px;
+	left: 0px;	
+}
+.contact_country_img h2 {
+	position: absolute;
+    bottom: 0px;
+    z-index: 1;
+    padding-left: 20px;
+    color: #fff;
+}
+.saudi_img {
+	background: url(../images/uae.jpg) no-repeat center center;
+	background-size: cover;
+}
+.egypt_img {
+	background: url(../images/country_egypt.jpg) no-repeat center center;
+	background-size: cover;
+}
+.jordan_img {
+	background: url(../images/country_jordan.jpg) no-repeat center center;
+	background-size: cover;
+}
+.dubai_img {
+	background: url(../images/country_dubai.jpg) no-repeat center center;
+	background-size: cover;
+}
+.bahrain_img {
+	background: url(../images/country_bahrain.jpg) no-repeat center center;
+	background-size: cover;
+}
+
+.signup_login_section {
+    background: #fff;
+    position: relative;
+}
+.signup_login_section:after {
+      content: '';
+      position: absolute;
+      background: #fff;
+}
+.signup_login_section .app-download-content {
+    
+}
+.signup_login_section .app-download-content .download-btn {
+    border: 1px solid #b62227;
+    min-width: 280px;
+}
+.signup_login_section .app-download-content .download-btn:hover {
+    background: #fafafa;
+    box-shadow: 0px 0px 20px 6px rgba(0,0,0,.1);
+    transform: translateY(-1%);
+}
+.signup_login_section .app-download-content .download-btn:hover span,
+.signup_login_section .app-download-content .download-btn:hover i {
+    color: #444;
+}
+.signup_login_section .app-download-content .download-btn i {
+    color: #b62227;
+}
+.signup_login_section .app-download-content .download-btn span, .signup_login_section .section-title p {
+    color: #444;
+}
+.section-title img {
+    width: 300px;
+    margin-bottom: 30px;
+}
+
+.bq_icon_login {
+    width: 40px !important;
+    height: 50px;
+    display: inline-block;
+    vertical-align: middle;
+    background: url(../images/icon_login.svg) no-repeat center center;
+    background-size: cover;
+}
+.bq_icon_register {
+    width: 58px !important;
+    height: 45px;
+    display: inline-block;
+    vertical-align: middle;
+    background: url(../images/icon_register.svg) no-repeat center center;
+    background-size: cover;
+}
+.card_back {
+    position: absolute;
+    top: 10px;
+    left: 15px;
+}
+.track_details label {
+    width: 35%;
+}
+
+
+/* Heart Icon
+--------------------------------------------- */
+
+.site-footer .icon {
+	font-size: 20px;
+}
+
+.site-footer .love .icon {
+	font-size: 12px;
+	margin-left: 2px;
+	margin-right: 2px;
+}
+

@@ -1,0 +1,153 @@
+{
+    "Session": "الجلسة",
+    "Total Users": "إجمالي المستخدمين",
+    "Paid Users": "المستخدمين المدفوعين",
+    "Active Users": "المستخدمين النشطين",
+    "Pending Users": "المستخدمين المعلقين",
+    "Last week analytics": "تحليلات الأسبوع الماضي",
+    "Filters": "المرشحات",
+    "Select Role": "اختر الدور",
+    "Admin": "مدير",
+    "Privileged User": "مستخدم مميز",
+    "Regular User": "مستخدم عادي",
+    "Designer": "مصمم",
+    "Sales Point": "نقطة بيع",
+    "Select Country": "اختر الدولة",
+    "Select Status": "اختر الحالة",
+    "Active": "نشط",
+    "Inactive": "غير نشط",
+    "Blocked": "محظور",
+    "Deleted": "محذوف",
+    "ID": "المعرف",
+    "User": "المستخدم",
+    "Email": "البريد الإلكتروني",
+    "Role": "الدور",
+    "Country": "الدولة",
+    "Status": "الحالة",
+    "Verification": "التحقق",
+    "Actions": "الإجراءات",
+    "WhatsApp": "واتساب",
+    "Confirm Delete": "تأكيد الحذف",
+    "Are you sure you want to delete this user? This action cannot be undone.": "هل أنت متأكد أنك تريد حذف هذا المستخدم؟ لا يمكن التراجع عن هذا الإجراء.",
+    "Cancel": "إلغاء",
+    "Delete": "حذف",
+    "Add User": "إضافة مستخدم",
+    "John Doe": "محمد علي",
+    "Full Name": "الاسم الكامل",
+    "john.doe@example.com": "mohammedali@example.com",
+    "Password": "كلمة المرور",
+    "Confirm Password": "تأكيد كلمة المرور",
+    "Select": "اختر",
+    "User Role": "دور المستخدم",
+    "Email Verified": "تم التحقق من البريد الإلكتروني",
+    "WhatsApp Verified": "تم التحقق من واتساب",
+    "Submit": "إرسال",
+    "Search...": "بحث...",
+    "User created successfully.": "تم إنشاء المستخدم بنجاح.",
+    "User updated successfully.": "تم تحديث المستخدم بنجاح.",
+    "User marked as deleted successfully.": "تم تحديد المستخدم كمحذوف بنجاح.",
+    "Invalid user type specified.": "نوع المستخدم المحدد غير صالح.",
+    "Invalid status specified.": "الحالة المحددة غير صالحة.",
+    "Showing only :type users": "عرض المستخدمين من نوع :type فقط",
+    "Showing only :status users": "عرض المستخدمين بحالة :status فقط",
+    "Invalid country specified.": "الدولة المحددة غير صالحة.",
+    "Showing only users from :country": "عرض المستخدمين من :country فقط",
+    "User not found": "المستخدم غير موجود",
+    "User has been deactivated.": "تم إلغاء تنشيط المستخدم.",
+    "User has been activated.": "تم تنشيط المستخدم.",
+    "User has been blocked.": "تم حظر المستخدم.",
+    "Email has been verified.": "تم التحقق من البريد الإلكتروني.",
+    "WhatsApp has been verified.": "تم التحقق من واتساب.",
+    "Edit User": "تعديل المستخدم",
+    "Update": "تحديث",
+    "Show User": "عرض المستخدم",
+    "Back to List": "العودة إلى القائمة",
+    "Created At": "تم الإنشاء في",
+    "Updated At": "تم التحديث في",
+    "Cards Created": "البطاقات المنشأة",
+    "Ready Cards Ordered": "البطاقات الجاهزة المطلوبة",
+    "View all": "عرض الكل",
+    "View": "عرض",
+    "Edit": "تعديل",
+
+    
+        "Home": "الرئيسية",
+        "Our Card Features": "مميزات بطاقتنا",
+        "Where to Find the Card": "أين تجد البطاقة",
+        "Learn About Card Recipients' Feelings": "تعرف على شعور متلقي البطاقة",
+        "About Us": "من نحن",
+        "Contact Us": "تواصل معنا",
+        "Dashboard": "لوحة التحكم",
+        "Login": "تسجيل الدخول",
+        "Arabic": "العربية",
+        "English": "الإنجليزية",
+        "Toggle Navigation": "تبديل الملاحة",
+        "App mockup Image": "صورة نموذج التطبيق",
+        "An electronic card that acts as a bridge for communication from the heart": "بطاقة إلكترونية عبارة عن جسر للتواصل من القلب",
+        "From the Heart Cards Features": "مميزات بطاقات من القلب",
+        "We strive for excellence by serving users of our innovations, so we have encrypted the gift cards with a specific time and limited number of views chosen by the card creator, after which it is completely erased from the databases": "نبحث عن التميز بخدمة مستخدمي إبداعتنا لذلك قمنا بتشفير بطاقات الاهداء ولها وقت محدد وعدد محدد للعرض يختارها معد البطاقة وبعد ذلك يتم مسحها من الكامل من قواعد البيانات",
+        "We are on a mission to make the site a bridge that delivers messages from the heart and spreads happiness": "نحن في مهمة لجعل الموقع جسر يوصل الرسائل من القلب وينشر السعادة",
+        "Through our services, we seek to satisfy the customer and make them confident in our services and completely satisfied": "نسعى من خلال خدماتنا بأن نرضي العميل وأن يكون واثق بخدماتنا وراضي تماما",
+        "Creativity": "إبداع",
+        "Information Protection": "حماية المعلومات",
+        "Satisfied Customer": "عميل راضي",
+        "Apply to become a sales outlet for cards": "قدم طلب بأن تكون منفذ بيع للبطاقات",
+        "Be distinctive": "كن مميز",
+        "App Mockup": "نموذج التطبيق",
+        "How the Card Works": "كيف تعمل البطاقة",
+        "Simple and easy ways accessible to everyone, just simple steps that enable you to prepare a distinctive card": "طرق بسيطة وسهله وبتناول الجميع فقط خطوات بسيطة تمكنك من إعداد بطاقة تتميز بها",
+        "Purchase the card from one of the sales outlets": "شراء البطاقة من أحد منافذ البيع",
+        "Browse the Where to Find the Card section to know the card sales outlets": "تصفح قسم أين تجد البطاقة لتعرف منافذ بيع البطاقة",
+        "Read the code on the card and then enter the activation code": "قراءة الرمز الذي بالبطاقة وبعد ذلك ادخل رمز التفعيل",
+        "Each purchased card has an activation code at the sales outlet": "لكل بطاقة يتم شرائها لها رمز تفعيل لدى منفذ البيع",
+        "Choose the occasion to determine the type of card and then choose your card": "اختر المناسبة لتحديد نوع البطاقة وبعد ذلك اختر بطاقتك",
+        "Hundreds of types and forms are available to suit everyone's taste": "تتوفر مئات الأنواع والاشكال لتناسب ذوق الجميع",
+        "You can ask the recipient to send their feeling upon receiving the card and you can also inquire about the status of the card": "يمكنك طلب من المتلقي ارسال شعوره عند استلام البطاقة ويمكنك ايضا الاستعلام عن حالة البطاقة",
+        "Cards are encrypted and sent, and they are canceled and deleted after viewing. The recipient can keep a copy of the card as a video or image on their phone.": "يتم تشفير البطاقات والارسال و يتم إلغاءها ومسحها بعد رؤيتها ويمكن أن يحتفظ المتلقي بنسخة من البطاقة على شكل فيديو او صوره بهاتفه.",
+        "Why We Chose the Name": "سبب اختيارنا للاسم",
+        "At Coder company, we wanted the recipient to receive a gift with a card that increases happiness, and there's nothing better than the phrase \"From the Heart,\" so we adopted the name to be the launch of our system and our creativity in providing the electronic card service": "نحن بشركة كودر اردنا عندما يتلقى المتلقي الهدية بأن تحمل بطاقة تزيد سعادة وليس اجمل من عبارة \"من القلب\" لذلك اعتمدنا الأسم ليكون أنطلاقة لنظامنا وأبداعتنا في تقديم خدمة البطاقات الإلكترونية",
+        "What You Want to Be": "ما تريد أن تكون",
+        "Simple ways to order the card or apply to be a sales outlet": "طرق بسيطة لطلب البطاقة أو التقدم بأن تكون منفذ بيع",
+        "Apply to become": "طلب التقدم",
+        "New Sales Outlet": "منفذ بيع جديد",
+        "Purchase and Order": "شراء وطلب",
+        "New Cards": "بطاقات جديدة",
+        "Distinctive and Creative Idea": "فكرة مميزة ومبدعة",
+        "From Coder": "من كودر",
+        "Register": "تسجيل حساب جديد",
+        "Name": "الاسم",
+        "Email": "البريد الإلكتروني",
+        "Password": "كلمة المرور",
+        "Confirm Password": "تأكيد كلمة المرور",
+        "Already registered?": "لديك حساب بالفعل؟",
+        "Remember me": "تذكرني",
+        "Forgot your password?": "هل نسيت كلمة المرور؟",
+        "Email Address": "البريد الإلكتروني",
+        "Enter": "دخول",
+        "Designed happily by 😉 CODER": "صمم بسعادة من قبل 😉 CODER",
+        "Follow us": "تابعنا",
+        
+            "Dashboard": "لوحة التحكم",
+            "Content Management": "إدارة المحتوى",
+            "Users": "المستخدمين",
+            "Manage Users": "إدارة المستخدمين",
+            "Add New User": "إضافة مستخدم جديد",
+            "Categories": "التصنيفات",
+            "Manage Categories": "إدارة التصنيفات",
+            "Add Category": "إضافة تصنيف",
+            "Card Types": "أنواع البطاقات",
+            "Manage Card Types": "إدارة أنواع البطاقات",
+            "Add Card Type": "إضافة نوع بطاقة",
+            "Cards": "البطاقات",
+            "Manage Cards": "إدارة البطاقات",
+            "Add New Card": "إضافة بطاقة جديدة",
+            "Orders & Sales": "الطلبات والمبيعات",
+            "Ready Cards": "البطاقات الجاهزة",
+            "Manage Ready Cards": "إدارة البطاقات الجاهزة",
+            "Orders": "الطلبات",
+            "Manage Orders": "إدارة الطلبات",
+            "System": "النظام",
+            "Settings": "الإعدادات",
+            "Logout": "تسجيل الخروج"
+        
+}

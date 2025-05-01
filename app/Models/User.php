@@ -1,0 +1,197 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
+//use Spatie\Permission\Traits\HasRoles;
+
+class User extends Authenticatable
+{
+    use HasApiTokens, HasFactory, Notifiable;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+        'country_id',
+        'whatsapp',
+        'email_verified',
+        'whatsapp_verified',
+        'user_type',
+        'status',
+    ];
+
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array<int, string>
+     */
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+        'email_verified' => 'boolean',
+        'whatsapp_verified' => 'boolean',
+    ];
+
+    /**
+     * Get the cards created by the user (designer).
+     */
+    public function cards()
+    {
+        return $this->hasMany(Card::class);
+    }
+
+    /**
+     * Get the ready cards ordered by the user.
+     */
+    public function readyCards()
+    {
+        return $this->hasMany(ReadyCard::class, 'customer_id');
+    }
+
+    /**
+     * Get the invoices belonging to the user.
+     */
+    // public function invoices()
+    // {
+    //     return $this->hasMany(Invoice::class, 'customer_id');
+    // }
+
+    // /**
+    //  * Get the gifts sent by the user.
+    //  */
+    // public function sentGifts()
+    // {
+    //     return $this->hasMany(Gift::class, 'sender_id');
+    // }
+
+    // /**
+    //  * Get the user's balance.
+    //  */
+    // public function balance()
+    // {
+    //     return $this->hasOne(Balance::class);
+    // }
+
+    // /**
+    //  * Get the transactions for the user.
+    //  */
+    // public function transactions()
+    // {
+    //     return $this->hasMany(Transaction::class);
+    // }
+
+    // /**
+    //  * Get the messages sent by the user.
+    //  */
+    // public function sentMessages()
+    // {
+    //     return $this->hasMany(Message::class, 'sender_id');
+    // }
+
+    // /**
+    //  * Get the messages received by the user.
+    //  */
+    // public function receivedMessages()
+    // {
+    //     return $this->hasMany(Message::class, 'receiver_id');
+    // }
+
+    // /**
+    //  * Get the payments for the designer.
+    //  */
+    // public function designerPayments()
+    // {
+    //     return $this->hasMany(DesignerPayment::class, 'designer_id');
+    // }
+
+    /**
+     * Scope a query to only include admin users.
+     */
+    public function scopeAdmin($query)
+    {
+        return $query->where('user_type', 'admin');
+    }
+
+    /**
+     * Scope a query to only include privileged users.
+     */
+    public function scopePrivilegedUser($query)
+    {
+        return $query->where('user_type', 'privileged_user');
+    }
+
+    /**
+     * Scope a query to only include regular users.
+     */
+    public function scopeRegularUser($query)
+    {
+        return $query->where('user_type', 'regular_user');
+    }
+
+    /**
+     * Scope a query to only include designer users.
+     */
+    public function scopeDesigner($query)
+    {
+        return $query->where('user_type', 'designer');
+    }
+
+    /**
+     * Scope a query to only include sales point users.
+     */
+    public function scopeSalesPoint($query)
+    {
+        return $query->where('user_type', 'sales_point');
+    }
+
+    /**
+     * Scope a query to only include active users.
+     */
+    public function scopeActive($query)
+    {
+        return $query->where('status', 'active');
+    }
+
+    /**
+     * Scope a query to only include inactive users.
+     */
+    public function scopeInactive($query)
+    {
+        return $query->where('status', 'inactive');
+    }
+
+    /**
+     * Scope a query to only include blocked users.
+     */
+    public function scopeBlocked($query)
+    {
+        return $query->where('status', 'blocked');
+    }
+
+    /**
+     * Scope a query to only include deleted users.
+     */
+    public function scopeDeleted($query)
+    {
+        return $query->where('status', 'deleted');
+    }
+}
