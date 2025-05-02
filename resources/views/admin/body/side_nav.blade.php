@@ -1,7 +1,7 @@
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
   <!-- Logo area with more bottom margin -->
   <div class="app-brand demo" style="margin-bottom: 15px;">
-    <a href="{{ route('dashboard') }}" class="app-brand-link">
+    <a href="{{ route('dashboard.index') }}" class="app-brand-link">
       <span class="app-brand-logo demo">
           <span style="color: var(--bs-primary)">
               <img src="{{asset('assets/img/logo.png')}}" alt="Company Logo" class="logo-img">
@@ -17,8 +17,8 @@
   <!-- Start of navigation with increased top padding -->
   <ul class="menu-inner py-1" style="padding-top: 10px;">
     <!-- Dashboards with increased margins -->
-    <li class="menu-item {{ Request::is('dashboard*') ? 'active open' : '' }}" style="margin-bottom: 8px;">
-      <a href="{{ route('dashboard') }}" class="menu-link">
+    <li class="menu-item {{ Request::is('dashboard.index*') ? 'active open' : '' }}" style="margin-bottom: 8px;">
+      <a href="{{ route('dashboard.index') }}" class="menu-link">
         <i class="menu-icon tf-icons ri-dashboard-line"></i>
         <div data-i18n="Dashboard">{{ __('Dashboard') }}</div>
       </a>
@@ -106,6 +106,21 @@
      
       </ul>
     </li>
+    <li class="menu-item {{ Request::is('ready-cards*') ? 'active open' : '' }}" style="margin-bottom: 8px;">
+      <a href="javascript:void(0);" class="menu-link menu-toggle">
+        <i class="menu-icon tf-icons ri-gallery-line"></i>
+        <div>{{ __('Ready Cards') }}</div>
+      </a>
+      <ul class="menu-sub">
+        <li class="menu-item {{ Request::routeIs('cards.index') ? 'active' : '' }}">
+          <a href="{{ route('ready-cards.index') }}" class="menu-link">
+            <div>{{ __('Ready Cards') }}</div>
+          </a>
+        </li>
+     
+      </ul>
+    </li>
+    
     {{-- <!-- Orders & Sales section -->
     <li class="menu-header" style="margin-top: 30px; margin-bottom: 15px;">
       <span class="menu-header-text">{{ __('Orders & Sales') }}</span>

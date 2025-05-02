@@ -7,6 +7,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CardTypeController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ReadyCardController;
 use App\Http\Controllers\Admin\DashboardController;
 
 /*
@@ -92,6 +93,13 @@ Route::get('locks/filter/stock/{status}', [LockController::class, 'filterByStock
 Route::get('locks/filter/supplier/{supplier}', [LockController::class, 'filterBySupplier'])->name('locks.filter.supplier');
 Route::post('locks/{lock}/adjust-quantity', [LockController::class, 'adjustQuantity'])->name('locks.adjust.quantity');
     // Additional filter routes
+
+    // Ready Card Management Routes
+Route::resource('ready-cards', ReadyCardController::class);
+Route::get('ready-cards/filter/customer/{customerId}', [ReadyCardController::class, 'filterByCustomer'])->name('ready_cards.filter.customer');
+Route::post('ready-cards/filter/date', [ReadyCardController::class, 'filterByDate'])->name('ready_cards.filter.date');
+
+
     Route::get('cards/type/{cardType}', [CardController::class, 'filterByType'])->name('cards.filter.type');
     Route::get('cards/main-category/{mainCategory}', [CardController::class, 'filterByMainCategory'])->name('cards.filter.main-category');
     Route::get('cards/sub-category/{subCategory}', [CardController::class, 'filterBySubCategory'])->name('cards.filter.sub-category');
