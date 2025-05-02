@@ -74,11 +74,7 @@
             <div>{{ __('Manage Card Types') }}</div>
           </a>
         </li>
-        <li class="menu-item {{ Request::routeIs('card_types.create') ? 'active' : '' }}">
-          <a href="{{ route('card_types.create') }}" class="menu-link">
-            <div>{{ __('Add Card Type') }}</div>
-          </a>
-        </li>
+   
       </ul>
     </li>
 

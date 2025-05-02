@@ -13,7 +13,7 @@ class CardTypeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         // Get statistics for dashboard
         $totalCardTypes = CardType::count();
@@ -26,21 +26,58 @@ class CardTypeController extends Controller
             $typeStats[$key] = CardType::ofType($key)->count();
         }
         
-        $cardTypes = CardType::paginate(10);
+        // Start with base query
+        $query = CardType::query();
+        
+        // Apply filters
+        if ($request->filled('type')) {
+            $query->ofType($request->type);
+        }
+        
+        if ($request->filled('status')) {
+            if ($request->status == 'active') {
+                $query->active();
+            } elseif ($request->status == 'inactive') {
+                $query->inactive();
+            }
+        }
+        
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('name_en', 'like', "%{$search}%")
+                  ->orWhere('name_ar', 'like', "%{$search}%")
+                  ->orWhere('type', 'like', "%{$search}%");
+            });
+        }
+        
+        // Prepare filter description
+        $filter = null;
+        if ($request->filled('type')) {
+            $typeLabel = CardType::getTypeOptions()[$request->type] ?? $request->type;
+            $filter = __('Card Types of type') . ': ' . __($typeLabel);
+        } elseif ($request->filled('status')) {
+            $filter = __($request->status == 'active' ? 'Active Card Types' : 'Inactive Card Types');
+        } elseif ($request->filled('search')) {
+            $filter = __('Search results for') . ': ' . $request->search;
+        }
+        
+        // Get paginated results
+        $cardTypes = $query->paginate(10)->withQueryString();
         $typeOptions = CardType::getTypeOptions();
         $iconOptions = CardType::getIconOptions();
         
         return view('card_types.index', compact(
-            'cardTypes', 
-            'totalCardTypes', 
-            'activeCardTypes', 
+            'cardTypes',
+            'totalCardTypes',
+            'activeCardTypes',
             'inactiveCardTypes',
             'typeOptions',
             'iconOptions',
-            'typeStats'
+            'typeStats',
+            'filter'
         ));
     }
-
     /**
      * Show the form for creating a new card type.
      *

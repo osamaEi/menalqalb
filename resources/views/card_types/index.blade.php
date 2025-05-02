@@ -1,5 +1,70 @@
 @extends('admin.index')
 
+@section('styles')
+<style>
+.icon-grid {
+    max-height: 200px;
+    overflow-y: auto;
+    padding: 10px 5px;
+    border: 1px solid #eee;
+    border-radius: 5px;
+}
+
+.icon-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.icon-card:hover {
+    background-color: rgba(105, 108, 255, 0.08);
+    border-color: rgba(105, 108, 255, 0.5);
+}
+
+.icon-card.selected {
+    background-color: rgba(105, 108, 255, 0.15);
+    border-color: rgba(105, 108, 255, 0.7);
+}
+
+.selected-icon-display {
+    padding: 5px 10px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    border: 1px solid #e9ecef;
+    font-size: 0.9rem;
+}
+
+/* Improve scrollbar appearance for icon grid */
+.icon-grid::-webkit-scrollbar {
+    width: 6px;
+}
+
+.icon-grid::-webkit-scrollbar-track {
+    background: #f8f9fa;
+    border-radius: 3px;
+}
+
+.icon-grid::-webkit-scrollbar-thumb {
+    background-color: #adb5bd;
+    border-radius: 3px;
+}
+
+.icon-grid::-webkit-scrollbar-thumb:hover {
+    background-color: #6c757d;
+}
+
+/* Make sure the offcanvas form scrolls properly on smaller screens */
+.offcanvas-body[data-simplebar] {
+    max-height: calc(100vh - 60px);
+}
+</style>
+@endsection
+
 @section('content')
 <div class="content-wrapper">
     <!-- Content -->
@@ -103,7 +168,7 @@
             </div>
         </div>
         
-       
+        
         
         <!-- Card Types List Table -->
         <div class="card">
@@ -139,33 +204,36 @@
                     </div>
                 </div>
                 
-                <div class="d-flex justify-content-between align-items-center row gx-5 pt-4 gap-5 gap-md-0">
-                    <div class="col-md-4 card_type">
-                        <select id="card-type-filter" class="form-select">
-                            <option value="">{{ __('Select Card Type') }}</option>
-                            @foreach($typeOptions as $key => $label)
-                                <option value="{{ $key }}" {{ request()->segment(3) == 'type' && request()->segment(4) == $key ? 'selected' : '' }}>
-                                    {{ __($label) }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="col-md-4 card_status">
-                        <select id="status-filter" class="form-select">
-                            <option value="">{{ __('Select Status') }}</option>
-                            <option value="active" {{ request()->segment(3) == 'status' && request()->segment(4) == 'active' ? 'selected' : '' }}>{{ __('Active') }}</option>
-                            <option value="inactive" {{ request()->segment(3) == 'status' && request()->segment(4) == 'inactive' ? 'selected' : '' }}>{{ __('Inactive') }}</option>
-                        </select>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="input-group">
-                            <input type="text" class="form-control" id="search-input" placeholder="{{ __('Search...') }}">
-                            <button class="btn btn-outline-primary" type="button" id="search-button">
-                                <i class="ri-search-line"></i>
-                            </button>
+                <form action="{{ route('card_types.index') }}" method="GET">
+                    <div class="d-flex justify-content-between align-items-center row gx-5 pt-4 gap-5 gap-md-0">
+                        <div class="col-md-3 card_type">
+                            <select id="card-type-filter" name="type" class="form-select">
+                                <option value="">{{ __('Select Card Type') }}</option>
+                                @foreach($typeOptions as $key => $label)
+                                    <option value="{{ $key }}" {{ request('type') == $key ? 'selected' : '' }}>
+                                        {{ __($label) }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-3 card_status">
+                            <select id="status-filter" name="status" class="form-select">
+                                <option value="">{{ __('Select Status') }}</option>
+                                <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>{{ __('Active') }}</option>
+                                <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>{{ __('Inactive') }}</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="search-input" name="search" value="{{ request('search') }}" placeholder="{{ __('Search...') }}">
+                            </div>
+                        </div>
+                        <div class="col-md-3 d-flex align-items-end">
+                            <button type="submit" class="btn btn-primary">{{ __('apply_filters') }}</button>
+                            <a href="{{ route('card_types.index') }}" class="btn btn-outline-secondary ms-2">{{ __('reset_filters') }}</a>
                         </div>
                     </div>
-                </div>
+                </form>
             </div>
             <div class="card-datatable table-responsive">
                 <table class="datatables-card-types table">
@@ -249,41 +317,43 @@
                 </table>
             </div>
             <div class="d-flex justify-content-center mt-3 mb-5">
-                {{ $cardTypes->links() }}
+                {{ $cardTypes->withQueryString()->links() }}
             </div>
         </div>
     </div>
 </div>
 
-<!-- Offcanvas to add new card type -->
+<!-- Offcanvas to add new card type with fixed icon selection -->
 <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasAddCardType" aria-labelledby="offcanvasAddCardTypeLabel">
     <div class="offcanvas-header border-bottom">
         <h5 id="offcanvasAddCardTypeLabel" class="offcanvas-title">{{ __('Add Card Type') }}</h5>
         <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
-    <div class="offcanvas-body mx-0 flex-grow-0 pt-0 h-100" data-simplebar>
+    <div class="offcanvas-body" data-simplebar>
         <form class="add-new-card-type pt-0" method="POST" action="{{ route('card_types.store') }}" enctype="multipart/form-data">
             @csrf
             
             <!-- Card Type Icon Selection -->
             <div class="mb-4">
-                <label class="form-label">{{ __('Select Icon') }}</label>
+                <label class="form-label d-block">{{ __('Select Icon') }}</label>
                 <div class="card">
                     <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center mb-2">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
                             <label class="form-label mb-0">{{ __('Selected Icon') }}</label>
-                            <span class="selected-icon-display d-flex align-items-center">
-                                <i class="ri-heart-line ri-lg me-1" id="selected-icon-preview"></i>
-                                <span id="selected-icon-name">ri-heart-line</span>
-                            </span>
+                            <div class="selected-icon-display d-flex align-items-center">
+                                <i class="{{ old('icon', 'ri-heart-line') }} ri-lg me-1" id="selected-icon-preview"></i>
+                                <span id="selected-icon-name">{{ old('icon', 'ri-heart-line') }}</span>
+                            </div>
                         </div>
-                        <input type="hidden" name="icon" id="selected-icon" value="ri-heart-line" required>
+                        <input type="hidden" name="icon" id="selected-icon" value="{{ old('icon', 'ri-heart-line') }}" required>
                         
-                        <div class="icon-grid">
-                            <div class="row g-2" style="max-height: 200px; overflow-y: auto;">
+                        <div class="icon-grid mb-3">
+                            <div class="row g-2">
                                 @foreach($iconOptions as $icon => $label)
-                                <div class="col-2 text-center">
-                                    <div class="card icon-card cursor-pointer p-2 text-center mb-0" data-icon="{{ $icon }}">
+                                <div class="col-3 text-center mb-2">
+                                    <div class="icon-card cursor-pointer d-flex align-items-center justify-content-center" 
+                                         data-icon="{{ $icon }}" 
+                                         onclick="selectIcon('{{ $icon }}')">
                                         <i class="{{ $icon }} ri-lg"></i>
                                     </div>
                                 </div>
@@ -360,139 +430,179 @@
                 </div>
             </div>
             
-            <button type="submit" class="btn btn-primary me-sm-3 me-1 data-submit">{{ __('Submit') }}</button>
-            <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">{{ __('Cancel') }}</button>
+            <div class="d-flex justify-content-between mt-4">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">{{ __('Cancel') }}</button>
+                <button type="submit" class="btn btn-primary">{{ __('Submit') }}</button>
+            </div>
         </form>
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- Add this inline script to directly handle icon selection -->
 <script>
-    $(function() {
-        // Initialize DataTable
-        var dataTable = $('.datatables-card-types').DataTable({
-            ordering: true,
-            paging: false,
-            dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end"f>>t<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
-            language: {
-                search: '',
-                searchPlaceholder: "{{ __('Search...') }}",
-            }
+    function selectIcon(iconClass) {
+        // Update hidden input
+        document.getElementById('selected-icon').value = iconClass;
+        
+        // Update preview
+        document.getElementById('selected-icon-preview').className = iconClass + ' ri-lg me-1';
+        document.getElementById('selected-icon-name').textContent = iconClass;
+        
+        // Update visual selection
+        document.querySelectorAll('.icon-card').forEach(function(el) {
+            el.classList.remove('selected', 'bg-light', 'border-primary');
         });
         
-        // Filter by Type
-        $('#card-type-filter').on('change', function() {
-            var type = $(this).val();
-            if (type) {
-                window.location.href = "{{ route('card_types.filter.type', '') }}/" + type;
-            } else {
-                window.location.href = "{{ route('card_types.index') }}";
-            }
-        });
-        
-        // Filter by Status
-        $('#status-filter').on('change', function() {
-            var status = $(this).val();
-            if (status) {
-                window.location.href = "{{ route('card_types.filter.status', '') }}/" + status;
-            } else {
-                window.location.href = "{{ route('card_types.index') }}";
-            }
-        });
-        
-        // Icon Selection
-        $('.icon-card').on('click', function() {
-            var selectedIcon = $(this).data('icon');
-            $('#selected-icon').val(selectedIcon);
-            $('#selected-icon-preview').attr('class', selectedIcon + ' ri-lg me-1');
-            $('#selected-icon-name').text(selectedIcon);
-            
-            // Highlight selected icon card
-            $('.icon-card').removeClass('bg-light border-primary');
-            $(this).addClass('bg-light border-primary');
-        });
-        
-        // Photo Preview
-        $('#photo').on('change', function(e) {
-            if (e.target.files && e.target.files[0]) {
-                var reader = new FileReader();
-                reader.onload = function(e) {
-                    $('#preview-photo').attr('src', e.target.result);
-                }
-                reader.readAsDataURL(e.target.files[0]);
-            }
-        });
-        
-        // Create chart
-        var ctx = document.getElementById('cardTypeChart').getContext('2d');
-        var cardTypeChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: [
-                    @foreach($typeOptions as $key => $label)
-                        '{{ __($label) }}',
-                    @endforeach
-                ],
-                datasets: [{
-                    label: '{{ __("Number of Card Types") }}',
-                    data: [
-                        @foreach($typeOptions as $key => $label)
-                            {{ $typeStats[$key] ?? 0 }},
-                        @endforeach
-                    ],
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 206, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(255, 159, 64, 0.2)',
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 206, 86, 0.2)'
-                    ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(153, 102, 255, 1)',
-                        'rgba(255, 159, 64, 1)',
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)'
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        precision: 0
+        // Find the clicked element and add selected class
+        document.querySelector('.icon-card[data-icon="' + iconClass + '"]').classList.add('selected', 'bg-light', 'border-primary');
+    }
+    
+    // Initialize selected icon when offcanvas opens
+    document.addEventListener('DOMContentLoaded', function() {
+        var offcanvasEl = document.getElementById('offcanvasAddCardType');
+        if (offcanvasEl) {
+            offcanvasEl.addEventListener('shown.bs.offcanvas', function() {
+                setTimeout(function() {
+                    var currentIcon = document.getElementById('selected-icon').value;
+                    if (currentIcon) {
+                        selectIcon(currentIcon);
+                    } else {
+                        // Default to first icon if nothing selected
+                        var firstIcon = document.querySelector('.icon-card');
+                        if (firstIcon) {
+                            selectIcon(firstIcon.getAttribute('data-icon'));
+                        }
                     }
-                }
-            }
-        });
+                }, 300);
+            });
+        }
         
-        // Search functionality
-        $('#search-button').on('click', function() {
-            dataTable.search($('#search-input').val()).draw();
-        });
-        
-        $('#search-input').on('keyup', function(e) {
-            if (e.key === 'Enter') {
-                dataTable.search(this.value).draw();
-            }
-        });
-        
-        // Show validation errors in offcanvas if any
+        // Initialize if there are validation errors
         @if($errors->any())
-            var offcanvas = new bootstrap.Offcanvas(document.getElementById('offcanvasAddCardType'));
-            offcanvas.show();
+        setTimeout(function() {
+            var currentIcon = document.getElementById('selected-icon').value;
+            if (currentIcon) {
+                selectIcon(currentIcon);
+            }
+        }, 500);
         @endif
     });
+</script>
+@endsection
+
+@section('scripts')
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+$(function() {
+  // Standalone JavaScript function to fix the icon selection
+function fixIconSelection() {
+    console.log("Initializing icon selection functionality");
+    
+    // Direct binding to each icon card
+    $('.icon-card').off('click').on('click', function() {
+        console.log("Icon clicked:", $(this).data('icon'));
+        var selectedIcon = $(this).data('icon');
+        
+        // Update hidden input
+        $('#selected-icon').val(selectedIcon);
+        
+        // Update preview
+        $('#selected-icon-preview').attr('class', selectedIcon + ' ri-lg me-1');
+        $('#selected-icon-name').text(selectedIcon);
+        
+        // Update visual selection
+        $('.icon-card').removeClass('selected bg-light border-primary');
+        $(this).addClass('selected bg-light border-primary');
+        
+        // Debug log
+        console.log("Icon selection updated to:", selectedIcon);
+    });
+    
+    // Initialize the selected icon (if coming back after validation error)
+    var currentSelectedIcon = $('#selected-icon').val();
+    console.log("Current selected icon:", currentSelectedIcon);
+    
+    if (currentSelectedIcon) {
+        // Find and highlight the previously selected icon
+        var $iconElement = $('.icon-card[data-icon="' + currentSelectedIcon + '"]');
+        if ($iconElement.length) {
+            console.log("Found existing selection, highlighting it");
+            $iconElement.addClass('selected bg-light border-primary');
+        } else {
+            console.log("Could not find icon element for:", currentSelectedIcon);
+        }
+    } else {
+        // If no icon is selected, select the first one
+        console.log("No icon selected, selecting the first one");
+        if ($('.icon-card').length) {
+            var $firstIcon = $('.icon-card').first();
+            var firstIconClass = $firstIcon.data('icon');
+            
+            $('#selected-icon').val(firstIconClass);
+            $('#selected-icon-preview').attr('class', firstIconClass + ' ri-lg me-1');
+            $('#selected-icon-name').text(firstIconClass);
+            $firstIcon.addClass('selected bg-light border-primary');
+            
+            console.log("Selected first icon:", firstIconClass);
+        }
+    }
+}
+
+<script>
+
+
+
+$(function() {
+    console.log("Document ready");
+    
+    // Initial setup
+    fixIconSelection();
+    
+    // Reinitialize when offcanvas is shown
+    $('#offcanvasAddCardType').on('shown.bs.offcanvas', function() {
+        console.log("Offcanvas shown, reinitializing icon selection");
+        setTimeout(function() {
+            fixIconSelection();
+        }, 500);
+    });
+    
+    // Show offcanvas and reinitialize if there are validation errors
+    @if($errors->any())
+        console.log("Validation errors detected, showing offcanvas");
+        var offcanvas = new bootstrap.Offcanvas(document.getElementById('offcanvasAddCardType'));
+        offcanvas.show();
+        
+        setTimeout(function() {
+            fixIconSelection();
+        }, 800);
+    @endif
+    
+    // Photo Preview
+    $('#photo').on('change', function(e) {
+        if (e.target.files && e.target.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                $('#preview-photo').attr('src', e.target.result);
+            }
+            reader.readAsDataURL(e.target.files[0]);
+        }
+    });
+    
+    // Initialize DataTable
+    var dataTable = $('.datatables-card-types').DataTable({
+        ordering: true,
+        paging: false,
+        dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end"f>>t<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
+        language: {
+            search: '',
+            searchPlaceholder: "{{ __('Search...') }}",
+        }
+    });
+    
+    // Auto-hide alert messages after 5 seconds
+    setTimeout(function() {
+        $('.alert-dismissible').alert('close');
+    }, 5000);
+});
 </script>
 @endsection

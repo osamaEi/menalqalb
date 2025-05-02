@@ -1,5 +1,46 @@
 @extends('admin.index')
 
+@section('styles')
+<style>
+.icon-grid {
+    max-height: 200px;
+    overflow-y: auto;
+    padding: 10px 5px;
+    border: 1px solid #eee;
+    border-radius: 5px;
+}
+
+.icon-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.icon-card:hover {
+    background-color: rgba(105, 108, 255, 0.08);
+    border-color: rgba(105, 108, 255, 0.5);
+}
+
+.icon-card.selected {
+    background-color: rgba(105, 108, 255, 0.15);
+    border-color: rgba(105, 108, 255, 0.7);
+}
+
+.selected-icon-display {
+    padding: 5px 10px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    border: 1px solid #e9ecef;
+    font-size: 0.9rem;
+}
+</style>
+@endsection
+
 @section('content')
 <div class="content-wrapper">
     <!-- Content -->
@@ -94,18 +135,19 @@
                                                         <div class="d-flex justify-content-between align-items-center mb-2">
                                                             <label class="form-label mb-0">{{ __('Selected Icon') }}</label>
                                                             <span class="selected-icon-display d-flex align-items-center">
-                                                                <i class="{{ $cardType->icon }} ri-lg me-1" id="selected-icon-preview"></i>
-                                                                <span id="selected-icon-name">{{ $cardType->icon }}</span>
+                                                                <i class="{{ old('icon', $cardType->icon) }} ri-lg me-1" id="selected-icon-preview"></i>
+                                                                <span id="selected-icon-name">{{ old('icon', $cardType->icon) }}</span>
                                                             </span>
                                                         </div>
                                                         <input type="hidden" name="icon" id="selected-icon" value="{{ old('icon', $cardType->icon) }}" required>
                                                         
                                                         <div class="icon-grid">
-                                                            <div class="row g-2" style="max-height: 200px; overflow-y: auto;">
+                                                            <div class="row g-2">
                                                                 @foreach($iconOptions as $icon => $label)
-                                                                <div class="col-2 text-center">
-                                                                    <div class="card icon-card cursor-pointer p-2 text-center mb-0 {{ $icon === $cardType->icon ? 'bg-light border-primary' : '' }}" 
-                                                                        data-icon="{{ $icon }}">
+                                                                <div class="col-3 text-center mb-2">
+                                                                    <div class="icon-card cursor-pointer d-flex align-items-center justify-content-center {{ $icon === old('icon', $cardType->icon) ? 'selected bg-light border-primary' : '' }}" 
+                                                                        data-icon="{{ $icon }}"
+                                                                        onclick="selectIcon('{{ $icon }}')">
                                                                         <i class="{{ $icon }} ri-lg"></i>
                                                                     </div>
                                                                 </div>
@@ -170,26 +212,33 @@
     </div>
 </div>
 
+<!-- Add this inline script to handle icon selection -->
 <script>
-    $(function() {
-        // Icon Selection
-        $('.icon-card').on('click', function() {
-            var selectedIcon = $(this).data('icon');
-            $('#selected-icon').val(selectedIcon);
-            $('#selected-icon-preview').attr('class', selectedIcon + ' ri-lg me-1');
-            $('#selected-icon-name').text(selectedIcon);
-            
-            // Highlight selected icon card
-            $('.icon-card').removeClass('bg-light border-primary');
-            $(this).addClass('bg-light border-primary');
+    function selectIcon(iconClass) {
+        // Update hidden input
+        document.getElementById('selected-icon').value = iconClass;
+        
+        // Update preview
+        document.getElementById('selected-icon-preview').className = iconClass + ' ri-lg me-1';
+        document.getElementById('selected-icon-name').textContent = iconClass;
+        
+        // Update visual selection
+        document.querySelectorAll('.icon-card').forEach(function(el) {
+            el.classList.remove('selected', 'bg-light', 'border-primary');
         });
         
+        // Find the clicked element and add selected class
+        document.querySelector('.icon-card[data-icon="' + iconClass + '"]').classList.add('selected', 'bg-light', 'border-primary');
+    }
+    
+    // Initialize icon selection when page loads
+    document.addEventListener('DOMContentLoaded', function() {
         // Photo Preview
-        $('#photo').on('change', function(e) {
+        document.getElementById('photo').addEventListener('change', function(e) {
             if (e.target.files && e.target.files[0]) {
                 var reader = new FileReader();
                 reader.onload = function(e) {
-                    $('#preview-photo').attr('src', e.target.result);
+                    document.getElementById('preview-photo').src = e.target.result;
                 }
                 reader.readAsDataURL(e.target.files[0]);
             }

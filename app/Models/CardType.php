@@ -123,4 +123,28 @@ class CardType extends Model
             'ri-shopping-cart-line' => 'Shopping Cart'
         ];
     }
+
+    /**
+ * Get available icon options.
+ */
+
+
+/**
+ * Get available type options.
+ */
+
+
+/**
+ * Scope for active card types.
+ */
+
+/**
+ * Scope for inactive card types.
+ */
+
+
+/**
+ * Scope for specific type of card.
+ */
+
 }
