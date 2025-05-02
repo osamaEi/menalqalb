@@ -14,30 +14,66 @@ class CategoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $category = Category::query(); // or any other way to get a category instance
-        
+        $categoryQuery = Category::query();
+       
+        // Apply filters
+        if ($request->filled('type')) {
+            if ($request->type == 'main') {
+                $categoryQuery->main();
+            } elseif ($request->type == 'sub') {
+                $categoryQuery->subs(); // Now using the renamed scope
+            }
+        }
+       
+        if ($request->filled('parent_id')) {
+            $categoryQuery->where('parent_id', $request->parent_id);
+        }
+       
+        if ($request->filled('status')) {
+            if ($request->status == 'active') {
+                $categoryQuery->active();
+            } elseif ($request->status == 'inactive') {
+                $categoryQuery->inactive();
+            }
+        }
+       
+        // Count statistics
         $totalCategories = Category::count();
         $mainCategories = Category::main()->count();
-        $subcategories = $category->subcategories()->count();
+        $subcategories = Category::subs()->count(); // Use the new scope name
         $activeCategories = Category::active()->count();
         $inactiveCategories = Category::inactive()->count();
-        
-        $categories = Category::with('parent')->paginate(10);
+       
+        // Get filtered categories with pagination
+        $categories = $categoryQuery->with('parent')->paginate(10)->withQueryString();
         $parentCategories = Category::getParentCategories();
-        
+       
+        // Determine filter title
+        $filter = __('All Categories');
+        if ($request->filled('type')) {
+            $filter = $request->type == 'main' ? __('Main Categories') : __('Subcategories');
+        }
+        if ($request->filled('parent_id')) {
+            $parentName = Category::find($request->parent_id)->name ?? '';
+            $filter = __('Subcategories of') . ' ' . $parentName;
+        }
+        if ($request->filled('status')) {
+            $filter = $request->status == 'active' ? __('Active Categories') : __('Inactive Categories');
+        }
+       
         return view('categories.index', compact(
-            'categories', 
-            'parentCategories', 
-            'totalCategories', 
-            'mainCategories', 
-            'subcategories', 
+            'categories',
+            'parentCategories',
+            'totalCategories',
+            'mainCategories',
+            'subcategories',
             'activeCategories',
-            'inactiveCategories'
+            'inactiveCategories',
+            'filter'
         ));
     }
-
     /**
      * Show the form for creating a new category.
      *
@@ -310,14 +346,14 @@ class CategoryController extends Controller
         // Get statistics for dashboard
         $totalCategories = Category::count();
         $mainCategories = Category::main()->count();
-        $subcategories = Category::subcategories()->count();
+        $subcategories = Category::subs()->count(); // Use the new scope name
         $activeCategories = Category::active()->count();
         $inactiveCategories = Category::inactive()->count();
         
         $categories = Category::where('parent_id', $parentId)->paginate(10);
         $parentCategories = Category::getParentCategories();
         
-        return view('categories.dashboard', compact(
+        return view('categories.index', compact(
             'categories', 
             'parentCategories', 
             'totalCategories', 

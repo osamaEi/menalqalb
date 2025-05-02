@@ -138,30 +138,37 @@
                 </div>
                 
                 <div class="d-flex justify-content-between align-items-center row gx-5 pt-4 gap-5 gap-md-0">
-                    <div class="col-md-4 category_type">
-                        <select id="category-type-filter" class="form-select">
-                            <option value="">{{ __('Select Type') }}</option>
-                            <option value="main" {{ request()->segment(3) == 'type' && request()->segment(4) == 'main' ? 'selected' : '' }}>{{ __('Main Categories') }}</option>
-                            <option value="sub" {{ request()->segment(3) == 'type' && request()->segment(4) == 'sub' ? 'selected' : '' }}>{{ __('Subcategories') }}</option>
-                        </select>
-                    </div>
-                    <div class="col-md-4 parent_category">
-                        <select id="parent-filter" class="form-select">
-                            <option value="">{{ __('Select Parent Category') }}</option>
-                            @foreach($parentCategories as $parent)
-                                <option value="{{ $parent->id }}" {{ request()->segment(3) == 'parent' && request()->segment(4) == $parent->id ? 'selected' : '' }}>
-                                    {{ $parent->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="col-md-4 category_status">
-                        <select id="status-filter" class="form-select">
-                            <option value="">{{ __('Select Status') }}</option>
-                            <option value="active" {{ request()->segment(3) == 'status' && request()->segment(4) == 'active' ? 'selected' : '' }}>{{ __('Active') }}</option>
-                            <option value="inactive" {{ request()->segment(3) == 'status' && request()->segment(4) == 'inactive' ? 'selected' : '' }}>{{ __('Inactive') }}</option>
-                        </select>
-                    </div>
+                    <form action="{{ route('categories.index') }}" method="GET" class="row gx-5 gap-5 gap-md-0 w-100">
+                        <div class="col-md-3 category_type">
+                            <select id="category-type-filter" name="type" class="form-select">
+                                <option value="">{{ __('Select Type') }}</option>
+                                <option value="main" {{ request('type') == 'main' ? 'selected' : '' }}>{{ __('Main Categories') }}</option>
+                                <option value="sub" {{ request('type') == 'sub' ? 'selected' : '' }}>{{ __('Subcategories') }}</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 parent_category">
+                            <select id="parent-filter" name="parent_id" class="form-select">
+                                <option value="">{{ __('Select Parent Category') }}</option>
+                                @foreach($parentCategories as $parent)
+                                    <option value="{{ $parent->id }}" {{ request('parent_id') == $parent->id ? 'selected' : '' }}>
+                                        {{ $parent->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-3 category_status">
+                            <select id="status-filter" name="status" class="form-select">
+                                <option value="">{{ __('Select Status') }}</option>
+                                <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>{{ __('Active') }}</option>
+                                <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>{{ __('Inactive') }}</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 d-flex align-items-center">
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="ri-filter-line me-1"></i> {{ __('Apply Filters') }}
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
             <div class="card-datatable table-responsive">
@@ -226,9 +233,9 @@
                                         <i class="ri-more-fill"></i>
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-end">
-                                        <a class="dropdown-item" href="{{ route('categories.show', $category->id) }}">
+                                        {{-- <a class="dropdown-item" href="{{ route('categories.show', $category->id) }}">
                                             <i class="ri-eye-line text-primary me-2"></i>{{ __('View') }}
-                                        </a>
+                                        </a> --}}
                                         <a class="dropdown-item" href="{{ route('categories.edit', $category->id) }}">
                                             <i class="ri-pencil-line text-primary me-2"></i>{{ __('Edit') }}
                                         </a>

@@ -1,14 +1,13 @@
 <?php
-
 namespace App\Models;
-
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Category extends Model
 {
     use HasFactory;
-
+    
     /**
      * The attributes that are mass assignable.
      *
@@ -22,7 +21,7 @@ class Category extends Model
         'parent_id',
         'is_active',
     ];
-
+    
     /**
      * The attributes that should be cast.
      *
@@ -32,7 +31,7 @@ class Category extends Model
         'is_main' => 'boolean',
         'is_active' => 'boolean',
     ];
-
+    
     /**
      * Get the parent category.
      */
@@ -40,19 +39,39 @@ class Category extends Model
     {
         return $this->belongsTo(Category::class, 'parent_id');
     }
-
+    
     /**
      * Get the subcategories.
      */
-    public function subcategories()
+    public function children()
     {
         return $this->hasMany(Category::class, 'parent_id');
     }
-
+    
     /**
-     * Get the products in this category.
+     * Scope a query to only include subcategories.
      */
-  
+    public function scopeSubs(Builder $query): Builder
+    {
+        return $query->whereNotNull('parent_id');
+    }
+    
+    /**
+     * Scope a query to only include active categories.
+     */
+    public function scopeActive(Builder $query): Builder
+    {
+        return $query->where('is_active', true);
+    }
+    
+    /**
+     * Scope a query to only include inactive categories.
+     */
+    public function scopeInactive(Builder $query): Builder
+    {
+        return $query->where('is_active', false);
+    }
+    
     /**
      * Get the category name based on the current locale.
      */
@@ -61,7 +80,7 @@ class Category extends Model
         $locale = app()->getLocale();
         return $locale == 'ar' ? $this->name_ar : $this->name_en;
     }
-
+    
     /**
      * Scope a query to only include main categories.
      */
@@ -69,31 +88,7 @@ class Category extends Model
     {
         return $query->where('is_main', true);
     }
-
-    /**
-     * Scope a query to only include subcategories.
-     */
-    public function scopeSubcategories($query)
-    {
-        return $query->where('is_main', false);
-    }
-
-    /**
-     * Scope a query to only include active categories.
-     */
-    public function scopeActive($query)
-    {
-        return $query->where('is_active', true);
-    }
-
-    /**
-     * Scope a query to only include inactive categories.
-     */
-    public function scopeInactive($query)
-    {
-        return $query->where('is_active', false);
-    }
-
+    
     /**
      * Get all parent categories.
      */
