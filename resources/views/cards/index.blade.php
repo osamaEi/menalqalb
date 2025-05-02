@@ -141,64 +141,71 @@
                 </div>
                 
                 <div class="d-flex justify-content-between align-items-center row gx-5 pt-4 gap-5 gap-md-0">
-                    <div class="col-md-4">
-                        <div class="d-flex gap-3">
-                            <select id="card-type-filter" class="form-select">
-                                <option value="">{{ __('Card Type') }}</option>
-                                @foreach($cardTypes as $type)
-                                    <option value="{{ $type->id }}" {{ request()->segment(3) == 'type' && request()->segment(4) == $type->id ? 'selected' : '' }}>
-                                        {{ $type->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            
-                            <select id="language-filter" class="form-select">
-                                <option value="">{{ __('Language') }}</option>
-                                @foreach($languages as $code => $name)
-                                    <option value="{{ $code }}" {{ request()->segment(3) == 'language' && request()->segment(4) == $code ? 'selected' : '' }}>
-                                        {{ __($name) }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="d-flex gap-3">
-                            <select id="category-filter" class="form-select">
-                                <option value="">{{ __('Category') }}</option>
-                                @foreach($mainCategories as $category)
-                                    <option value="{{ $category->id }}" {{ request()->segment(3) == 'main-category' && request()->segment(4) == $category->id ? 'selected' : '' }}>
-                                        {{ $category->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            
-                            <select id="designer-filter" class="form-select">
-                                <option value="">{{ __('Designer') }}</option>
-                                @foreach($designers as $designer)
-                                    <option value="{{ $designer->id }}" {{ request()->segment(3) == 'designer' && request()->segment(4) == $designer->id ? 'selected' : '' }}>
-                                        {{ $designer->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="d-flex gap-3">
-                            <select id="status-filter" class="form-select">
-                                <option value="">{{ __('Status') }}</option>
-                                <option value="active" {{ request()->segment(3) == 'status' && request()->segment(4) == 'active' ? 'selected' : '' }}>{{ __('Active') }}</option>
-                                <option value="inactive" {{ request()->segment(3) == 'status' && request()->segment(4) == 'inactive' ? 'selected' : '' }}>{{ __('Inactive') }}</option>
-                            </select>
-                            
-                            <div class="input-group">
-                                <input type="text" class="form-control" id="search-input" placeholder="{{ __('Search...') }}">
-                                <button class="btn btn-outline-primary" type="button" id="search-button">
-                                    <i class="ri-search-line"></i>
-                                </button>
+                    <form action="{{ route('cards.index') }}" method="GET" class="row gx-5 gap-5 gap-md-0 w-100">
+                        <!-- Hidden field to indicate form submission -->
+                        <input type="hidden" name="_filter" value="1">
+                        
+                        <div class="col-md-4">
+                            <div class="d-flex gap-3">
+                                <select id="card-type-filter" name="card_type" class="form-select">
+                                    <option value="">{{ __('Card Type') }}</option>
+                                    @foreach($cardTypes as $type)
+                                        <option value="{{ $type->id }}" {{ request('card_type') == $type->id ? 'selected' : '' }}>
+                                            {{ $type->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                
+                                <select id="language-filter" name="language" class="form-select">
+                                    <option value="">{{ __('Language') }}</option>
+                                    @foreach($languages as $code => $name)
+                                        <option value="{{ $code }}" {{ request('language') == $code ? 'selected' : '' }}>
+                                            {{ __($name) }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
-                    </div>
+                        
+                        <div class="col-md-4">
+                            <div class="d-flex gap-3">
+                                <select id="category-filter" name="category" class="form-select">
+                                    <option value="">{{ __('Category') }}</option>
+                                    @foreach($mainCategories as $category)
+                                        <option value="{{ $category->id }}" {{ request('category') == $category->id ? 'selected' : '' }}>
+                                            {{ $category->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                
+                                <select id="designer-filter" name="designer" class="form-select">
+                                    <option value="">{{ __('Designer') }}</option>
+                                    @foreach($designers as $designer)
+                                        <option value="{{ $designer->id }}" {{ request('designer') == $designer->id ? 'selected' : '' }}>
+                                            {{ $designer->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="d-flex gap-3">
+                                <select id="status-filter" name="status" class="form-select">
+                                    <option value="">{{ __('Status') }}</option>
+                                    <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>{{ __('Active') }}</option>
+                                    <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>{{ __('Inactive') }}</option>
+                                </select>
+                                
+                                <div class="input-group">
+            
+                                    <button class="btn btn-primary" type="submit">
+                                        <i class="ri-filter-line me-1"></i> {{ __('Filter') }}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
             <div class="card-datatable table-responsive">

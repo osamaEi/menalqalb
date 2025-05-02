@@ -18,8 +18,53 @@ class CardController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        // Initialize the card query
+        $cardQuery = Card::with(['user', 'cardType', 'mainCategory', 'subCategory']);
+        
+        // Apply filters if form is submitted
+        if ($request->has('_filter')) {
+            // Apply filters
+            if ($request->filled('card_type')) {
+                $cardQuery->where('card_type_id', $request->card_type);
+            }
+            
+            if ($request->filled('language')) {
+                $cardQuery->where('language', $request->language);
+            }
+            
+            if ($request->filled('category')) {
+                $cardQuery->where('main_category_id', $request->category);
+            }
+            
+            if ($request->filled('designer')) {
+                $cardQuery->where('user_id', $request->designer);
+            }
+            
+            if ($request->filled('status')) {
+                if ($request->status == 'active') {
+                    $cardQuery->active();
+                } elseif ($request->status == 'inactive') {
+                    $cardQuery->inactive();
+                }
+            }
+            
+            if ($request->filled('search')) {
+                $search = $request->search;
+                $cardQuery->where(function($query) use ($search) {
+                    $query->where('title', 'like', "%{$search}%")
+                          ->orWhere('description', 'like', "%{$search}%");
+                });
+            }
+            
+            // Set filter title for display
+            $filter = __('Filtered Cards');
+        } else {
+            // Set default title if not filtering
+            $filter = __('Recent Cards');
+        }
+        
         // Get statistics for dashboard
         $totalCards = Card::count();
         $activeCards = Card::active()->count();
@@ -31,11 +76,9 @@ class CardController extends Controller
         // Get most used cards
         $mostUsedCards = Card::orderBy('usage_count', 'desc')->take(5)->get();
         
-        // Get recently added cards
-        $recentCards = Card::with(['user', 'cardType', 'mainCategory', 'subCategory'])
-            ->orderBy('created_at', 'desc')
-            ->paginate(10);
-            
+        // Execute the query with pagination
+        $recentCards = $cardQuery->orderBy('created_at', 'desc')->paginate(10)->withQueryString();
+        
         // Get main categories, subcategories and card types for filtering
         $mainCategories = Category::where('is_main', true)->where('is_active', true)->get();
         $cardTypes = CardType::where('is_active', true)->get();
@@ -52,10 +95,10 @@ class CardController extends Controller
             'mainCategories',
             'cardTypes',
             'designers',
-            'languages'
+            'languages',
+            'filter'
         ));
     }
-
     /**
      * Show the form for creating a new card.
      *
