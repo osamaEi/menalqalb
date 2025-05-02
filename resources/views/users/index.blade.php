@@ -134,37 +134,43 @@
                     </div>
                 </div>
                 
-                <div class="d-flex justify-content-between align-items-center row gx-5 pt-4 gap-5 gap-md-0">
-                    <div class="col-md-4 user_role">
-                        <select id="user-type-filter" class="form-select">
-                            <option value="">{{ __('Select Role') }}</option>
-                            <option value="admin" {{ request()->segment(3) == 'type' && request()->segment(4) == 'admin' ? 'selected' : '' }}>{{ __('Admin') }}</option>
-                            <option value="privileged_user" {{ request()->segment(3) == 'type' && request()->segment(4) == 'privileged_user' ? 'selected' : '' }}>{{ __('Privileged User') }}</option>
-                            <option value="regular_user" {{ request()->segment(3) == 'type' && request()->segment(4) == 'regular_user' ? 'selected' : '' }}>{{ __('Regular User') }}</option>
-                            <option value="designer" {{ request()->segment(3) == 'type' && request()->segment(4) == 'designer' ? 'selected' : '' }}>{{ __('Designer') }}</option>
-                            <option value="sales_point" {{ request()->segment(3) == 'type' && request()->segment(4) == 'sales_point' ? 'selected' : '' }}>{{ __('Sales Point') }}</option>
-                        </select>
+                <form action="{{ route('users.index') }}" method="GET">
+                    <div class="d-flex justify-content-between align-items-center row gx-5 pt-4 gap-5 gap-md-0">
+                        <div class="col-md-3 user_role">
+                            <select id="user-type-filter" name="user_type" class="form-select">
+                                <option value="">{{ __('Select Role') }}</option>
+                                <option value="admin" {{ request('user_type') == 'admin' ? 'selected' : '' }}>{{ __('Admin') }}</option>
+                                <option value="privileged_user" {{ request('user_type') == 'privileged_user' ? 'selected' : '' }}>{{ __('Privileged User') }}</option>
+                                <option value="regular_user" {{ request('user_type') == 'regular_user' ? 'selected' : '' }}>{{ __('Regular User') }}</option>
+                                <option value="designer" {{ request('user_type') == 'designer' ? 'selected' : '' }}>{{ __('Designer') }}</option>
+                                <option value="sales_point" {{ request('user_type') == 'sales_point' ? 'selected' : '' }}>{{ __('Sales Point') }}</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 user_plan">
+                            <select id="country-filter" name="country_id" class="form-select">
+                                <option value="">{{ __('Select Country') }}</option>
+                                @foreach($countries as $country)
+                                    <option value="{{ $country->id }}" {{ request('country_id') == $country->id ? 'selected' : '' }}>
+                                        {{ $country->name ?? $country->name_en }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-3 user_status">
+                            <select id="status-filter" name="status" class="form-select">
+                                <option value="">{{ __('Select Status') }}</option>
+                                <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>{{ __('Active') }}</option>
+                                <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>{{ __('Inactive') }}</option>
+                                <option value="blocked" {{ request('status') == 'blocked' ? 'selected' : '' }}>{{ __('Blocked') }}</option>
+                                <option value="deleted" {{ request('status') == 'deleted' ? 'selected' : '' }}>{{ __('Deleted') }}</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 d-flex align-items-end">
+                            <button type="submit" class="btn btn-primary">{{ __('Apply Filters') }}</button>
+                            <a href="{{ route('users.index') }}" class="btn btn-outline-secondary ms-2">{{ __('Reset') }}</a>
+                        </div>
                     </div>
-                    <div class="col-md-4 user_plan">
-                        <select id="country-filter" class="form-select">
-                            <option value="">{{ __('Select Country') }}</option>
-                            @foreach($countries as $country)
-                                <option value="{{ $country->id }}" {{ request()->segment(3) == 'country' && request()->segment(4) == $country->id ? 'selected' : '' }}>
-                                    {{ $country->name ?? $country->name_en }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="col-md-4 user_status">
-                        <select id="status-filter" class="form-select">
-                            <option value="">{{ __('Select Status') }}</option>
-                            <option value="active" {{ request()->segment(3) == 'status' && request()->segment(4) == 'active' ? 'selected' : '' }}>{{ __('Active') }}</option>
-                            <option value="inactive" {{ request()->segment(3) == 'status' && request()->segment(4) == 'inactive' ? 'selected' : '' }}>{{ __('Inactive') }}</option>
-                            <option value="blocked" {{ request()->segment(3) == 'status' && request()->segment(4) == 'blocked' ? 'selected' : '' }}>{{ __('Blocked') }}</option>
-                            <option value="deleted" {{ request()->segment(3) == 'status' && request()->segment(4) == 'deleted' ? 'selected' : '' }}>{{ __('Deleted') }}</option>
-                        </select>
-                    </div>
-                </div>
+                </form>
             </div>
             <div class="card-datatable table-responsive">
                 <table class="datatables-users table">
@@ -437,68 +443,130 @@
 
 
 <script>
-    $(function() {
-        // Initialize DataTable
-        var dataTable = $('.datatables-users').DataTable({
-            ordering: true,
-            paging: false,
-            dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end"f>>t<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
-            language: {
-                search: '',
-                searchPlaceholder: "{{ __('Search...') }}",
-            }
-        });
+  $(function() {
+    // Initialize DataTable with proper configuration
+    var dataTable = $('.datatables-users').DataTable({
+        ordering: true,
+        paging: false,
+        searching: true,
+        dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end"f>>t<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
+        language: {
+            search: '',
+            searchPlaceholder: jsLang('Search...')
+        }
+    });
+    
+    // Function to extract and preserve current filter parameters from URL
+    function getCurrentParams() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const params = {};
         
-        // Filter by User Type
-        $('#user-type-filter').on('change', function() {
-            var type = $(this).val();
-            if (type) {
-                window.location.href = "{{ route('users.filter.type', '') }}/" + type;
-            } else {
-                window.location.href = "{{ route('users.index') }}";
-            }
-        });
-        
-        // Filter by Status
-        $('#status-filter').on('change', function() {
-            var status = $(this).val();
-            if (status) {
-                window.location.href = "{{ route('users.filter.status', '') }}/" + status;
-            } else {
-                window.location.href = "{{ route('users.index') }}";
-            }
-        });
-
-        // Country filter
-        $('#country-filter').on('change', function() {
-            var countryId = $(this).val();
-            if (countryId) {
-                window.location.href = "{{ route('users.filter.country', '') }}/" + countryId;
-            } else {
-                window.location.href = "{{ route('users.index') }}";
-            }
-        });
-        
-        // Delete confirmation
-        $('.delete-record').on('click', function() {
-            var id = $(this).data('id');
-            $('#deleteForm').attr('action', "{{ url('users') }}/" + id);
-        });
-        
-        // Initialize select2 for offcanvas form if available
-        if (typeof $.fn.select2 !== 'undefined') {
-            $('#offcanvasAddUser .select2').select2({
-                dropdownParent: $('#offcanvasAddUser'),
-                placeholder: "{{ __('Select an option') }}",
-                allowClear: true
-            });
+        // Check for existing filter parameters
+        for(const [key, value] of urlParams.entries()) {
+            params[key] = value;
         }
         
-        // Show validation errors in offcanvas if any
-        @if($errors->any())
-            var offcanvas = new bootstrap.Offcanvas(document.getElementById('offcanvasAddUser'));
-            offcanvas.show();
-        @endif
+        return params;
+    }
+    
+ // Function to build URL with filters
+function buildFilterUrl(filterType, filterValue) {
+    // Base routes for each filter type
+    const routes = {
+        'user_type': routeUsersFilterType,  // Should be something like '/users/type/'
+        'status': routeUsersFilterStatus,   // Should be something like '/users/status/'
+        'country_id': routeUsersFilterCountry  // Should be something like '/users/country/'
+    };
+    
+    // If we have a value and a proper route, build the URL with the segment
+    if (filterValue && routes[filterType]) {
+        return routes[filterType] + '/' + filterValue;
+    } else {
+        // Return to index if no filter is selected
+        return routeUsers;
+    }
+}
+    
+    // User Type Filter
+    $('#user-type-filter').on('change', function() {
+        const userType = $(this).val();
+        window.location.href = buildFilterUrl('user_type', userType);
     });
+    
+    // Status Filter
+    $('#status-filter').on('change', function() {
+        const status = $(this).val();
+        window.location.href = buildFilterUrl('status', status);
+    });
+    
+    // Country Filter
+    $('#country-filter').on('change', function() {
+        const countryId = $(this).val();
+        window.location.href = buildFilterUrl('country_id', countryId);
+    });
+    
+    // Handle reset all filters
+    $('.reset-filters').on('click', function(e) {
+        e.preventDefault();
+        window.location.href = routeUsers;
+    });
+    
+    // Set filters from URL parameters on page load
+    function setFiltersFromUrl() {
+        const urlParams = new URLSearchParams(window.location.search);
+        
+        // Set user type filter if in URL
+        if (urlParams.has('user_type')) {
+            $('#user-type-filter').val(urlParams.get('user_type'));
+        }
+        
+        // Set status filter if in URL
+        if (urlParams.has('status')) {
+            $('#status-filter').val(urlParams.get('status'));
+        }
+        
+        // Set country filter if in URL
+        if (urlParams.has('country_id')) {
+            $('#country-filter').val(urlParams.get('country_id'));
+        }
+    }
+    
+    // Initialize filters on page load
+    setFiltersFromUrl();
+    
+    // Initialize select2 for dropdown filters if available
+    if (typeof $.fn.select2 !== 'undefined') {
+        $('.select2').select2({
+            placeholder: jsLang('Select an option'),
+            allowClear: true
+        });
+    }
+    
+    // Delete confirmation
+    $('.delete-record').on('click', function() {
+        var id = $(this).data('id');
+        $('#deleteForm').attr('action', routeUsersDelete.replace(':id', id));
+    });
+    
+    // Initialize select2 for offcanvas form
+    if (typeof $.fn.select2 !== 'undefined') {
+        $('#offcanvasAddUser .select2').select2({
+            dropdownParent: $('#offcanvasAddUser'),
+            placeholder: jsLang('Select an option'),
+            allowClear: true
+        });
+    }
+    
+    // Show validation errors in offcanvas if any
+    if ($('#offcanvasAddUser').data('has-errors')) {
+        var offcanvas = new bootstrap.Offcanvas(document.getElementById('offcanvasAddUser'));
+        offcanvas.show();
+    }
+    
+    // Auto-hide alert messages after 5 seconds
+    setTimeout(function() {
+        $('.alert-dismissible').alert('close');
+    }, 5000);
+});
 </script>
 @endsection

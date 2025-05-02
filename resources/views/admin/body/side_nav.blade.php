@@ -40,11 +40,7 @@
             <div>{{ __('Manage Users') }}</div>
           </a>
         </li>
-        <li class="menu-item {{ Request::routeIs('users.create') ? 'active' : '' }}">
-          <a href="{{ route('users.create') }}" class="menu-link">
-            <div>{{ __('Add New User') }}</div>
-          </a>
-        </li>
+    
       </ul>
     </li>
 

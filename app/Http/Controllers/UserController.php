@@ -15,26 +15,52 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        // Get statistics for dashboard
-        $totalUsers = User::count();
-        $activeUsers = User::active()->count();
-        $inactiveUsers = User::inactive()->count() + User::blocked()->count();
-        $privilegedUsers = User::privilegedUser()->count();
-        
-        $users = User::paginate(10);
-        $countries = Country::all();
-        
-        return view('users.index', compact(
-            'users', 
-            'countries', 
-            'totalUsers', 
-            'activeUsers', 
-            'inactiveUsers', 
-            'privilegedUsers'
-        ));
+   /**
+ * Display a listing of the users with dashboard statistics and filters.
+ *
+ * @param  \Illuminate\Http\Request  $request
+ * @return \Illuminate\Http\Response
+ */
+public function index(Request $request)
+{
+    // Get statistics for dashboard
+    $totalUsers = User::count();
+    $activeUsers = User::active()->count();
+    $inactiveUsers = User::inactive()->count() + User::blocked()->count();
+    $privilegedUsers = User::privilegedUser()->count();
+    
+    // Start with a base query
+    $query = User::query();
+    
+    // Apply filters from query parameters
+    if ($request->has('user_type') && !empty($request->user_type)) {
+        $query->where('user_type', $request->user_type);
+        $filter = __("Showing only :type users", ['type' => str_replace('_', ' ', $request->user_type)]);
     }
+    
+    if ($request->has('status') && !empty($request->status)) {
+        $query->where('status', $request->status);
+        $filter = __("Showing only :status users", ['status' => $request->status]);
+    }
+    
+    if ($request->has('country_id') && !empty($request->country_id)) {
+        $query->where('country_id', $request->country_id);
+        $country = Country::find($request->country_id);
+        $filter = __("Showing only users from :country", ['country' => $country ? $country->name : '']);
+    }
+    
+    $users = $query->paginate(10);
+    $countries = Country::all();
+    
+    return view('users.index', compact(
+        'users', 
+        'countries', 
+        'totalUsers', 
+        'activeUsers', 
+        'inactiveUsers', 
+        'privilegedUsers'
+    ))->with('filter', $filter ?? __('All Users'));
+}
 
     /**
      * Show the form for creating a new user.
