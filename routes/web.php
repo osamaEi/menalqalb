@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CardController;
+use App\Http\Controllers\LockController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CardTypeController;
@@ -84,7 +85,12 @@ Route::middleware(['auth'])->group(function () {
 Route::middleware(['auth'])->group(function () {
     // Basic CRUD routes
     Route::resource('cards', CardController::class);
-    
+    Route::resource('locks', LockController::class);
+Route::post('locks/{lock}/toggle-status', [LockController::class, 'toggleStatus'])->name('locks.toggle.status');
+Route::get('locks/filter/status/{status}', [LockController::class, 'filterByStatus'])->name('locks.filter.status');
+Route::get('locks/filter/stock/{status}', [LockController::class, 'filterByStock'])->name('locks.filter.stock');
+Route::get('locks/filter/supplier/{supplier}', [LockController::class, 'filterBySupplier'])->name('locks.filter.supplier');
+Route::post('locks/{lock}/adjust-quantity', [LockController::class, 'adjustQuantity'])->name('locks.adjust.quantity');
     // Additional filter routes
     Route::get('cards/type/{cardType}', [CardController::class, 'filterByType'])->name('cards.filter.type');
     Route::get('cards/main-category/{mainCategory}', [CardController::class, 'filterByMainCategory'])->name('cards.filter.main-category');

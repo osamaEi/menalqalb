@@ -89,14 +89,23 @@
             <div>{{ __('Manage Cards') }}</div>
           </a>
         </li>
-        <li class="menu-item {{ Request::routeIs('cards.create') ? 'active' : '' }}">
-          <a href="{{ route('cards.create') }}" class="menu-link">
-            <div>{{ __('Add New Card') }}</div>
-          </a>
-        </li>
+        
       </ul>
     </li>
-
+    <li class="menu-item {{ Request::is('locks*') ? 'active open' : '' }}" style="margin-bottom: 8px;">
+      <a href="javascript:void(0);" class="menu-link menu-toggle">
+        <i class="menu-icon tf-icons ri-gallery-line"></i>
+        <div>{{ __('Lock Management') }}</div>
+      </a>
+      <ul class="menu-sub">
+        <li class="menu-item {{ Request::routeIs('cards.index') ? 'active' : '' }}">
+          <a href="{{ route('locks.index') }}" class="menu-link">
+            <div>{{ __('Lock Management') }}</div>
+          </a>
+        </li>
+     
+      </ul>
+    </li>
     {{-- <!-- Orders & Sales section -->
     <li class="menu-header" style="margin-top: 30px; margin-bottom: 15px;">
       <span class="menu-header-text">{{ __('Orders & Sales') }}</span>
