@@ -138,7 +138,6 @@ class CardController extends Controller
                 },
             ],
             'card_type_id' => 'required|exists:card_types,id',
-            'cost_price' => 'required|numeric|min:0',
             'selling_price' => 'required|numeric|min:0',
             'file' => [
                 'required',
