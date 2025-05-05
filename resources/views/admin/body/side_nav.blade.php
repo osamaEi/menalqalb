@@ -1,10 +1,10 @@
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
   <!-- Logo area with more bottom margin -->
-  <div class="app-brand demo" style="margin-bottom: 15px;">
+  <div class="" style="margin-bottom: 15px;">
     <a href="{{ route('dashboard.index') }}" class="app-brand-link">
       <span class="app-brand-logo demo">
           <span style="color: var(--bs-primary)">
-              <img src="{{asset('assets/img/logo.png')}}" alt="Company Logo" class="logo-img">
+              <img src="{{ asset('front/img/logo1.png')}}" style="width : 120px;" alt="Company Logo" class="logo-img">
           </span>
       </span>
       <span class="app-brand-text demo menu-text fw-semibold ms-2"></span>

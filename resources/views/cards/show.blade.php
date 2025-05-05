@@ -184,10 +184,7 @@
                                     <hr>
                                 </div>
                                 
-                                <div class="col-md-4 mb-3">
-                                    <h6 class="fw-semibold">{{ __('Cost Price') }}</h6>
-                                    <p>{{ number_format($card->cost_price ?? 0, 2) }}</p>
-                                </div>
+                              
                                 
                                 <div class="col-md-4 mb-3">
                                     <h6 class="fw-semibold">{{ __('Selling Price') }}</h6>
