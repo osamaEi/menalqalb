@@ -38,26 +38,27 @@
     max-height: calc(100vh - 60px);
 }
 
-/* QR code styling */
-.qrcode {
-    display: inline-block;
-    margin: 0 auto;
-}
+/* QR code styling - improved for better display */
 .qrcode-container {
-    width: 85px;
-    height: 85px;
+    width: 100px;
+    height: 100px;
     margin: 0 auto;
-    padding: 2px;
+    padding: 5px;
     background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
     display: flex;
     align-items: center;
     justify-content: center;
+    overflow: hidden;
 }
 
 .qrcode-container img {
     max-width: 100%;
     max-height: 100%;
+    display: block;
 }
+
 /* Modal max height */
 .modal-body {
     max-height: 70vh;
@@ -71,6 +72,12 @@
 
 .badge-closed {
     background-color: #6c757d !important;
+}
+
+/* QR table cell width */
+.qr-cell {
+    min-width: 120px;
+    width: 120px;
 }
 </style>
 
@@ -358,7 +365,7 @@
                             <tr>
                                 <th>{{ __('Sequence #') }}</th>
                                 <th>{{ __('Identity #') }}</th>
-                                <th>{{ __('QR Code') }}</th>
+                                <th class="qr-cell">{{ __('QR Code') }}</th>
                                 <th>{{ __('Status') }}</th>
                                 <th>{{ __('Actions') }}</th>
                             </tr>
@@ -376,6 +383,7 @@
         </div>
     </div>
 </div>
+
 
 <!-- Add Toastr and QR Code JS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
@@ -482,8 +490,7 @@ function showCardItems(readyCardId) {
         });
 }
 
-// Process the card items data and update the modal
-// Process the card items data and update the modal
+// Process the card items data and update the modal with fixed QR code display
 function processCardItemsData(data) {
     var items = data.items;
     var html = '';
@@ -497,11 +504,11 @@ function processCardItemsData(data) {
             html += '<tr data-id="' + item.id + '" data-status="' + item.status + '">';
             html += '<td>' + item.sequence_number + '</td>';
             html += '<td>' + item.identity_number + '</td>';
-            // Create a unique container ID for each QR code
-            html += '<td class="text-center"><div id="qrcode-container-' + item.id + '" class="qrcode-container"></div></td>';
+            // Create a unique container ID for each QR code with a simpler approach
+            html += '<td class="text-center qr-cell"><div id="qrcode-' + item.id + '" class="qrcode-container d-inline-block"></div></td>';
             html += '<td>' + statusBadge + '</td>';
             html += '<td class="text-center">';
-            html += '<button type="button" class="btn btn-sm btn-outline-primary toggle-status" data-id="' + item.id + '" data-status="' + item.status + '" onclick="toggleCardStatus(this)">';
+            html += '<button type="button" class="btn btn-sm btn-outline-primary toggle-status me-1" data-id="' + item.id + '" data-status="' + item.status + '" onclick="toggleCardStatus(this)">';
             html += item.status === 'open' ? '{{ __('Close') }}' : '{{ __('Open') }}';
             html += '</button> ';
             html += '<button type="button" class="btn btn-sm btn-outline-secondary print-card" data-id="' + item.id + '" onclick="printCard(' + item.id + ')">';
@@ -513,32 +520,10 @@ function processCardItemsData(data) {
         
         document.getElementById('card-items-body').innerHTML = html;
         
-        // Generate QR codes after the HTML has been added to the DOM
+        // Wait for the DOM to update before generating QR codes
         setTimeout(function() {
-            items.forEach(function(item) {
-                try {
-                    var qrContainer = document.getElementById('qrcode-container-' + item.id);
-                    if (qrContainer) {
-                        // Clear any previous content
-                        qrContainer.innerHTML = '';
-                        
-                        // Create new QR code
-                        new QRCode(qrContainer, {
-                            text: item.qr_code,
-                            width: 80,
-                            height: 80,
-                            colorDark: "#000000",
-                            colorLight: "#ffffff",
-                            correctLevel: QRCode.CorrectLevel.H
-                        });
-                    } else {
-                        console.error('QR container not found for item ' + item.id);
-                    }
-                } catch (e) {
-                    console.error('Error generating QR code for item ' + item.id, e);
-                }
-            });
-        }, 100); // Small delay to ensure DOM is updated
+            generateQRCodes(items);
+        }, 100);
     } else {
         document.getElementById('card-items-body').innerHTML = 
             '<tr><td colspan="5" class="text-center">{{ __('No card items found') }}</td></tr>';
@@ -546,22 +531,50 @@ function processCardItemsData(data) {
     
     // Apply filters after loading
     applyFilters();
+}
 
+// Separate function to generate QR codes - for better error handling
+function generateQRCodes(items) {
+    // Clean implementation for QR code generation
+    if (!items || !items.length) return;
     
-    // Add event listeners for toggle buttons
-    var toggleButtons = document.querySelectorAll('.toggle-status');
-    toggleButtons.forEach(function(button) {
-        button.addEventListener('click', function() {
-            toggleCardStatus(this);
-        });
-    });
+    console.log('Generating QR codes for ' + items.length + ' items');
     
-    // Add event listeners for print buttons
-    var printButtons = document.querySelectorAll('.print-card');
-    printButtons.forEach(function(button) {
-        button.addEventListener('click', function() {
-            printCard(this.getAttribute('data-id'));
-        });
+    items.forEach(function(item) {
+        try {
+            var qrContainer = document.getElementById('qrcode-' + item.id);
+            if (!qrContainer) {
+                console.error('QR container not found for item ' + item.id);
+                return;
+            }
+            
+            // Clear any previous content
+            qrContainer.innerHTML = '';
+            
+            // Simple fallback if QRCode library is not available
+            if (typeof QRCode === 'undefined') {
+                console.error('QRCode library not loaded');
+                qrContainer.innerHTML = '<div style="padding:5px;background:#f8f9fa;border-radius:3px;font-size:10px;">QR: ' + item.qr_code + '</div>';
+                return;
+            }
+            
+            // Create new QR code with explicit dimensions
+            new QRCode(qrContainer, {
+                text: item.qr_code || 'Error: No QR code content',
+                width: 90,
+                height: 90,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+            
+            console.log('Generated QR code for item ' + item.id);
+        } catch (e) {
+            console.error('Error generating QR code for item ' + item.id, e);
+            if (qrContainer) {
+                qrContainer.innerHTML = '<div class="text-danger">Error generating QR</div>';
+            }
+        }
     });
 }
 
@@ -581,7 +594,10 @@ function toggleCardStatus(buttonElement) {
     // Send the request
     fetch('/ready-card-items/' + id + '/toggle-status', {
         method: 'POST',
-        body: formData
+        body: formData,
+        headers: {
+            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        }
     })
     .then(function(response) {
         return response.json();

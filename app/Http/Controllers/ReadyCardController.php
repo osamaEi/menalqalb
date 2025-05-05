@@ -274,7 +274,7 @@ class ReadyCardController extends Controller
                     'identity_number' => $identityNumber,
                     'qr_code' => $qrCodeContent,
                     'sequence_number' => $i,
-                    'status' => 'closed' // Default status
+                    'status' => 'open' // Default status
                 ]);
             }
             
