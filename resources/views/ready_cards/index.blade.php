@@ -415,7 +415,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Auto-hide alert messages after 5 seconds
+    // Auto-hide alert messages after 5 
     setTimeout(function() {
         $('.alert-dismissible').alert('close');
     }, 5000);
@@ -448,10 +448,15 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     document.getElementById('print-all-cards').addEventListener('click', function() {
-        var titleText = document.getElementById('cardItemsModalLabel').textContent;
-        var readyCardId = titleText.split('#')[1].trim();
-        window.open("{{ route('ready-cards.print-all', '') }}/" + readyCardId, '_blank');
-    });
+    var titleText = document.getElementById('cardItemsModalLabel').textContent;
+    var readyCardId = titleText.split('#')[1].trim();
+    
+    // Fix the double slash issue by constructing the URL properly
+    var baseUrl = '{{ route('ready-cards.print-all', ':id') }}';
+    var url = baseUrl.replace(':id', readyCardId);
+    
+    window.open(url, '_blank');
+});
 });
 
 // Function to show card items - called directly from the View Cards button
@@ -491,6 +496,7 @@ function showCardItems(readyCardId) {
 }
 
 // Process the card items data and update the modal with fixed QR code display
+// Updated processCardItemsData function with fixed QR code display
 function processCardItemsData(data) {
     var items = data.items;
     var html = '';
@@ -504,8 +510,16 @@ function processCardItemsData(data) {
             html += '<tr data-id="' + item.id + '" data-status="' + item.status + '">';
             html += '<td>' + item.sequence_number + '</td>';
             html += '<td>' + item.identity_number + '</td>';
-            // Create a unique container ID for each QR code with a simpler approach
-            html += '<td class="text-center qr-cell"><div id="qrcode-' + item.id + '" class="qrcode-container d-inline-block"></div></td>';
+            
+            // Display QR code URL and prepare container for QR code generation
+            html += '<td class="text-center qr-cell">';
+            html += '<div class="qrcode-container d-inline-block">';
+            html += '<div id="qrcode-' + item.id + '"></div>';
+            html += '</div>';
+            // Also show the text value below the QR code
+            html += '<small class="d-block mt-1 text-muted">' + item.qr_code + '</small>';
+            html += '</td>';
+            
             html += '<td>' + statusBadge + '</td>';
             html += '<td class="text-center">';
             html += '<button type="button" class="btn btn-sm btn-outline-primary toggle-status me-1" data-id="' + item.id + '" data-status="' + item.status + '" onclick="toggleCardStatus(this)">';
@@ -520,7 +534,7 @@ function processCardItemsData(data) {
         
         document.getElementById('card-items-body').innerHTML = html;
         
-        // Wait for the DOM to update before generating QR codes
+        // Generate QR codes after DOM is updated
         setTimeout(function() {
             generateQRCodes(items);
         }, 100);
@@ -533,13 +547,36 @@ function processCardItemsData(data) {
     applyFilters();
 }
 
-// Separate function to generate QR codes - for better error handling
+// Improved generateQRCodes function with better error handling
 function generateQRCodes(items) {
-    // Clean implementation for QR code generation
     if (!items || !items.length) return;
     
     console.log('Generating QR codes for ' + items.length + ' items');
     
+    // Check if QR code library is available
+    if (typeof QRCode === 'undefined') {
+        console.error('QRCode library not loaded. Loading from CDN...');
+        
+        // Try to load QR code library dynamically if not available
+        var script = document.createElement('script');
+        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js';
+        script.onload = function() {
+            console.log('QRCode library loaded, now generating QR codes');
+            generateQRCodesWithLib(items);
+        };
+        script.onerror = function() {
+            console.error('Failed to load QRCode library');
+            showQRAsText(items);
+        };
+        document.head.appendChild(script);
+        return;
+    }
+    
+    generateQRCodesWithLib(items);
+}
+
+// Helper function to generate QR codes when library is available
+function generateQRCodesWithLib(items) {
     items.forEach(function(item) {
         try {
             var qrContainer = document.getElementById('qrcode-' + item.id);
@@ -551,16 +588,9 @@ function generateQRCodes(items) {
             // Clear any previous content
             qrContainer.innerHTML = '';
             
-            // Simple fallback if QRCode library is not available
-            if (typeof QRCode === 'undefined') {
-                console.error('QRCode library not loaded');
-                qrContainer.innerHTML = '<div style="padding:5px;background:#f8f9fa;border-radius:3px;font-size:10px;">QR: ' + item.qr_code + '</div>';
-                return;
-            }
-            
             // Create new QR code with explicit dimensions
             new QRCode(qrContainer, {
-                text: item.qr_code || 'Error: No QR code content',
+                text: item.qr_code,
                 width: 90,
                 height: 90,
                 colorDark: "#000000",
@@ -568,15 +598,30 @@ function generateQRCodes(items) {
                 correctLevel: QRCode.CorrectLevel.H
             });
             
-            console.log('Generated QR code for item ' + item.id);
+            console.log('Generated QR code for item ' + item.id + ': ' + item.qr_code);
         } catch (e) {
             console.error('Error generating QR code for item ' + item.id, e);
-            if (qrContainer) {
-                qrContainer.innerHTML = '<div class="text-danger">Error generating QR</div>';
-            }
+            var fallbackText = document.createElement('div');
+            fallbackText.className = 'text-danger';
+            fallbackText.innerHTML = 'QR Error';
+            qrContainer.appendChild(fallbackText);
         }
     });
 }
+
+// Fallback function to show QR as text if QR code generation fails
+function showQRAsText(items) {
+    items.forEach(function(item) {
+        var qrContainer = document.getElementById('qrcode-' + item.id);
+        if (qrContainer) {
+            qrContainer.innerHTML = '<div style="padding:5px;background:#f8f9fa;border-radius:3px;font-size:10px;">' + 
+                item.qr_code + '</div>';
+        }
+    });
+}
+
+// Separate function to generate QR codes - for better error handling
+
 
 // Toggle card status
 function toggleCardStatus(buttonElement) {

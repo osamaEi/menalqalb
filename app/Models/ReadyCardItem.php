@@ -20,6 +20,7 @@ class ReadyCardItem extends Model
         'identity_number',
         'qr_code',
         'sequence_number',
+        'unique_identifier',
         'status',
     ];
     

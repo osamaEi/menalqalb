@@ -151,7 +151,8 @@
                                     <option value="">{{ __('Card Type') }}</option>
                                     @foreach($cardTypes as $type)
                                         <option value="{{ $type->id }}" {{ request('card_type') == $type->id ? 'selected' : '' }}>
-                                            {{ $type->name }}
+                                            {{ $type->type }}
+
                                         </option>
                                     @endforeach
                                 </select>
@@ -383,7 +384,7 @@
                         @foreach($cardTypes as $type)
                             <option value="{{ $type->id }}" {{ old('card_type_id') == $type->id ? 'selected' : '' }}
                                 data-type="{{ $type->type }}">
-                                {{ $type->name }}
+                                {{ $type->type }}
                             </option>
                         @endforeach
                     </select>

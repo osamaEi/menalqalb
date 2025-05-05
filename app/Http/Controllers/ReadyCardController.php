@@ -142,15 +142,15 @@ class ReadyCardController extends Controller
             'cost' => 'required|numeric|min:0',
             'received_card_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
-        
+       
         // Handle image upload
         if ($request->hasFile('received_card_image')) {
             $path = $request->file('received_card_image')->store('ready_cards', 'public');
             $validated['received_card_image'] = $path;
         }
-        
+       
         DB::beginTransaction();
-        
+       
         try {
             // Create the ready card
             $readyCard = ReadyCard::create([
@@ -159,35 +159,75 @@ class ReadyCardController extends Controller
                 'cost' => $validated['cost'],
                 'received_card_image' => $validated['received_card_image'] ?? null,
             ]);
-            
+           
             // Create the individual card items based on card count
             for ($i = 1; $i <= $validated['card_count']; $i++) {
-                // Generate a 4-digit identity number (with leading zeros if needed)
-                $identityNumber = str_pad(mt_rand(1, 9999), 4, '0', STR_PAD_LEFT);
-                
-                // Generate QR code content (can be customized as needed)
-                $qrCodeContent = 'RC-' . $readyCard->id . '-' . $identityNumber . '-' . $i;
-                
+                // Generate a unique 6-digit serial number
+                $serialNumber = $this->generateUniqueSerialNumber();
+               
+                // Generate unique letters for QR URL
+                $uniqueLetters = $this->generateUniqueLetters();
+               
+                // Generate QR code content with URL
+                $qrCodeContent = 'https://minalqalb.ae/' . $uniqueLetters;
+               
                 // Create the ready card item
                 ReadyCardItem::create([
                     'ready_card_id' => $readyCard->id,
-                    'identity_number' => $identityNumber,
+                    'sequence_number' => $serialNumber,
+                    'identity_number' => str_pad(mt_rand(1, 9999), 4, '0', STR_PAD_LEFT), // Keep the identity number as is
                     'qr_code' => $qrCodeContent,
-                    'sequence_number' => $i,
+                    'unique_identifier' => $uniqueLetters,
                     'status' => 'closed' // Default status
                 ]);
             }
-            
+           
             DB::commit();
-            
+           
             return redirect()->route('ready-cards.index')
                 ->with('success', __('Ready card created successfully.'));
         } catch (\Exception $e) {
             DB::rollback();
-            
+           
             return redirect()->back()->withInput()
                 ->with('error', __('Failed to create ready card.') . ' ' . $e->getMessage());
         }
+    }
+    
+    /**
+     * Generate a unique 6-digit serial number
+     *
+     * @return string
+     */
+    private function generateUniqueSerialNumber()
+    {
+        do {
+            $serialNumber = str_pad(mt_rand(100000, 999999), 6, '0', STR_PAD_LEFT);
+            $exists = ReadyCardItem::where('sequence_number', $serialNumber)->exists();
+        } while ($exists);
+        
+        return $serialNumber;
+    }
+    
+    /**
+     * Generate unique letters for QR URL
+     *
+     * @return string
+     */
+    private function generateUniqueLetters()
+    {
+        $characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
+        $length = 8; // Adjust length as needed
+        
+        do {
+            $uniqueLetters = '';
+            for ($i = 0; $i < $length; $i++) {
+                $uniqueLetters .= $characters[rand(0, strlen($characters) - 1)];
+            }
+            $exists = ReadyCardItem::where('unique_identifier', $uniqueLetters)->exists();
+        } while ($exists);
+        
+        return $uniqueLetters;
     }
 
     /**
@@ -385,10 +425,107 @@ public function getItems(ReadyCard $readyCard)
  * @param  \App\Models\ReadyCard  $readyCard
  * @return \Illuminate\Http\Response
  */
+/**
+ * Print all cards for a ready card as an Excel sheet.
+ *
+ * @param  \App\Models\ReadyCard  $readyCard
+ * @return \Illuminate\Http\Response
+ */
+/**
+ * Print all cards for a ready card as an Excel sheet with QR code text (not images).
+ *
+ * @param  \App\Models\ReadyCard  $readyCard
+ * @return \Illuminate\Http\Response
+ */
 public function printAllCards(ReadyCard $readyCard)
 {
+    // Get all items ordered by sequence number
     $items = $readyCard->items()->orderBy('sequence_number')->get();
     
-    return view('ready_cards.print_all', compact('readyCard', 'items'));
+    // Create a new Excel file
+    $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+    $sheet = $spreadsheet->getActiveSheet();
+    
+    // Set column headers
+    $sheet->setCellValue('A1', 'Sequence #');
+    $sheet->setCellValue('B1', 'Identity #');
+    $sheet->setCellValue('C1', 'QR Code');
+    
+    // Style headers
+    $headerStyle = [
+        'font' => [
+            'bold' => true,
+            'size' => 12
+        ],
+        'fill' => [
+            'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+            'startColor' => [
+                'rgb' => 'E2EFDA',
+            ],
+        ],
+        'borders' => [
+            'allBorders' => [
+                'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+            ],
+        ],
+    ];
+    $sheet->getStyle('A1:D1')->applyFromArray($headerStyle);
+    
+    // Set column widths
+    $sheet->getColumnDimension('A')->setWidth(15);
+    $sheet->getColumnDimension('B')->setWidth(15);
+    $sheet->getColumnDimension('C')->setWidth(30);  // Wider for QR code text
+    $sheet->getColumnDimension('D')->setWidth(12);
+    
+    // No need for extra row height since we're just displaying text
+    $sheet->getDefaultRowDimension()->setRowHeight(20);
+    
+    // Add data rows with QR codes as text
+    $row = 2;
+    foreach ($items as $item) {
+        $sheet->setCellValue('A' . $row, $item->sequence_number);
+        $sheet->setCellValue('B' . $row, $item->identity_number);
+        $sheet->setCellValue('C' . $row, $item->qr_code);  // Just add the QR code text from database
+        
+        // Set text alignment for readability
+        $sheet->getStyle('C' . $row)->getAlignment()->setWrapText(true);
+        
+        // Style for data rows
+        $sheet->getStyle('A' . $row . ':D' . $row)->applyFromArray([
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                ],
+            ],
+            'alignment' => [
+                'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+            ],
+        ]);
+        
+      
+        $row++;
+    }
+    
+    // Create Excel writer
+    $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+    
+    // Set the file name with customer name and date
+    $fileName = 'ReadyCards_' . preg_replace('/[^a-zA-Z0-9]/', '_', $readyCard->customer->name) . '_' . date('Y-m-d') . '.xlsx';
+    
+    // Create response with headers for Excel download
+    $response = response()->stream(
+        function() use ($writer) {
+            $writer->save('php://output');
+        },
+        200,
+        [
+            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
+            'Cache-Control' => 'max-age=0',
+        ]
+    );
+    
+    return $response;
 }
+
 }

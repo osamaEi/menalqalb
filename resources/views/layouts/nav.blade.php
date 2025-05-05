@@ -19,7 +19,7 @@
                     <li><a href="{{ url('/contact') }}">{{ __('Contact Us') }}</a></li>
                     @if (Route::has('login'))
                         @auth
-                        <li><a href="{{ url('/dashboard') }}">{{ __('Dashboard') }}</a></li>
+                        <li><a href="{{ url('/admin/dashboard') }}">{{ __('Dashboard') }}</a></li>
                         @else
                         <li><a href="{{ url('/login') }}">{{ __('Login') }}</a></li>
                         @endif

@@ -2,7 +2,7 @@
   <!-- Logo area with more bottom margin -->
   <div class="" style="margin-bottom: 15px;">
     <a href="{{ route('dashboard.index') }}" class="app-brand-link">
-      <span class="app-brand-logo demo">
+      <span class="app-brand-logo demo" style="  margin-right: 66px;">
           <span style="color: var(--bs-primary)">
               <img src="{{ asset('front/img/logo1.png')}}" style="width : 120px;" alt="Company Logo" class="logo-img">
           </span>
@@ -20,19 +20,19 @@
     <li class="menu-item {{ Request::is('dashboard.index*') ? 'active open' : '' }}" style="margin-bottom: 8px;">
       <a href="{{ route('dashboard.index') }}" class="menu-link">
         <i class="menu-icon tf-icons ri-dashboard-line"></i>
-        <div data-i18n="Dashboard">{{ __('Dashboard') }}</div>
+        <div>{{ __('Dashboard') }}</div>
       </a>
     </li>
  
     <!-- Apps & Pages section with increased margins -->
     <li class="menu-header" style="margin-top: 30px; margin-bottom: 15px;">
-      <span class="menu-header-text" data-i18n="Apps & Pages">{{ __('Content Management') }}</span>
+      <span class="menu-header-text" >{{ __('Content Management') }}</span>
     </li>
    
     <li class="menu-item {{ Request::is('users*') ? 'active open' : '' }}" style="margin-bottom: 8px;">
       <a href="javascript:void(0);" class="menu-link menu-toggle">
         <i class="menu-icon tf-icons ri-user-settings-line"></i>
-        <div data-i18n="Users">{{ __('Users') }}</div>
+        <div>{{ __('Users') }}</div>
       </a>
       <ul class="menu-sub">
         <li class="menu-item {{ Request::routeIs('users.index') ? 'active' : '' }}">
@@ -102,7 +102,28 @@
       </ul>
     </li>
    
- 
+    <li class="menu-item {{ Request::is('messages*') ? 'active open' : '' }}" style="margin-bottom: 8px;">
+      <a href="javascript:void(0);" class="menu-link menu-toggle">
+        <i class="menu-icon tf-icons ri-gallery-line"></i>
+        <div>{{ __('Messages') }}</div>
+      </a>
+      <ul class="menu-sub">
+
+
+        <li class="menu-item {{ Request::routeIs('messages.index') ? 'active' : '' }}">
+          <a href="{{ route('messages.index') }}" class="menu-link">
+            <div>{{ __('all Messages') }}</div>
+          </a>
+        </li>
+        <li class="menu-item {{ Request::routeIs('messages.create') ? 'active' : '' }}">
+          <a href="{{ route('messages.create') }}" class="menu-link">
+            <div>{{ __('Send Message') }}</div>
+          </a>
+        </li>
+        
+      </ul>
+    </li>
+   
     
     {{-- <!-- Orders & Sales section -->
     <li class="menu-header" style="margin-top: 30px; margin-bottom: 15px;">

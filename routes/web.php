@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CardController;
 use App\Http\Controllers\LockController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CardTypeController;
 use App\Http\Controllers\CategoryController;
@@ -114,6 +115,31 @@ Route::post('ready-cards/filter/date', [ReadyCardController::class, 'filterByDat
     // Get subcategories for a main category (for AJAX)
     Route::get('get-subcategories/{mainCategory}', [CardController::class, 'getSubcategories'])->name('cards.get-subcategories');
 });
+
+
+
+// Messages Routes
+Route::middleware(['auth'])->group(function () {
+    // Resourceful routes
+    Route::get('/messages', [MessageController::class, 'index'])->name('messages.index');
+    Route::get('/messages/create', [MessageController::class, 'create'])->name('messages.create');
+    Route::post('/messages', [MessageController::class, 'store'])->name('messages.store');
+    Route::get('/messages/{message}', [MessageController::class, 'show'])->name('messages.show');
+    Route::get('/messages/{message}/edit', [MessageController::class, 'edit'])->name('messages.edit');
+    Route::put('/messages/{message}', [MessageController::class, 'update'])->name('messages.update');
+    Route::delete('/messages/{message}', [MessageController::class, 'destroy'])->name('messages.destroy');
+    
+    // Additional custom routes
+    Route::post('/messages/get-sub-categories', [MessageController::class, 'getSubCategories'])
+        ->name('messages.get-subcategories');
+    
+    Route::post('/messages/get-cards', [MessageController::class, 'getCards'])
+        ->name('messages.get-cards');
+    
+    Route::post('/messages/{message}/send-manual', [MessageController::class, 'sendManual'])
+        ->name('messages.send-manual');
+});
+
 
 Route::get('language/{locale}', function ($locale) {
     if (in_array($locale, ['en', 'ar'])) {
