@@ -8,6 +8,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CardTypeController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ReadyCardController;
+use App\Http\Controllers\ReadyCardItemController;
 use App\Http\Controllers\Admin\DashboardController;
 
 /*
@@ -121,5 +122,9 @@ Route::get('language/{locale}', function ($locale) {
     }
     return redirect()->back()->with('locale_changed', true);
 })->name('language.switch');
-
+// Add these routes
+Route::get('ready-cards/{readyCard}/items', [ReadyCardController::class, 'getItems'])->name('ready-cards.items');
+Route::post('ready-card-items/{item}/toggle-status', [ReadyCardItemController::class, 'toggleStatus'])->name('ready-card-items.toggle-status');
+Route::get('ready-card-items/{item}/print', [ReadyCardItemController::class, 'printCard'])->name('ready-card-items.print');
+Route::get('ready-cards/{readyCard}/print-all', [ReadyCardController::class, 'printAllCards'])->name('ready-cards.print-all');
 });

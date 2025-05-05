@@ -173,19 +173,19 @@ class Card extends Model
     {
         return [
             'en' => 'English',
-            'ar' => 'Arabic',
-            'fr' => 'French',
-            'es' => 'Spanish',
-            'de' => 'German',
-            'it' => 'Italian',
-            'ru' => 'Russian',
-            'zh' => 'Chinese',
-            'ja' => 'Japanese',
-            'ko' => 'Korean',
-            'pt' => 'Portuguese',
-            'tr' => 'Turkish',
-            'hi' => 'Hindi',
-            'ur' => 'Urdu',
+            'ar' => 'العربية', // Arabic
+            'fr' => 'Français', // French
+            'es' => 'Español', // Spanish
+            'de' => 'Deutsch', // German
+            'it' => 'Italiano', // Italian
+            'ru' => 'Русский', // Russian
+            'zh' => '中文', // Chinese
+            'ja' => '日本語', // Japanese
+            'ko' => '한국어', // Korean
+            'pt' => 'Português', // Portuguese
+            'tr' => 'Türkçe', // Turkish
+            'hi' => 'हिन्दी', // Hindi
+            'ur' => 'اردو', // Urdu
         ];
     }
 

@@ -205,7 +205,7 @@
                                     {{ $category->name_en }}
                                 </a>
                             </td>
-                            <td class="text-end">{{ $category->name_ar }}</td>
+                            <td >{{ $category->name_ar }}</td>
                             <td>
                                 <span class="badge bg-label-{{ $category->is_main ? 'danger' : 'info' }}">
                                     {{ $category->is_main ? __('Main') : __('Sub') }}

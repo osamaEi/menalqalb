@@ -186,62 +186,7 @@
                                     </div>
                                 </div>
                                 
-                                <div class="col-md-6 mb-4">
-                                    <label class="form-label">{{ __('Select Cards') }} <span class="text-danger">*</span></label>
-                                    <div class="card">
-                                        <div class="card-body p-0">
-                                            <div class="input-group mb-2 p-2 border-bottom">
-                                                <input type="text" class="form-control" id="card-search" placeholder="{{ __('Search cards...') }}">
-                                                <span class="input-group-text">
-                                                    <i class="ri-search-line"></i>
-                                                </span>
-                                            </div>
-                                            <div class="card-selection">
-                                                @foreach($cards as $card)
-                                                    <div class="card-checkbox d-flex align-items-center">
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" 
-                                                                id="card-{{ $card->id }}" 
-                                                                name="card_ids[]" 
-                                                                value="{{ $card->id }}"
-                                                                {{ is_array(old('card_ids', $selectedCards)) && in_array($card->id, old('card_ids', $selectedCards)) ? 'checked' : '' }}>
-                                                        </div>
-                                                        <label class="ms-2 d-flex align-items-center w-100" for="card-{{ $card->id }}">
-                                                            <div class="card-avatar">
-                                                                @if(isset($card->image) && $card->image)
-                                                                    <img src="{{ asset('storage/' . $card->image) }}" alt="Card" class="w-100 h-100 object-fit-cover">
-                                                                @else
-                                                                    <i class="ri-credit-card-line"></i>
-                                                                @endif
-                                                            </div>
-                                                            <div>
-                                                                <span class="fw-medium d-block">Card #{{ $card->id }}</span>
-                                                                <small class="text-muted">
-                                                                    {{ isset($card->serial) ? $card->serial : 'N/A' }} 
-                                                                    @if(isset($card->card_type))
-                                                                        - {{ $card->card_type->name_en ?? 'N/A' }}
-                                                                    @endif
-                                                                </small>
-                                                            </div>
-                                                        </label>
-                                                    </div>
-                                                @endforeach
-                                            </div>
-                                            <div class="px-3 py-2 border-top d-flex justify-content-between align-items-center">
-                                                <span>
-                                                    <span id="selected-count">0</span> {{ __('cards selected') }}
-                                                </span>
-                                                <div>
-                                                    <button type="button" class="btn btn-sm btn-outline-primary" id="select-all">{{ __('Select All') }}</button>
-                                                    <button type="button" class="btn btn-sm btn-outline-secondary" id="deselect-all">{{ __('Deselect All') }}</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    @error('card_ids')
-                                        <div class="text-danger mt-1">{{ $message }}</div>
-                                    @enderror
-                                </div>
+                             
                             </div>
                             
                             <div class="row">

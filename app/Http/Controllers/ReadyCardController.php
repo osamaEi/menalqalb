@@ -141,8 +141,6 @@ class ReadyCardController extends Controller
             'card_count' => 'required|integer|min:1',
             'cost' => 'required|numeric|min:0',
             'received_card_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'card_ids' => 'required|array|min:1',
-            'card_ids.*' => 'exists:cards,id',
         ]);
         
         // Handle image upload
@@ -162,11 +160,21 @@ class ReadyCardController extends Controller
                 'received_card_image' => $validated['received_card_image'] ?? null,
             ]);
             
-            // Create the ready card items
-            foreach ($validated['card_ids'] as $cardId) {
+            // Create the individual card items based on card count
+            for ($i = 1; $i <= $validated['card_count']; $i++) {
+                // Generate a 4-digit identity number (with leading zeros if needed)
+                $identityNumber = str_pad(mt_rand(1, 9999), 4, '0', STR_PAD_LEFT);
+                
+                // Generate QR code content (can be customized as needed)
+                $qrCodeContent = 'RC-' . $readyCard->id . '-' . $identityNumber . '-' . $i;
+                
+                // Create the ready card item
                 ReadyCardItem::create([
                     'ready_card_id' => $readyCard->id,
-                    'card_id' => $cardId,
+                    'identity_number' => $identityNumber,
+                    'qr_code' => $qrCodeContent,
+                    'sequence_number' => $i,
+                    'status' => 'closed' // Default status
                 ]);
             }
             
@@ -225,8 +233,6 @@ class ReadyCardController extends Controller
             'card_count' => 'required|integer|min:1',
             'cost' => 'required|numeric|min:0',
             'received_card_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'card_ids' => 'required|array|min:1',
-            'card_ids.*' => 'exists:cards,id',
         ]);
         
         // Handle image upload
@@ -254,11 +260,21 @@ class ReadyCardController extends Controller
             // Delete existing items
             $readyCard->items()->delete();
             
-            // Create new items
-            foreach ($validated['card_ids'] as $cardId) {
+            // Create new items based on updated card count
+            for ($i = 1; $i <= $validated['card_count']; $i++) {
+                // Generate a 4-digit identity number
+                $identityNumber = str_pad(mt_rand(1, 9999), 4, '0', STR_PAD_LEFT);
+                
+                // Generate QR code content
+                $qrCodeContent = 'RC-' . $readyCard->id . '-' . $identityNumber . '-' . $i;
+                
+                // Create the ready card item
                 ReadyCardItem::create([
                     'ready_card_id' => $readyCard->id,
-                    'card_id' => $cardId,
+                    'identity_number' => $identityNumber,
+                    'qr_code' => $qrCodeContent,
+                    'sequence_number' => $i,
+                    'status' => 'closed' // Default status
                 ]);
             }
             
@@ -273,7 +289,6 @@ class ReadyCardController extends Controller
                 ->with('error', __('Failed to update ready card.') . ' ' . $e->getMessage());
         }
     }
-
     /**
      * Remove the specified ready card from storage.
      *
@@ -347,4 +362,33 @@ class ReadyCardController extends Controller
             'date_to' => $validated['date_to'],
         ]);
     }
+
+    /**
+ * Get items for a ready card.
+ *
+ * @param  \App\Models\ReadyCard  $readyCard
+ * @return \Illuminate\Http\Response
+ */
+public function getItems(ReadyCard $readyCard)
+{
+    $items = $readyCard->items()->orderBy('sequence_number')->get();
+    
+    return response()->json([
+        'success' => true,
+        'items' => $items
+    ]);
+}
+
+/**
+ * Print all cards for a ready card.
+ *
+ * @param  \App\Models\ReadyCard  $readyCard
+ * @return \Illuminate\Http\Response
+ */
+public function printAllCards(ReadyCard $readyCard)
+{
+    $items = $readyCard->items()->orderBy('sequence_number')->get();
+    
+    return view('ready_cards.print_all', compact('readyCard', 'items'));
+}
 }

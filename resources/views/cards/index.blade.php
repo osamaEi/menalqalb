@@ -218,7 +218,8 @@
                             <th>{{ __('Type') }}</th>
                             <th>{{ __('Category') }}</th>
                             <th>{{ __('Language') }}</th>
-                            <th>{{ __('Designer') }}</th>
+                            <th>{{ __('Creator') }}</th>
+                            <th>{{ __('Created at') }}</th>
                             <th>{{ __('Pricing') }}</th>
                             <th>{{ __('Status') }}</th>
                             <th>{{ __('Actions') }}</th>
@@ -286,6 +287,7 @@
                                     {{ $card->user ? $card->user->name : 'N/A' }}
                                 </a>
                             </td>
+                            <td>{{$card->created_at}}</td>
                             <td>
                                 <div class="d-flex flex-column">
                                     <span>{{ number_format($card->selling_price, 2) }}</span>
@@ -425,7 +427,7 @@
             
             <div class="mb-3">
                 <div class="row">
-                    <div class="col-md-6">
+                    {{-- <div class="col-md-6">
                         <div class="form-floating form-floating-outline">
                             <input type="number" class="form-control @error('cost_price') is-invalid @enderror" id="cost_price" 
                                 name="cost_price" value="{{ old('cost_price', '0.00') }}" required step="0.01" min="0">
@@ -434,8 +436,8 @@
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
-                    </div>
-                    <div class="col-md-6">
+                    </div> --}}
+                    <div class="col-md-12">
                         <div class="form-floating form-floating-outline">
                             <input type="number" class="form-control @error('selling_price') is-invalid @enderror" id="selling_price" 
                                 name="selling_price" value="{{ old('selling_price', '0.00') }}" required step="0.01" min="0">

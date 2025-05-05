@@ -96,9 +96,9 @@
                                                 @enderror
                                             </div>
                                             
-                                            <div class="mb-3">
-                                                <label for="type" class="form-label">{{ __('Card Type') }}</label>
-                                                <select id="type" name="type" class="form-select @error('type') is-invalid @enderror" required>
+                                            <div class="mb-3" style="display:none;">
+                                                <label for="type" class="form-label" style="display:none;">{{ __('Card Type') }}</label>
+                                                <select id="type" style="display:none;" name="type" class="form-select @error('type') is-invalid @enderror" required>
                                                     <option value="">{{ __('Select Type') }}</option>
                                                     @foreach($typeOptions as $key => $label)
                                                         <option value="{{ $key }}" {{ old('type', $cardType->type) == $key ? 'selected' : '' }}>

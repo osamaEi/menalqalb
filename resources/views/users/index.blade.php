@@ -409,6 +409,21 @@
                     @enderror
                 </div>
             </div>
+            
+            <!-- Company Name Field (initially hidden) -->
+            <div class="mb-3" id="company_name_container" style="display: {{ old('user_type') == 'sales_point' ? 'block' : 'none' }};">
+                <div class="form-floating form-floating-outline">
+                    <input type="text" id="company_name" name="company_name" 
+                        class="form-control @error('company_name') is-invalid @enderror" 
+                        placeholder="{{ __('Company Name') }}" value="{{ old('company_name') }}"
+                        {{ old('user_type') == 'sales_point' ? 'required' : '' }} />
+                    <label for="company_name">{{ __('Company Name') }}</label>
+                    @error('company_name')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+            </div>
+            
             <div class="mb-3">
                 <div class="form-floating form-floating-outline">
                     <select id="status" name="status" class="form-select @error('status') is-invalid @enderror" required>
@@ -440,6 +455,29 @@
         </form>
     </div>
 </div>
+
+<!-- JavaScript to handle dynamic company name field -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Get references to the elements
+    const userTypeSelect = document.getElementById('user_type');
+    const companyNameContainer = document.getElementById('company_name_container');
+    const companyNameInput = document.getElementById('company_name');
+    
+    // Add event listener to the user_type select element
+    userTypeSelect.addEventListener('change', function() {
+        if (this.value === 'sales_point') {
+            // Show the company name field and make it required
+            companyNameContainer.style.display = 'block';
+            companyNameInput.setAttribute('required', 'required');
+        } else {
+            // Hide the company name field and make it not required
+            companyNameContainer.style.display = 'none';
+            companyNameInput.removeAttribute('required');
+        }
+    });
+});
+</script>
 
 
 <script>

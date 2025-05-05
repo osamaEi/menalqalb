@@ -71,17 +71,7 @@
     <div class="container-xxl flex-grow-1 container-p-y">
         <div class="row">
             <div class="col-12 mb-4">
-                <div class="d-flex justify-content-between align-items-center">
-                    <h4 class="fw-bold py-3 mb-0">{{ __('Card Type Management') }}</h4>
-                    <button
-                        class="btn btn-primary"
-                        type="button"
-                        data-bs-toggle="offcanvas"
-                        data-bs-target="#offcanvasAddCardType"
-                        aria-controls="offcanvasAddCardType">
-                        <i class="ri-add-line me-1"></i> {{ __('Add New Card Type') }}
-                    </button>
-                </div>
+              
             </div>
         </div>
         

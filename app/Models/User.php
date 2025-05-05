@@ -26,6 +26,7 @@ class User extends Authenticatable
         'email_verified',
         'whatsapp_verified',
         'user_type',
+        'company_name',
         'status',
     ];
 

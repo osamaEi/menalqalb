@@ -90,6 +90,7 @@ public function index(Request $request)
             'password' => 'required|string|min:8|confirmed',
             'country_id' => 'required|exists:countries,id',
             'whatsapp' => 'nullable|string|max:20',
+            'company_name' => 'nullable|string|max:20',
             'user_type' => 'required|in:admin,privileged_user,regular_user,designer,sales_point',
             'status' => 'required|in:active,inactive,blocked,deleted',
             'email_verified' => 'boolean',

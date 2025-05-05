@@ -37,7 +37,45 @@
 .offcanvas-body[data-simplebar] {
     max-height: calc(100vh - 60px);
 }
+
+/* QR code styling */
+.qrcode {
+    display: inline-block;
+    margin: 0 auto;
+}
+.qrcode-container {
+    width: 85px;
+    height: 85px;
+    margin: 0 auto;
+    padding: 2px;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.qrcode-container img {
+    max-width: 100%;
+    max-height: 100%;
+}
+/* Modal max height */
+.modal-body {
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+/* Status badges */
+.badge-open {
+    background-color: #2ecc71 !important;
+}
+
+.badge-closed {
+    background-color: #6c757d !important;
+}
 </style>
+
+<!-- Add Toastr CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 @endsection
 
 @section('content')
@@ -257,6 +295,10 @@
                                         <i class="ri-more-fill"></i>
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-end">
+                                        <!-- Changed to use onclick handler for direct response -->
+                                        <a class="dropdown-item" href="javascript:void(0)" onclick="showCardItems({{ $readyCard->id }})">
+                                            <i class="ri-bank-card-2-line text-primary me-2"></i>{{ __('View Cards') }}
+                                        </a>
                                         <a class="dropdown-item" href="{{ route('ready-cards.show', $readyCard->id) }}">
                                             <i class="ri-eye-line text-primary me-2"></i>{{ __('View') }}
                                         </a>
@@ -285,18 +327,85 @@
     </div>
 </div>
 
+<!-- Card Items Modal -->
+<div class="modal fade" id="cardItemsModal" tabindex="-1" aria-labelledby="cardItemsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="cardItemsModalLabel">{{ __('Card Items') }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="search-card-items" placeholder="{{ __('Search card items...') }}">
+                            <button class="btn btn-outline-primary" type="button" id="filter-card-items">{{ __('Search') }}</button>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <select id="status-filter" class="form-select">
+                            <option value="all">{{ __('All Statuses') }}</option>
+                            <option value="open">{{ __('Open') }}</option>
+                            <option value="closed">{{ __('Closed') }}</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="card-items-table">
+                        <thead>
+                            <tr>
+                                <th>{{ __('Sequence #') }}</th>
+                                <th>{{ __('Identity #') }}</th>
+                                <th>{{ __('QR Code') }}</th>
+                                <th>{{ __('Status') }}</th>
+                                <th>{{ __('Actions') }}</th>
+                            </tr>
+                        </thead>
+                        <tbody id="card-items-body">
+                            <!-- Card items will be loaded dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('Close') }}</button>
+                <button type="button" class="btn btn-primary" id="print-all-cards">{{ __('Print All Cards') }}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Toastr and QR Code JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode.js/lib/qrcode.min.js"></script>
+
 <script>
-$(function() {
-    // Initialize DataTable
-    var dataTable = $('.datatables-ready-cards').DataTable({
-        ordering: true,
-        paging: false,
-        dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end"f>>t<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
-        language: {
-            search: '',
-            searchPlaceholder: "{{ __('Search...') }}",
-        }
-    });
+// Initialize bootstrap components
+document.addEventListener('DOMContentLoaded', function() {
+    // Configure Toastr
+    if (typeof toastr !== 'undefined') {
+        toastr.options = {
+            closeButton: true,
+            progressBar: true,
+            positionClass: "toast-top-right",
+            timeOut: 5000
+        };
+    }
+    
+    // Set up DataTable if exists
+    if ($.fn.DataTable) {
+        $('.datatables-ready-cards').DataTable({
+            ordering: true,
+            paging: false,
+            dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end"f>>t<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
+            language: {
+                search: '',
+                searchPlaceholder: "{{ __('Search...') }}",
+            }
+        });
+    }
     
     // Auto-hide alert messages after 5 seconds
     setTimeout(function() {
@@ -314,6 +423,242 @@ $(function() {
     $('#sort-filter').on('change', function() {
         $(this).closest('form').submit();
     });
+    
+    // Add event listeners for the modal
+    document.getElementById('filter-card-items').addEventListener('click', function() {
+        applyFilters();
+    });
+    
+    document.getElementById('search-card-items').addEventListener('keyup', function(e) {
+        if (e.keyCode === 13) {
+            applyFilters();
+        }
+    });
+    
+    document.getElementById('status-filter').addEventListener('change', function() {
+        applyFilters();
+    });
+    
+    document.getElementById('print-all-cards').addEventListener('click', function() {
+        var titleText = document.getElementById('cardItemsModalLabel').textContent;
+        var readyCardId = titleText.split('#')[1].trim();
+        window.open("{{ route('ready-cards.print-all', '') }}/" + readyCardId, '_blank');
+    });
 });
+
+// Function to show card items - called directly from the View Cards button
+function showCardItems(readyCardId) {
+    console.log('showCardItems function called with ID:', readyCardId);
+    
+    // Update modal title
+    document.getElementById('cardItemsModalLabel').textContent = '{{ __('Card Items for Ready Card #') }}' + readyCardId;
+    
+    // Show loading indicator
+    document.getElementById('card-items-body').innerHTML = 
+        '<tr><td colspan="5" class="text-center"><i class="fas fa-spinner fa-spin me-2"></i>{{ __('Loading card items...') }}</td></tr>';
+    
+    // Show the modal - using vanilla JS for reliability
+    var myModal = new bootstrap.Modal(document.getElementById('cardItemsModal'));
+    myModal.show();
+    
+    // Fetch card items data
+    fetch('/ready-cards/' + readyCardId + '/items')
+        .then(function(response) {
+            console.log('Response status:', response.status);
+            return response.json();
+        })
+        .then(function(data) {
+            console.log('Data received:', data);
+            processCardItemsData(data);
+        })
+        .catch(function(error) {
+            console.error('Error loading card items:', error);
+            document.getElementById('card-items-body').innerHTML = 
+                '<tr><td colspan="5" class="text-center text-danger">{{ __('Failed to load card items') }}</td></tr>';
+            
+            if (typeof toastr !== 'undefined') {
+                toastr.error('{{ __('Failed to load card items') }}');
+            }
+        });
+}
+
+// Process the card items data and update the modal
+// Process the card items data and update the modal
+function processCardItemsData(data) {
+    var items = data.items;
+    var html = '';
+    
+    if (items && items.length > 0) {
+        items.forEach(function(item) {
+            var statusBadge = item.status === 'open' ? 
+                '<span class="badge bg-success">{{ __('Open') }}</span>' : 
+                '<span class="badge bg-secondary">{{ __('Closed') }}</span>';
+                
+            html += '<tr data-id="' + item.id + '" data-status="' + item.status + '">';
+            html += '<td>' + item.sequence_number + '</td>';
+            html += '<td>' + item.identity_number + '</td>';
+            // Create a unique container ID for each QR code
+            html += '<td class="text-center"><div id="qrcode-container-' + item.id + '" class="qrcode-container"></div></td>';
+            html += '<td>' + statusBadge + '</td>';
+            html += '<td class="text-center">';
+            html += '<button type="button" class="btn btn-sm btn-outline-primary toggle-status" data-id="' + item.id + '" data-status="' + item.status + '" onclick="toggleCardStatus(this)">';
+            html += item.status === 'open' ? '{{ __('Close') }}' : '{{ __('Open') }}';
+            html += '</button> ';
+            html += '<button type="button" class="btn btn-sm btn-outline-secondary print-card" data-id="' + item.id + '" onclick="printCard(' + item.id + ')">';
+            html += '<i class="ri-printer-line me-1"></i>{{ __('Print') }}';
+            html += '</button>';
+            html += '</td>';
+            html += '</tr>';
+        });
+        
+        document.getElementById('card-items-body').innerHTML = html;
+        
+        // Generate QR codes after the HTML has been added to the DOM
+        setTimeout(function() {
+            items.forEach(function(item) {
+                try {
+                    var qrContainer = document.getElementById('qrcode-container-' + item.id);
+                    if (qrContainer) {
+                        // Clear any previous content
+                        qrContainer.innerHTML = '';
+                        
+                        // Create new QR code
+                        new QRCode(qrContainer, {
+                            text: item.qr_code,
+                            width: 80,
+                            height: 80,
+                            colorDark: "#000000",
+                            colorLight: "#ffffff",
+                            correctLevel: QRCode.CorrectLevel.H
+                        });
+                    } else {
+                        console.error('QR container not found for item ' + item.id);
+                    }
+                } catch (e) {
+                    console.error('Error generating QR code for item ' + item.id, e);
+                }
+            });
+        }, 100); // Small delay to ensure DOM is updated
+    } else {
+        document.getElementById('card-items-body').innerHTML = 
+            '<tr><td colspan="5" class="text-center">{{ __('No card items found') }}</td></tr>';
+    }
+    
+    // Apply filters after loading
+    applyFilters();
+
+    
+    // Add event listeners for toggle buttons
+    var toggleButtons = document.querySelectorAll('.toggle-status');
+    toggleButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+            toggleCardStatus(this);
+        });
+    });
+    
+    // Add event listeners for print buttons
+    var printButtons = document.querySelectorAll('.print-card');
+    printButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+            printCard(this.getAttribute('data-id'));
+        });
+    });
+}
+
+// Toggle card status
+function toggleCardStatus(buttonElement) {
+    var id = buttonElement.getAttribute('data-id');
+    var currentStatus = buttonElement.getAttribute('data-status');
+    var newStatus = currentStatus === 'open' ? 'closed' : 'open';
+    
+    console.log('Toggling status for card item:', id, 'from', currentStatus, 'to', newStatus);
+    
+    // Create form data
+    var formData = new FormData();
+    formData.append('_token', '{{ csrf_token() }}');
+    formData.append('status', newStatus);
+    
+    // Send the request
+    fetch('/ready-card-items/' + id + '/toggle-status', {
+        method: 'POST',
+        body: formData
+    })
+    .then(function(response) {
+        return response.json();
+    })
+    .then(function(data) {
+        console.log('Status update response:', data);
+        
+        if (data.success) {
+            // Update button text and data attributes
+            buttonElement.textContent = newStatus === 'open' ? '{{ __('Close') }}' : '{{ __('Open') }}';
+            buttonElement.setAttribute('data-status', newStatus);
+            
+            // Update row data attribute
+            var row = buttonElement.closest('tr');
+            row.setAttribute('data-status', newStatus);
+            
+            // Update status badge
+            var statusCell = row.cells[3]; // The 4th cell (index 3) contains the status
+            var statusBadge = newStatus === 'open' ? 
+                '<span class="badge bg-success">{{ __('Open') }}</span>' : 
+                '<span class="badge bg-secondary">{{ __('Closed') }}</span>';
+            statusCell.innerHTML = statusBadge;
+            
+            // Show success message
+            if (typeof toastr !== 'undefined') {
+                toastr.success('{{ __('Card status updated successfully') }}');
+            }
+            
+            // Reapply filters
+            applyFilters();
+        } else {
+            console.error('Failed to update status');
+            if (typeof toastr !== 'undefined') {
+                toastr.error('{{ __('Failed to update card status') }}');
+            }
+        }
+    })
+    .catch(function(error) {
+        console.error('Error updating status:', error);
+        if (typeof toastr !== 'undefined') {
+            toastr.error('{{ __('Failed to update card status') }}');
+        }
+    });
+}
+
+// Print a single card
+function printCard(id) {
+    window.open('/ready-card-items/' + id + '/print', '_blank');
+}
+
+// Apply filters to the card items table
+function applyFilters() {
+    var statusFilter = document.getElementById('status-filter').value;
+    var searchTerm = document.getElementById('search-card-items').value.toLowerCase();
+    
+    var rows = document.querySelectorAll('#card-items-body tr');
+    
+    rows.forEach(function(row) {
+        var status = row.getAttribute('data-status');
+        var visible = true;
+        
+        // Apply status filter
+        if (statusFilter !== 'all' && status !== statusFilter) {
+            visible = false;
+        }
+        
+        // Apply search filter
+        if (searchTerm !== '') {
+            var rowText = row.textContent.toLowerCase();
+            if (rowText.indexOf(searchTerm) === -1) {
+                visible = false;
+            }
+        }
+        
+        // Show or hide row
+        row.style.display = visible ? '' : 'none';
+    });
+}
 </script>
 @endsection

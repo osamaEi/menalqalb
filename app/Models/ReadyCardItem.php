@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\ReadyCard;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class ReadyCardItem extends Model
 {
     use HasFactory;
-
+    
     /**
      * The attributes that are mass assignable.
      *
@@ -16,9 +17,12 @@ class ReadyCardItem extends Model
      */
     protected $fillable = [
         'ready_card_id',
-        'card_id',
+        'identity_number',
+        'qr_code',
+        'sequence_number',
+        'status',
     ];
-
+    
     /**
      * Get the ready card that owns the item.
      */
@@ -26,12 +30,36 @@ class ReadyCardItem extends Model
     {
         return $this->belongsTo(ReadyCard::class);
     }
-
+    
     /**
-     * Get the card that is included in this item.
+     * Check if the card is open.
      */
-    public function card()
+    public function isOpen()
     {
-        return $this->belongsTo(Card::class);
+        return $this->status === 'open';
+    }
+    
+    /**
+     * Check if the card is closed.
+     */
+    public function isClosed()
+    {
+        return $this->status === 'closed';
+    }
+    
+    /**
+     * Open the card.
+     */
+    public function open()
+    {
+        $this->update(['status' => 'open']);
+    }
+    
+    /**
+     * Close the card.
+     */
+    public function close()
+    {
+        $this->update(['status' => 'closed']);
     }
 }

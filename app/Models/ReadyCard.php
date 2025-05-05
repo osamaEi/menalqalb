@@ -53,18 +53,7 @@ class ReadyCard extends Model
     /**
      * Get the cards included in this ready card set.
      */
-    public function cards()
-    {
-        return $this->hasManyThrough(
-            Card::class,
-            ReadyCardItem::class,
-            'ready_card_id',
-            'id',
-            'id',
-            'card_id'
-        );
-    }
-
+  
     /**
      * Get the full URL for the received card image.
      */
