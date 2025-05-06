@@ -85,33 +85,7 @@
                                             </td>
                                             <td>{{ $message->created_at->format('Y-m-d H:i') }}</td>
                                             <td>
-                                                <div class="btn-group" role="group">
-                                                    <a href="{{ route('messages.show', $message) }}" class="btn btn-sm btn-info">
-                                                        <i class="fas fa-eye"></i>
-                                                    </a>
-                                                    
-                                                    @if ($message->status === 'pending')
-                                                        <a href="{{ route('messages.edit', $message) }}" class="btn btn-sm btn-primary">
-                                                            <i class="fas fa-edit"></i>
-                                                        </a>
-                                                        
-                                                        @if ($message->manually_sent)
-                                                            <a href="{{ route('messages.send-manual', $message) }}" class="btn btn-sm btn-success" 
-                                                               onclick="return confirm('{{ __('Are you sure you want to send this message now?') }}')">
-                                                                <i class="fas fa-paper-plane"></i>
-                                                            </a>
-                                                        @endif
-                                                        
-                                                        <form action="{{ route('messages.destroy', $message) }}" method="POST" class="d-inline">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="submit" class="btn btn-sm btn-danger" 
-                                                                    onclick="return confirm('{{ __('Are you sure you want to delete this message?') }}')">
-                                                                <i class="fas fa-trash"></i>
-                                                            </button>
-                                                        </form>
-                                                    @endif
-                                                </div>
+                                           
                                             </td>
                                         </tr>
                                     @endforeach

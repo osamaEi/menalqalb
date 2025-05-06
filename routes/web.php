@@ -130,16 +130,22 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/messages/{message}', [MessageController::class, 'destroy'])->name('messages.destroy');
     
     // Additional custom routes
-    Route::post('/messages/get-sub-categories', [MessageController::class, 'getSubCategories'])
-        ->name('messages.get-subcategories');
-    
+
     Route::post('/messages/get-cards', [MessageController::class, 'getCards'])
         ->name('messages.get-cards');
     
     Route::post('/messages/{message}/send-manual', [MessageController::class, 'sendManual'])
         ->name('messages.send-manual');
 });
-
+// Add this to routes/web.php for testing
+Route::get('/test-subcategories', function(Illuminate\Http\Request $request) {
+    $mainCategoryId = $request->input('main_category_id');
+    $subCategories = App\Models\Category::where('parent_id', $mainCategoryId)
+        ->get(['id', 'name_ar', 'name_en']);
+    return response()->json($subCategories);
+});
+Route::get('/subcategories-for-main', [App\Http\Controllers\MessageController::class, 'getSubCategories']);
+Route::get('/cards-for-subcategory', [App\Http\Controllers\MessageController::class, 'getCards']);
 
 Route::get('language/{locale}', function ($locale) {
     if (in_array($locale, ['en', 'ar'])) {

@@ -2,7 +2,6 @@
 
 @section('title', __('Create New Message'))
 
-@section('styles')
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <style>
     .form-section {
@@ -116,7 +115,6 @@
         text-align: center;
     }
 </style>
-@endsection
 
 @section('content')
 <div class="container">
@@ -183,7 +181,7 @@
                     <select class="form-control @error('dedication_type_id') is-invalid @enderror" id="dedication_type_id" name="dedication_type_id" required>
                         <option value="">{{ __('Select Dedication Type') }}</option>
                         @foreach($dedicationTypes as $type)
-                            <option value="{{ $type->id }}" {{ old('dedication_type_id') == $type->id ? 'selected' : '' }}>{{ $type->name }}</option>
+                            <option value="{{ $type->id }}" {{ old('dedication_type_id') == $type->id ? 'selected' : '' }}>{{ __($type->type) }}</option>
                         @endforeach
                     </select>
                     @error('dedication_type_id')
@@ -233,7 +231,7 @@
                 </div>
                 
                 <!-- For sales outlet, show sender fields -->
-                @if(isset($isSalesOutlet) && $isSalesOutlet)
+                {{-- @if(isset($isSalesOutlet) && $isSalesOutlet)
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group mb-3">
@@ -258,7 +256,7 @@
                         </div>
                     </div>
                 </div>
-                @endif
+                @endif --}}
                 
                 <!-- Recipient Info -->
                 <div class="form-group mb-3">
@@ -299,7 +297,7 @@
                 </div>
                 
                 <!-- Schedule -->
-                <div class="form-group mb-3">
+                <div class="form-group mb-3" >
                     <label for="scheduled_at">{{ __('Schedule Sending Time') }}</label>
                     <input type="text" class="form-control @error('scheduled_at') is-invalid @enderror" id="scheduled_at" name="scheduled_at" value="{{ old('scheduled_at') }}" placeholder="{{ __('Select date and time or leave empty to send immediately') }}">
                     @error('scheduled_at')
@@ -330,182 +328,282 @@
         </div>
     </div>
 </div>
-
-<!-- JavaScript for Dynamic Loading -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Initialize flatpickr for datetime picker
-        flatpickr("#scheduled_at", {
-            enableTime: true,
-            dateFormat: "Y-m-d H:i",
-            minDate: "today",
-            time_24hr: true
-        });
+$(document).ready(function() {
+    console.log('Document ready, initializing form...');
+    
+    // Find the elements we need to show/hide
+    var recipientPhoneGroup = $('#recipientPhoneGroup');
+    var scheduledAtGroup = $('label[for="scheduled_at"]').parent();
+    var manuallySentGroup = $('#manually_sent').parent();
+    
+    // Initial state: hide all three fields
+    recipientPhoneGroup.hide();
+    scheduledAtGroup.hide();
+    manuallySentGroup.hide();
+    
+    // Debug: Log the current selected value
+    console.log('Initial lock_type value:', $('#lock_type').val());
+    
+    // Handle change event on lock_type dropdown
+    $('#lock_type').on('change', function() {
+        var selectedValue = $(this).val();
+        console.log('Lock type changed to:', selectedValue);
         
-        // Load subcategories when main category changes
-        document.getElementById('main_category_id').addEventListener('change', function() {
-            const mainCategoryId = this.value;
-            const subCategorySelect = document.getElementById('sub_category_id');
-            
-            // Reset subcategory dropdown
-            subCategorySelect.innerHTML = '<option value="">{{ __('Select Sub Category') }}</option>';
-            
-            // Reset card container
-            document.getElementById('cardsContainer').innerHTML = '<div class="col-12 text-center py-3"><p>{{ __('Please select a sub category first') }}</p></div>';
-            document.getElementById('card_id').value = '';
-            
-            if (!mainCategoryId) {
-                return;
-            }
-            
-            // Show loading indicator
-            subCategorySelect.innerHTML += '<option disabled>{{ __('Loading...') }}</option>';
-            
-            // Fetch subcategories
-            fetch(`{{ route('messages.get-subcategories') }}?main_category_id=${mainCategoryId}`)
-                .then(response => response.json())
-                .then(data => {
-                    // Remove loading indicator
-                    subCategorySelect.innerHTML = '<option value="">{{ __('Select Sub Category') }}</option>';
-                    
-                    if (data.length === 0) {
-                        subCategorySelect.innerHTML += '<option disabled>{{ __('No subcategories found') }}</option>';
-                        return;
-                    }
-                    
-                    // Add subcategories to dropdown
-                    data.forEach(category => {
-                        const locale = '{{ app()->getLocale() }}';
-                        const name = locale === 'ar' ? category.name_ar : category.name_en;
-                        
-                        const option = document.createElement('option');
-                        option.value = category.id;
-                        option.textContent = name;
-                        subCategorySelect.appendChild(option);
-                    });
-                })
-                .catch(error => {
-                    console.error('Error loading subcategories:', error);
-                    subCategorySelect.innerHTML = '<option value="">{{ __('Error loading subcategories') }}</option>';
-                });
-        });
+        // Hide fields if "no_lock" is selected, show them for any other value
+        if (selectedValue === 'no_lock') {
+            console.log('Hiding fields for "no_lock"');
+            recipientPhoneGroup.hide();
+            scheduledAtGroup.hide();
+            manuallySentGroup.hide();
+            $('#recipient_phone').removeAttr('required');
+        } else {
+            console.log('Showing fields for lock type:', selectedValue);
+            recipientPhoneGroup.show();
+            scheduledAtGroup.show();
+            manuallySentGroup.show();
+            $('#recipient_phone').attr('required', 'required');
+        }
+    });
+    
+    // Check initial value on page load
+    var initialValue = $('#lock_type').val();
+    if (initialValue !== 'no_lock') {
+        console.log('Initial value is lock type, showing fields');
+        recipientPhoneGroup.show();
+        scheduledAtGroup.show();
+        manuallySentGroup.show();
+        $('#recipient_phone').attr('required', 'required');
+    }
+    
+    // Form validation
+    $('#messageForm').on('submit', function(event) {
+        var lockType = $('#lock_type').val();
+        var recipientPhone = $('#recipient_phone').val();
         
-        // Load cards when subcategory changes
-        document.getElementById('sub_category_id').addEventListener('change', function() {
-            const subCategoryId = this.value;
-            const cardsContainer = document.getElementById('cardsContainer');
-            
-            // Reset card selection
-            document.getElementById('card_id').value = '';
-            
-            if (!subCategoryId) {
-                cardsContainer.innerHTML = '<div class="col-12 text-center py-3"><p>{{ __('Please select a sub category first') }}</p></div>';
-                return;
-            }
-            
-            // Show loading indicator
-            cardsContainer.innerHTML = `
-                <div class="col-12 text-center py-3">
-                    <div class="spinner-border text-primary" role="status">
-                        <span class="visually-hidden">{{ __('Loading...') }}</span>
-                    </div>
-                    <p class="mt-2">{{ __('Loading cards...') }}</p>
-                </div>
-            `;
-            
-            // Fetch cards
-            fetch(`{{ route('messages.get-cards') }}?sub_category_id=${subCategoryId}`)
-                .then(response => response.json())
-                .then(data => {
-                    cardsContainer.innerHTML = '';
-                    
-                    if (data.length === 0) {
-                        cardsContainer.innerHTML = `
-                            <div class="col-12 text-center py-3">
-                                <p>{{ __('No cards found for this category.') }}</p>
-                            </div>
-                        `;
-                        return;
-                    }
-                    
-                    // Add cards to container
-                    data.forEach(card => {
-                        const locale = '{{ app()->getLocale() }}';
-                        const title = locale === 'ar' ? card.title_ar : card.title_en;
-                        
-                        const cardElement = document.createElement('div');
-                        cardElement.className = 'col-md-4 col-sm-6 mb-3';
-                        cardElement.innerHTML = `
-                            <div class="card-preview" data-card-id="${card.id}">
-                                <img src="${card.image_url}" alt="${title}" class="card-img">
-                                <div class="card-title">${title}</div>
-                            </div>
-                        `;
-                        cardsContainer.appendChild(cardElement);
-                    });
-                    
-                    // Add click event to card previews
-                    document.querySelectorAll('.card-preview').forEach(card => {
-                        card.addEventListener('click', function() {
-                            // Remove selected class from all cards
-                            document.querySelectorAll('.card-preview').forEach(c => {
-                                c.classList.remove('selected');
-                            });
-                            
-                            // Add selected class to clicked card
-                            this.classList.add('selected');
-                            document.getElementById('card_id').value = this.getAttribute('data-card-id');
-                        });
-                    });
-                })
-                .catch(error => {
-                    console.error('Error loading cards:', error);
-                    cardsContainer.innerHTML = '<div class="col-12 text-center py-3"><p>{{ __('Error loading cards') }}</p></div>';
-                });
-        });
+        if (lockType !== 'no_lock' && !recipientPhone) {
+            event.preventDefault();
+            alert('Recipient phone is required for locked cards.');
+            return false;
+        }
+    });
+    
+    console.log('Form initialization complete');
+});
+</script>
+<script>
+$(document).ready(function() {
+    console.log('jQuery document ready');
+    
+    // Initialize flatpickr for datetime picker
+    flatpickr("#scheduled_at", {
+        enableTime: true,
+        dateFormat: "Y-m-d H:i",
+        minDate: "today",
+        time_24hr: true
+    });
+    
+    // Main Category Change Event - UPDATED WITH DIFFERENT URL APPROACH
+    $('#main_category_id').on('change', function() {
+        console.log('Main category changed to:', $(this).val());
+        var mainCategoryId = $(this).val();
+        var subCategorySelect = $('#sub_category_id');
         
-        // Toggle recipient phone field based on lock type
-        document.getElementById('lock_type').addEventListener('change', function() {
-            const lockType = this.value;
-            const recipientPhoneGroup = document.getElementById('recipientPhoneGroup');
-            
-            if (lockType === 'no_lock') {
-                recipientPhoneGroup.style.display = 'none';
-                document.getElementById('recipient_phone').removeAttribute('required');
-            } else {
-                recipientPhoneGroup.style.display = 'block';
-                document.getElementById('recipient_phone').setAttribute('required', 'required');
-            }
-        });
+        // Reset subcategory dropdown
+        subCategorySelect.html('<option value="">Select Sub Category</option>');
         
-        // Initialize lock type toggle on page load
-        const lockType = document.getElementById('lock_type').value;
-        if (lockType !== 'no_lock') {
-            document.getElementById('recipientPhoneGroup').style.display = 'block';
-            document.getElementById('recipient_phone').setAttribute('required', 'required');
+        // Reset card container
+        $('#cardsContainer').html('<div class="col-12 text-center py-3"><p>Please select a sub category first</p></div>');
+        $('#card_id').val('');
+        
+        if (!mainCategoryId) {
+            return;
         }
         
-        // Form submission validation
-        document.getElementById('messageForm').addEventListener('submit', function(event) {
-            // Check if a card is selected
-            const cardId = document.getElementById('card_id').value;
-            if (!cardId) {
-                event.preventDefault();
-                alert('{{ __('Please select a card.') }}');
-                return false;
-            }
-            
-            // Check if recipient phone is provided for locked cards
-            const lockType = document.getElementById('lock_type').value;
-            const recipientPhone = document.getElementById('recipient_phone').value;
-            
-            if (lockType !== 'no_lock' && !recipientPhone) {
-                event.preventDefault();
-                alert('{{ __('Recipient phone is required for locked cards.') }}');
-                return false;
+        // Show loading indicator
+        subCategorySelect.html('<option value="">Loading...</option>');
+        
+        // Get CSRF token
+        var token = $('meta[name="csrf-token"]').attr('content');
+        
+        // MODIFY THIS URL - Try a different approach using a specific query parameter
+        // This avoids the route model binding issue
+        $.ajax({
+            url: '/subcategories-for-main', // Different URL to avoid conflict with resource routing
+            type: 'GET',
+            data: {
+                main_category_id: mainCategoryId,
+                _token: token
+            },
+            dataType: 'json',
+            success: function(data) {
+                console.log('Subcategories received:', data);
+                
+                // Reset dropdown first
+                subCategorySelect.html('<option value="">Select Sub Category</option>');
+                
+                if (!data || data.length === 0) {
+                    subCategorySelect.append('<option disabled>No subcategories found</option>');
+                    return;
+                }
+                
+                // Add subcategories to dropdown
+                $.each(data, function(index, category) {
+                    // Support both locale formats
+                    var locale = $('html').attr('lang') || 'en';
+                    var name = locale === 'ar' ? category.name_ar : category.name_en;
+                    
+                    subCategorySelect.append('<option value="' + category.id + '">' + name + '</option>');
+                });
+            },
+            error: function(xhr, status, error) {
+                console.error('AJAX Error:', error);
+                console.error('Status:', status);
+                console.error('Response:', xhr.responseText);
+                
+                // Try direct AJAX call as a second attempt
+                directAjaxCall(mainCategoryId, subCategorySelect);
             }
         });
     });
+    
+    // Fallback function for direct AJAX call
+    function directAjaxCall(mainCategoryId, subCategorySelect) {
+        // Try a different approach with a direct controller call
+        $.getJSON('/custom-subcategories?main_id=' + mainCategoryId, function(data) {
+            console.log('Fallback: Subcategories received:', data);
+            
+            // Reset dropdown first
+            subCategorySelect.html('<option value="">Select Sub Category</option>');
+            
+            if (!data || data.length === 0) {
+                subCategorySelect.append('<option disabled>No subcategories found</option>');
+                return;
+            }
+            
+            // Add subcategories to dropdown
+            $.each(data, function(index, category) {
+                var locale = $('html').attr('lang') || 'en';
+                var name = locale === 'ar' ? category.name_ar : category.name_en;
+                
+                subCategorySelect.append('<option value="' + category.id + '">' + name + '</option>');
+            });
+        }).fail(function(jqxhr, textStatus, error) {
+            console.error('Fallback call failed:', error);
+            subCategorySelect.html('<option value="">Error loading subcategories</option>');
+            alert('Error loading subcategories. Please try again later or contact support.');
+        });
+    }
+    
+    // Sub Category Change Event - ALSO UPDATED
+    $('#sub_category_id').on('change', function() {
+        var subCategoryId = $(this).val();
+        var cardsContainer = $('#cardsContainer');
+        
+        // Reset card selection
+        $('#card_id').val('');
+        
+        if (!subCategoryId) {
+            cardsContainer.html('<div class="col-12 text-center py-3"><p>Please select a sub category first</p></div>');
+            return;
+        }
+        
+        // Show loading indicator
+        cardsContainer.html(`
+            <div class="col-12 text-center py-3">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="mt-2">Loading cards...</p>
+            </div>
+        `);
+        
+        // Get CSRF token
+        var token = $('meta[name="csrf-token"]').attr('content');
+        
+        // Use different URL for cards too
+        $.ajax({
+            url: '/cards-for-subcategory', // Different URL to avoid conflict with resource routing
+            type: 'GET',
+            data: {
+                sub_category_id: subCategoryId,
+                _token: token
+            },
+            dataType: 'json',
+            success: function(data) {
+                console.log('Cards received:', data);
+                cardsContainer.html('');
+                
+                if (!data || data.length === 0) {
+                    cardsContainer.html(`
+                        <div class="col-12 text-center py-3">
+                            <p>No cards found for this category.</p>
+                        </div>
+                    `);
+                    return;
+                }
+                
+                // Add cards to container
+                $.each(data, function(index, card) {
+                    var locale = $('html').attr('lang') || 'en';
+                    var title =  card.title;
+                    
+                    var cardHtml = `
+                        <div class="col-md-4 col-sm-6 mb-3">
+                            <div class="card-preview" data-card-id="${card.id}">
+                                <img src="${card.file_path}" alt="${title}" class="card-img">
+                                <div class="card-title">${title}</div>
+                            </div>
+                        </div>
+                    `;
+                    cardsContainer.append(cardHtml);
+                });
+                
+                // Add click event to card previews
+                $('.card-preview').on('click', function() {
+                    // Remove selected class from all cards
+                    $('.card-preview').removeClass('selected');
+                    
+                    // Add selected class to clicked card
+                    $(this).addClass('selected');
+                    $('#card_id').val($(this).data('card-id'));
+                });
+            },
+            error: function(xhr, status, error) {
+                console.error('Error loading cards:', error);
+                cardsContainer.html('<div class="col-12 text-center py-3"><p>Error loading cards</p></div>');
+            }
+        });
+    });
+    
+
+    
+    // Form submission validation
+    $('#messageForm').on('submit', function(event) {
+        // Check if a card is selected
+        var cardId = $('#card_id').val();
+        if (!cardId) {
+            event.preventDefault();
+            alert('Please select a card.');
+            return false;
+        }
+        
+        // Check if recipient phone is provided for locked cards
+        var lockType = $('#lock_type').val();
+        var recipientPhone = $('#recipient_phone').val();
+        
+        if (lockType !== 'no_lock' && !recipientPhone) {
+            event.preventDefault();
+            alert('Recipient phone is required for locked cards.');
+            return false;
+        }
+    });
+    
+    // Trigger an immediate console log to verify script is running
+    console.log('Script fully loaded and initialized');
+});
 </script>
 
 <style>

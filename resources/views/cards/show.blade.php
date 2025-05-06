@@ -77,29 +77,7 @@
                             <h5 class="card-title mb-0">{{ __('Usage Statistics') }}</h5>
                         </div>
                         <div class="card-body">
-                            <div class="d-flex justify-content-between mb-3">
-                                <div class="d-flex flex-column">
-                                    <h6 class="mb-0">{{ __('Views') }}</h6>
-                                    <small class="text-muted">{{ __('Total views') }}</small>
-                                </div>
-                                <h4>{{ $card->view_count ?? 0 }}</h4>
-                            </div>
-                            
-                            <div class="d-flex justify-content-between mb-3">
-                                <div class="d-flex flex-column">
-                                    <h6 class="mb-0">{{ __('Downloads') }}</h6>
-                                    <small class="text-muted">{{ __('Total downloads') }}</small>
-                                </div>
-                                <h4>{{ $card->download_count ?? 0 }}</h4>
-                            </div>
-                            
-                            <div class="d-flex justify-content-between mb-3">
-                                <div class="d-flex flex-column">
-                                    <h6 class="mb-0">{{ __('Shares') }}</h6>
-                                    <small class="text-muted">{{ __('Social shares') }}</small>
-                                </div>
-                                <h4>{{ $card->share_count ?? 0 }}</h4>
-                            </div>
+                    
                             
                             <div class="d-flex justify-content-between">
                                 <div class="d-flex flex-column">
@@ -171,14 +149,7 @@
                                     </p>
                                 </div>
                                 
-                                <div class="col-md-6 mb-3">
-                                    <h6 class="fw-semibold">{{ __('File Information') }}</h6>
-                                    <p>
-                                        <small class="d-block text-muted">{{ __('Format') }}: {{ $card->mime_type ?? 'N/A' }}</small>
-                                        <small class="d-block text-muted">{{ __('Size') }}: {{ isset($card->file_size) ? number_format($card->file_size / 1024, 2) . ' KB' : 'N/A' }}</small>
-                                        <small class="d-block text-muted">{{ __('Dimensions') }}: {{ $card->width ? $card->width . 'x' . $card->height : 'N/A' }}</small>
-                                    </p>
-                                </div>
+                            
                                 
                                 <div class="col-12">
                                     <hr>

@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Category;
-use App\Models\DedicationType;
 use App\Models\Card;
 use App\Models\Message;
+use App\Models\CardType;
+use App\Models\Category;
 use Illuminate\Http\Request;
+use App\Models\DedicationType;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
@@ -44,7 +45,7 @@ class MessageController extends Controller
     public function create()
     {
         $mainCategories = Category::whereNull('parent_id')->where('is_active', true)->get();
-        $dedicationTypes = DedicationType::where('is_active', true)->orderBy('order')->get();
+        $dedicationTypes = CardType::all();
         $languages = ['ar' => 'العربية', 'en' => 'English'];
         $lockTypes = [
             'no_lock' => __('No'),
@@ -81,7 +82,7 @@ class MessageController extends Controller
             'recipient_language' => 'required|in:ar,en',
             'main_category_id' => 'required|exists:categories,id',
             'sub_category_id' => 'required|exists:categories,id',
-            'dedication_type_id' => 'required|exists:dedication_types,id',
+            'dedication_type_id' => 'required|exists:card_types,id',
             'card_number' => 'required|string',
             'card_id' => 'required|exists:cards,id',
             'message_content' => 'required|string',
@@ -91,11 +92,7 @@ class MessageController extends Controller
             'manually_sent' => 'boolean',
         ];
         
-        // Add sender validation rules for sales outlet
-        if ($isSalesOutlet) {
-            $rules['sender_name'] = 'required|string|max:255';
-            $rules['sender_phone'] = 'required|string|max:20';
-        }
+      
         
         // Add recipient phone validation for locked cards
         $rules['recipient_phone'] = 'required_if:lock_type,lock_without_heart,lock_with_heart|nullable|string|max:20';
@@ -141,6 +138,8 @@ class MessageController extends Controller
         
         // Set status
         $message->status = $request->has('manually_sent') || $request->scheduled_at ? 'pending' : 'sent';
+        $message->sender_phone = 23423232;
+        $message->sender_name = auth()->user()->name;
         
         $message->save();
         
@@ -149,7 +148,7 @@ class MessageController extends Controller
         //     // Send WhatsApp message
         // }
         
-        return redirect()->route('messages.show', $message)
+        return redirect()->route('messages.index')
             ->with('success', __('Message created successfully'));
     }
 
@@ -228,7 +227,7 @@ class MessageController extends Controller
             'recipient_language' => 'required|in:ar,en',
             'main_category_id' => 'required|exists:categories,id',
             'sub_category_id' => 'required|exists:categories,id',
-            'dedication_type_id' => 'required|exists:dedication_types,id',
+            'dedication_type_id' => 'required',
             'card_number' => 'required|string',
             'card_id' => 'required|exists:cards,id',
             'message_content' => 'required|string',
@@ -327,16 +326,22 @@ class MessageController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function getSubCategories(Request $request)
-    {
-        $mainCategoryId = $request->input('main_category_id');
-        $subCategories = Category::where('parent_id', $mainCategoryId)
-            ->where('is_active', true)
-            ->orderBy('order')
-            ->get(['id', 'name_ar', 'name_en']);
-            
-        return response()->json($subCategories);
-    }
+  // In your MessageController.php
+  public function getSubCategories(Request $request)
+  {
+      $mainCategoryId = $request->input('main_category_id');
+      
+      if (!$mainCategoryId) {
+          return response()->json([], 400);
+      }
+      
+      // Make sure you're using the correct model here
+      $subCategories = \App\Models\Category::where('parent_id', $mainCategoryId)
+          ->orderBy('name_en')
+          ->get(['id', 'name_ar', 'name_en']);
+      
+      return response()->json($subCategories);
+  }
 
     /**
      * Get cards for a sub category.
@@ -347,13 +352,12 @@ class MessageController extends Controller
     public function getCards(Request $request)
     {
         $subCategoryId = $request->input('sub_category_id');
-        $cards = Card::where('category_id', $subCategoryId)
+        $cards = Card::where('sub_category_id', $subCategoryId)
             ->where('is_active', true)
-            ->orderBy('order')
-            ->get(['id', 'title_ar', 'title_en', 'image_path']);
+            ->get(['id', 'title', 'file_path']);
             
         foreach ($cards as $card) {
-            $card->image_url = asset('storage/' . $card->image_path);
+            $card->file_path = asset('storage/' . $card->file_path);
         }
         
         return response()->json($cards);
