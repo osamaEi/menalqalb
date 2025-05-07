@@ -77,8 +77,8 @@
 <div id="rootElement" lang="en">
 
 <body class="">
-    @if(!session('unlocked_' . $message->id))
-    <!-- Code input form for unlocking -->
+    @if($message->lock_type != 'no_lock' && !session('unlocked_' . $message->id))
+    <!-- Code input form for unlocking - only for locked messages -->
     <div class="app">
         <div class="app formheartpage contactPage">
             <div class="header">
@@ -282,6 +282,7 @@
         @endif
 
         // Auto-focus the first input field for code input
+        @if($message->lock_type != 'no_lock' && !session('unlocked_' . $message->id))
         document.addEventListener('DOMContentLoaded', function() {
             const inputs = document.querySelectorAll('input[name="code[]"]');
             
@@ -309,6 +310,7 @@
                 });
             }
         });
+        @endif
     </script>
 </body>
 
