@@ -33,15 +33,17 @@ class Message extends Model
         'manually_sent',
         'status',
         'user_id',
+        'response',
+        'response_at',
         'sales_outlet_id',
     ];
 
     protected $casts = [
         'scheduled_at' => 'datetime',
+        'response_at' => 'datetime',
         'manually_sent' => 'boolean',
     ];
-
-    protected $appends = [
+   protected $appends = [
         'masked_unlock_code',
     ];
 

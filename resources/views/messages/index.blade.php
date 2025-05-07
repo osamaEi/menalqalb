@@ -43,6 +43,7 @@
                                         <th>{{ __('Status') }}</th>
                                         <th>{{ __('Lock Type') }}</th>
                                         <th>{{ __('Password') }}</th>
+                                        <th>{{ __('Response') }}</th>
                                         <th>{{ __('Created') }}</th>
                                         <th>{{ __('Actions') }}</th>
                                     </tr>
@@ -79,28 +80,58 @@
                                                 @if ($message->lock_type === 'no_lock')
                                                     <span class="badge bg-secondary">{{ __('No Lock') }}</span>
                                                 @elseif ($message->lock_type === 'lock_without_heart')
-
                                                     <span class="badge bg-info">{{ __('Locked') }}</span>
                                                 @elseif ($message->lock_type === 'lock_with_heart')
-
                                                     <span class="badge bg-danger">{{ __('Heart') }} {{$message->lock_number}}</span>
                                                 @endif
                                             </td>
 
                                             <td>
                                                 @if ($message->lock_type === 'lock_with_heart' ||  $message->lock_type === 'lock_without_heart')
-
-                                                
-                                                {{ $message->message_lock}}
-                                            
+                                                    {{ $message->message_lock}}
                                                 @endif
+                                            </td>
+
+                                            <td>
+                                                <td>
+                                                    @if ($message->response)
+                                                        <span class="badge bg-success">{{ __('Responded') }}</span>
+                                                        @if($message->response_at)
+                                                            <br><small>{{ is_object($message->response_at) ? $message->response_at->format('Y-m-d H:i') : $message->response_at }}</small>
+                                                        @endif
+                                                        <br>
+                                                        <button type="button" class="btn btn-sm btn-outline-info mt-1" data-bs-toggle="modal" data-bs-target="#responseModal{{ $message->id }}">
+                                                            {{ __('View Response') }}
+                                                        </button>
+                                                        
+                                                        <!-- Response Modal -->
+                                                        <div class="modal fade" id="responseModal{{ $message->id }}" tabindex="-1" aria-labelledby="responseModalLabel{{ $message->id }}" aria-hidden="true">
+                                                            <div class="modal-dialog modal-dialog-centered">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title" id="responseModalLabel{{ $message->id }}">{{ __('Response from') }} {{ $message->recipient_name }}</h5>
+                                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <p>{{ $message->response }}</p>
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('Close') }}</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    @else
+                                                        <span class="badge bg-secondary">{{ __('No Response') }}</span>
+                                                    @endif
+                                                </td>
+
                                             </td>
 
                                             <td>{{ $message->created_at->format('Y-m-d H:i') }}</td>
                                             <td>
-
                                                 <a href="{{ $message->readycardItem ? route('greetings.front.show', $message->readycardItem->unique_identifier) : '#' }}">
-                                                    مشاهدة الكارت
+                                                    {{ __('View Card') }}
                                                 </a>                                           
                                             </td>
                                         </tr>

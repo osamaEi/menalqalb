@@ -217,13 +217,13 @@
                 </li>
                 <li>
                     <img src="{{ asset('message_front/img/red.png')}}" alt="" style="visibility: hidden;" class="img-fluid">
-                    <a href="congrats_step2.html">
+                    <a href=" {{ route('message.respond.form', $message->readyCardItem->unique_identifier) }}">
                         <p for="txtSent" class="!text-[16px] relative bottom-[11px] localized" data-content="الرد على التهنئة"></p>
                     </a>
                 </li>
                 <li>
                     <img src="{{ asset('message_front/img/orange.png')}}" alt="" style="visibility: hidden;" class="img-fluid">
-                    <a href="congrats_step1.html">
+                    <a href="{{ route('message.details', $message->readyCardItem->unique_identifier) }}">
                         <p for="txtRead" class="!text-[16px] relative bottom-[11px] localized" data-content="التهنئة "></p>
                     </a>
                 </li>

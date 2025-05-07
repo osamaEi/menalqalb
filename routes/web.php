@@ -171,3 +171,9 @@ Route::get('/{unique_identifier}', [CardContentController::class, 'showCardConte
     ->name('greetings.front.show');
 
     Route::post('/unlock-message-code/{id}', [CardContentController::class, 'unlockMessageCode'])->name('unlock.message.code');
+
+
+
+Route::get('/message/{uniqueIdentifier}/respond', [CardContentController::class, 'showResponseForm'])->name('message.respond.form');
+Route::post('/message/{uniqueIdentifier}/respond', [CardContentController::class, 'storeResponse'])->name('message.respond.store');
+Route::get('/message/{uniqueIdentifier}/details', [CardContentController::class, 'showMessageDetails'])->name('message.details');

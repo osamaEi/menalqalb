@@ -74,4 +74,88 @@ public function unlockMessageCode(Request $request, $id)
     // If incorrect code
     return back()->with('error', 'الرمز غير صحيح. يرجى المحاولة مرة أخرى.');
 }
+
+
+public function showResponseForm($uniqueIdentifier)
+{
+    // Find the ready card item by unique identifier
+    $cardItem = ReadyCardItem::where('unique_identifier', $uniqueIdentifier)
+        ->first();
+        
+    if (!$cardItem) {
+        abort(404, __('Card not found'));
+    }
+    
+    // Get associated message
+    $message = Message::where('ready_card_item_id', $cardItem->id)->first();
+    
+    if (!$message) {
+        abort(404, __('Message not found'));
+    }
+    
+    // Get card content
+    $card = Card::find($message->card_id);
+    
+    if (!$card) {
+        abort(404, __('Card content not found'));
+    }
+    
+    return view('front.greetings.respond', [
+        'cardItem' => $cardItem,
+        'message' => $message,
+        'card' => $card,
+    ]);
+}
+public function showMessageDetails($uniqueIdentifier)
+{
+    // Find the ready card item by unique identifier
+    $cardItem = ReadyCardItem::where('unique_identifier', $uniqueIdentifier)
+        ->first();
+        
+    if (!$cardItem) {
+        abort(404, __('Card not found'));
+    }
+    
+    // Get associated message
+    $message = Message::where('ready_card_item_id', $cardItem->id)->first();
+    
+    if (!$message) {
+        abort(404, __('Message not found'));
+    }
+    
+    // Get card content
+    $card = Card::find($message->card_id);
+    
+    if (!$card) {
+        abort(404, __('Card content not found'));
+    }
+    
+    return view('front.greetings.message_details', [
+        'cardItem' => $cardItem,
+        'message' => $message,
+        'card' => $card,
+    ]);
+}
+public function storeResponse(Request $request, $uniqueIdentifier)
+{
+    // Validate request
+    $request->validate([
+        'response' => 'required|string|max:1000',
+    ]);
+    
+    // Find the card item
+    $cardItem = ReadyCardItem::where('unique_identifier', $uniqueIdentifier)->firstOrFail();
+    
+    // Get associated message
+    $message = Message::where('ready_card_item_id', $cardItem->id)->firstOrFail();
+    
+    // Save the response
+    $message->response = $request->response;
+    $message->response_at = now();
+    $message->save();
+    
+    // Redirect back with success message
+    return redirect()->route('message.respond.form', $uniqueIdentifier)
+        ->with('success', 'تم إرسال ردك بنجاح');
+}
 }
