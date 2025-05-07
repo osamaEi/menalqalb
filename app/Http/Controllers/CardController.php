@@ -333,11 +333,7 @@ class CardController extends Controller
      */
     public function destroy(Card $card)
     {
-        // Check if card has any ready cards
-        if ($card->readyCards()->count() > 0) {
-            return redirect()->route('cards.index')
-                ->with('error', __('Cannot delete a card that has been used in ready cards.'));
-        }
+    
         
         // Delete file
         if ($card->file_path) {

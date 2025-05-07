@@ -498,239 +498,302 @@
 </div>
 
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 <script>
-    $(function() {
-        // Initialize DataTable
-        var dataTable = $('.datatables-cards').DataTable({
-            ordering: true,
-            paging: false,
-            dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end"f>>t<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
-            language: {
-                search: '',
-                searchPlaceholder: "{{ __('Search...') }}",
-            }
+
+// Wait for the DOM to be fully loaded
+document.addEventListener('DOMContentLoaded', function() {
+    // Get references to the form elements
+    const mainCategorySelect = document.getElementById('main_category_id');
+    const subCategorySelect = document.getElementById('sub_category_id');
+    const cardTypeSelect = document.getElementById('card_type_id');
+    const typeHint = document.querySelector('.type-hint');
+    const fileInput = document.getElementById('file');
+    const fileHint = document.querySelector('.file-hint');
+    const previewContainer = document.getElementById('preview-container');
+    const costPriceInput = document.getElementById('cost_price');
+    const sellingPriceInput = document.getElementById('selling_price');
+    const profitMarginSpan = document.getElementById('profit-margin');
+
+    // Add event listener for main category changes
+    if (mainCategorySelect) {
+        mainCategorySelect.addEventListener('change', function() {
+            loadSubCategories(this.value);
         });
         
-        // Filter by Type
-        $('#card-type-filter').on('change', function() {
-            var type = $(this).val();
-            if (type) {
-                window.location.href = "{{ route('cards.filter.type', '') }}/" + type;
-            } else {
-                window.location.href = "{{ route('cards.index') }}";
-            }
-        });
-        
-        // Filter by Language
-        $('#language-filter').on('change', function() {
-            var language = $(this).val();
-            if (language) {
-                window.location.href = "{{ route('cards.filter.language', '') }}/" + language;
-            } else {
-                window.location.href = "{{ route('cards.index') }}";
-            }
-        });
-        
-        // Filter by Category
-        $('#category-filter').on('change', function() {
-            var category = $(this).val();
-            if (category) {
-                window.location.href = "{{ route('cards.filter.main-category', '') }}/" + category;
-            } else {
-                window.location.href = "{{ route('cards.index') }}";
-            }
-        });
-        
-        // Filter by Designer
-        $('#designer-filter').on('change', function() {
-            var designer = $(this).val();
-            if (designer) {
-                window.location.href = "{{ route('cards.filter.designer', '') }}/" + designer;
-            } else {
-                window.location.href = "{{ route('cards.index') }}";
-            }
-        });
-        
-        // Filter by Status
-        $('#status-filter').on('change', function() {
-            var status = $(this).val();
-            if (status) {
-                window.location.href = "{{ route('cards.filter.status', '') }}/" + status;
-            } else {
-                window.location.href = "{{ route('cards.index') }}";
-            }
-        });
-        
-        // Search functionality
-        $('#search-button').on('click', function() {
-            dataTable.search($('#search-input').val()).draw();
-        });
-        
-        $('#search-input').on('keyup', function(e) {
-            if (e.key === 'Enter') {
-                dataTable.search(this.value).draw();
-            }
-        });
-        
-        // Load subcategories when main category changes
-        $('#main_category_id').on('change', function() {
-            var mainCategoryId = $(this).val();
-            if (mainCategoryId) {
-                $.ajax({
-                    url: "{{ route('cards.get-subcategories', '') }}/" + mainCategoryId,
-                    type: "GET",
-                    dataType: "json",
-                    success: function(data) {
-                        $('#sub_category_id').empty();
-                        $('#sub_category_id').append('<option value="">{{ __("Select Subcategory") }}</option>');
-                        
-                        $.each(data, function(key, value) {
-                            $('#sub_category_id').append('<option value="' + value.id + '">' + value.name_ar + '</option>');
-                        });
-                    }
-                });
-            } else {
-                $('#sub_category_id').empty();
-                $('#sub_category_id').append('<option value="">{{ __("Select Subcategory") }}</option>');
-            }
-        });
-        
-        // Update type hint when card type changes
-        $('#card_type_id').on('change', function() {
-            var selectedOption = $(this).find('option:selected');
-            var type = selectedOption.data('type');
+        // Load subcategories for initial value if one is set
+        if (mainCategorySelect.value) {
+            loadSubCategories(mainCategorySelect.value);
+        }
+    }
+    
+    // Add event listener for card type changes
+    if (cardTypeSelect) {
+        cardTypeSelect.addEventListener('change', function() {
+            const selectedOption = this.options[this.selectedIndex];
+            const cardType = selectedOption.getAttribute('data-type');
             
-            if (type === 'image') {
-                $('.type-hint').text('{{ __("Supported formats: JPG, PNG, GIF, BMP, SVG, WebP") }}');
-                $('.file-hint').text('{{ __("Supported formats: JPG, PNG, GIF, BMP, SVG, WebP") }}');
-            } else if (type === 'video') {
-                $('.type-hint').text('{{ __("Supported formats: MP4, MOV, AVI, WebM") }}');
-                $('.file-hint').text('{{ __("Supported formats: MP4, MOV, AVI, WebM") }}');
-            } else if (type === 'animated_image') {
-                $('.type-hint').text('{{ __("Supported formats: GIF, Animated WebP") }}');
-                $('.file-hint').text('{{ __("Supported formats: GIF, Animated WebP") }}');
-            } else {
-                $('.type-hint').text('');
-                $('.file-hint').text('{{ __("Supported formats depend on the card type.") }}');
-            }
-        });
-        
-        // Calculate profit margin
-        function calculateProfitMargin() {
-            var costPrice = parseFloat($('#cost_price').val()) || 0;
-            var sellingPrice = parseFloat($('#selling_price').val()) || 0;
-            
-            if (costPrice === 0) {
-                $('#profit-margin').text('100%');
-                return;
+            // Update type hint
+            if (typeHint) {
+                updateCardTypeHint(cardType);
             }
             
-            var profitMargin = ((sellingPrice - costPrice) / costPrice) * 100;
-            $('#profit-margin').text(profitMargin.toFixed(2) + '%');
+            // Update file hint
+            if (fileHint) {
+                updateFileHint(cardType);
+            }
+        });
+        
+        // Set initial hint if a card type is selected
+        if (cardTypeSelect.value) {
+            const selectedOption = cardTypeSelect.options[cardTypeSelect.selectedIndex];
+            const cardType = selectedOption.getAttribute('data-type');
             
-            // Change color based on margin
-            if (profitMargin < 0) {
-                $('#profit-margin').removeClass('text-success').addClass('text-danger');
-            } else {
-                $('#profit-margin').removeClass('text-danger').addClass('text-success');
+            if (typeHint) {
+                updateCardTypeHint(cardType);
+            }
+            
+            if (fileHint) {
+                updateFileHint(cardType);
             }
         }
-        
-        $('#cost_price, #selling_price').on('input', calculateProfitMargin);
-        
-        // Preview uploaded file
-        $('#file').on('change', function(e) {
-            if (e.target.files && e.target.files[0]) {
-                var file = e.target.files[0];
-                var reader = new FileReader();
-                
-                reader.onload = function(e) {
-                    var fileType = file.type.split('/')[0]; // Get the first part of the MIME type
-                    var html = '';
-                    
-                    if (fileType === 'image') {
-                        html = '<img src="' + e.target.result + '" class="img-fluid rounded-3" style="max-height: 200px;">';
-                    } else if (fileType === 'video') {
-                        html = '<video controls class="img-fluid rounded-3" style="max-height: 200px;"><source src="' + e.target.result + '" type="' + file.type + '"></video>';
-                    } else {
-                        html = '<div class="avatar avatar-xl"><span class="avatar-initial rounded-3 bg-label-info"><i class="ri-file-line ri-2x"></i></span></div><p class="mt-2">' + file.name + '</p>';
-                    }
-                    
-                    $('#preview-container').html(html);
-                }
-                
-                reader.readAsDataURL(file);
-            }
+    }
+    
+    // File preview
+    if (fileInput) {
+        fileInput.addEventListener('change', function() {
+            displayFilePreview(this);
         });
+    }
+    
+    // Price calculation for profit margin
+    if (sellingPriceInput && profitMarginSpan) {
+        sellingPriceInput.addEventListener('input', calculateProfitMargin);
         
-        // Create cards by type chart
-        var ctx = document.getElementById('cardsByTypeChart').getContext('2d');
-        var cardsByTypeChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: [
-                    @foreach($cardsByType as $type)
-                        '{{ $type->name }}',
-                    @endforeach
-                ],
-                datasets: [{
-                    label: '{{ __("Number of Cards") }}',
-                    data: [
-                        @foreach($cardsByType as $type)
-                            {{ $type->cards_count }},
-                        @endforeach
-                    ],
-                    backgroundColor: [
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(255, 206, 86, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(255, 159, 64, 0.2)'
-                    ],
-                    borderColor: [
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(153, 102, 255, 1)',
-                        'rgba(255, 159, 64, 1)'
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        precision: 0
-                    }
-                }
-            }
-        });
-        
-        // Show validation errors in offcanvas if any
-        @if($errors->any())
-            var offcanvas = new bootstrap.Offcanvas(document.getElementById('offcanvasAddCard'));
-            offcanvas.show();
-        @endif
-        
-        // Trigger subcategory load if main category is selected
-        if ($('#main_category_id').val()) {
-            $('#main_category_id').trigger('change');
+        // If cost price is available, also listen to it
+        if (costPriceInput) {
+            costPriceInput.addEventListener('input', calculateProfitMargin);
         }
         
-        // Trigger card type hint update
-        if ($('#card_type_id').val()) {
-            $('#card_type_id').trigger('change');
-        }
-        
-        // Initialize profit margin calculation
+        // Initial calculation
         calculateProfitMargin();
-    });
+    }
+    
+    // Function to load subcategories
+    function loadSubCategories(mainCategoryId) {
+        if (!mainCategoryId) {
+            // If no main category is selected, clear and disable subcategory select
+            clearSubCategories();
+            return;
+        }
+        
+        // Fetch subcategories via AJAX
+        fetch(`/subcategories-for-main?main_category_id=${mainCategoryId}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                populateSubCategories(data);
+            })
+            .catch(error => {
+                console.error('Error fetching subcategories:', error);
+                clearSubCategories();
+            });
+    }
+    
+    // Function to clear subcategory select
+    function clearSubCategories() {
+        if (subCategorySelect) {
+            subCategorySelect.innerHTML = '<option value="">Select Subcategory</option>';
+            // Keep the disabled attribute as it's optional
+        }
+    }
+    
+    // Function to populate subcategory select
+    function populateSubCategories(subcategories) {
+        if (!subCategorySelect) return;
+        
+        // Clear existing options first
+        clearSubCategories();
+        
+        // Get the old selected value from a hidden input if available
+        const oldSubCategoryValue = document.querySelector('input[name="old_sub_category_id"]')?.value;
+        
+        // Add new options
+        subcategories.forEach(subcategory => {
+            const option = document.createElement('option');
+            option.value = subcategory.id;
+            
+            // Use the appropriate language name based on the site's locale
+            // This is a simplification - you might want to use the app's current locale
+            option.textContent = subcategory.name_ar || subcategory.name_en;
+            
+            // Select if it matches the old value
+            if (oldSubCategoryValue && subcategory.id == oldSubCategoryValue) {
+                option.selected = true;
+            }
+            
+            subCategorySelect.appendChild(option);
+        });
+    }
+    
+    // Function to update card type hint
+    function updateCardTypeHint(cardType) {
+        if (!typeHint) return;
+        
+        // Set hint based on card type
+        switch(cardType) {
+            case 'Image':
+                typeHint.textContent = 'Static images such as photos or graphics.';
+                break;
+            case 'Video':
+                typeHint.textContent = 'Video content in various formats.';
+                break;
+            case 'Audio':
+                typeHint.textContent = 'Audio files like music or sounds.';
+                break;
+            case 'Text':
+                typeHint.textContent = 'Text-based content or documents.';
+                break;
+            default:
+                typeHint.textContent = '';
+        }
+    }
+    
+    // Function to update file hint
+    function updateFileHint(cardType) {
+        if (!fileHint) return;
+        
+        // Set hint based on card type
+        switch(cardType) {
+            case 'Image':
+                fileHint.textContent = 'Supported formats: JPG, PNG, GIF (Max: 5MB)';
+                break;
+            case 'Video':
+                fileHint.textContent = 'Supported formats: MP4, MOV, AVI (Max: 50MB)';
+                break;
+            case 'Audio':
+                fileHint.textContent = 'Supported formats: MP3, WAV, OGG (Max: 10MB)';
+                break;
+            case 'Text':
+                fileHint.textContent = 'Supported formats: PDF, DOCX, TXT (Max: 10MB)';
+                break;
+            default:
+                fileHint.textContent = 'Supported formats depend on the card type.';
+        }
+    }
+    
+    // Function to display file preview
+    function displayFilePreview(input) {
+        if (!previewContainer) return;
+        
+        if (input.files && input.files[0]) {
+            const file = input.files[0];
+            const fileType = file.type.split('/')[0]; // Get the main type (image, video, etc.)
+            
+            // Clear previous preview
+            previewContainer.innerHTML = '';
+            
+            if (fileType === 'image') {
+                // Create image preview
+                const img = document.createElement('img');
+                img.className = 'img-fluid rounded-3';
+                img.style.maxHeight = '150px';
+                img.style.objectFit = 'contain';
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+                
+                previewContainer.appendChild(img);
+            } else {
+                // For non-image files, show an icon
+                const avatar = document.createElement('div');
+                avatar.className = 'avatar avatar-xl';
+                
+                const span = document.createElement('span');
+                span.className = 'avatar-initial rounded-3';
+                
+                let icon = '';
+                let bgClass = '';
+                
+                switch(fileType) {
+                    case 'video':
+                        icon = 'ri-video-line';
+                        bgClass = 'bg-label-danger';
+                        break;
+                    case 'audio':
+                        icon = 'ri-music-line';
+                        bgClass = 'bg-label-warning';
+                        break;
+                    case 'application':
+                        if (file.type.includes('pdf')) {
+                            icon = 'ri-file-pdf-line';
+                            bgClass = 'bg-label-danger';
+                        } else {
+                            icon = 'ri-file-text-line';
+                            bgClass = 'bg-label-info';
+                        }
+                        break;
+                    default:
+                        icon = 'ri-file-line';
+                        bgClass = 'bg-label-secondary';
+                }
+                
+                span.className += ' ' + bgClass;
+                
+                const i = document.createElement('i');
+                i.className = icon + ' ri-2x';
+                
+                span.appendChild(i);
+                avatar.appendChild(span);
+                
+                const p = document.createElement('p');
+                p.className = 'mt-2';
+                p.textContent = file.name;
+                
+                previewContainer.appendChild(avatar);
+                previewContainer.appendChild(p);
+            }
+        } else {
+            // No file selected, show default
+            previewContainer.innerHTML = `
+                <div class="avatar avatar-xl">
+                    <span class="avatar-initial rounded-3 bg-label-primary">
+                        <i class="ri-file-upload-line ri-2x"></i>
+                    </span>
+                </div>
+                <p class="mt-2">No file selected</p>
+            `;
+        }
+    }
+    
+    // Function to calculate profit margin
+    function calculateProfitMargin() {
+        if (!profitMarginSpan) return;
+        
+        const costPrice = parseFloat(costPriceInput?.value || 0);
+        const sellingPrice = parseFloat(sellingPriceInput?.value || 0);
+        
+        if (sellingPrice <= 0) {
+            profitMarginSpan.textContent = '0%';
+            return;
+        }
+        
+        if (costPrice <= 0) {
+            profitMarginSpan.textContent = '100%';
+            return;
+        }
+        
+        const margin = ((sellingPrice - costPrice) / sellingPrice) * 100;
+        profitMarginSpan.textContent = margin.toFixed(2) + '%';
+    }
+});
+
 </script>
+
 @endsection
