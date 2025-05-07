@@ -215,25 +215,24 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        // Check if category has subcategories
-        if ($category->subcategories()->count() > 0) {
+        // Check if category has subcategories (children)
+        if ($category->children()->count() > 0) {
             return redirect()->route('categories.index')
                 ->with('error', __('Cannot delete category with subcategories.'));
         }
-        
+       
         // Check if category has products
-        
+       
         // Delete image if exists
         if ($category->image) {
             Storage::disk('public')->delete($category->image);
         }
-        
+       
         $category->delete();
-        
+       
         return redirect()->route('categories.index')
             ->with('success', __('Category deleted successfully.'));
     }
-    
     /**
      * Toggle category active status.
      *

@@ -77,7 +77,7 @@
 <div id="rootElement" lang="en">
 
 <body class="">
-    @if($message->lock_type == 'lock_with_heart')
+    @if($message->lock_type == 'lock_with_heart' || $message->lock_type == 'lock_without_heart' )
     <!-- Lock with heart view -->
     <div class="app">
         <div class="app formheartpage contactPage">
@@ -187,12 +187,12 @@
                                     <!-- Show actual content -->
                                     @if($message->dedication_type_id == 1)
                                         <img class="w-full mx-auto pb-4" src="{{ asset('storage/' . $card->file_path) }}" alt="Greeting card">
-                                    @elseif($message->dedication_type_id == 3)
+                                    @elseif($message->dedication_type_id == 2)
                                         <video class="w-full mx-auto pb-4" controls>
                                             <source src="{{ asset('storage/' . $card->file_path) }}" type="video/mp4">
                                             Your browser does not support the video tag.
                                         </video>
-                                    @elseif($message->dedication_type_id == 2)
+                                    @elseif($message->dedication_type_id == 5)
                                         <img class="w-full mx-auto pb-4" src="{{ asset('storage/' . $card->file_path) }}" alt="Animated greeting card">
                                     @endif
                                 @endif

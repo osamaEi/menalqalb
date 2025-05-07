@@ -252,19 +252,20 @@ class CardController extends Controller
                 },
             ],
             'card_type_id' => 'required|exists:card_types,id',
-            'cost_price' => 'required|numeric|min:0',
             'selling_price' => 'required|numeric|min:0',
+            'file_action' => 'required|in:keep,replace,remove',
             'file' => [
                 'nullable',
+                'required_if:file_action,replace',
                 'file',
                 'max:20480', // 20MB max file size
                 function ($attribute, $value, $fail) use ($request) {
-                    if ($request->has('card_type_id') && $value) {
+                    if ($request->file_action === 'replace' && $value) {
                         $cardType = CardType::find($request->card_type_id);
                         if ($cardType) {
                             $mimeType = $value->getMimeType();
                             $extension = $value->getClientOriginalExtension();
-                            
+                           
                             // Validate based on card type
                             if ($cardType->type === 'image') {
                                 $validMimes = ['image/jpeg', 'image/png', 'image/gif', 'image/bmp', 'image/webp', 'image/svg+xml'];
@@ -288,24 +289,38 @@ class CardController extends Controller
             ],
             'is_active' => 'boolean',
         ]);
-        
+       
         // Set default values
-        $validated['is_active'] = $request->boolean('is_active', true);
+        $validated['is_active'] = $request->boolean('is_active', false);
         
-        // Handle file upload
-        if ($request->hasFile('file')) {
-            // Delete old file
+        // Remove fields that shouldn't be in the update array
+        unset($validated['file_action']);
+        if (isset($validated['file'])) {
+            unset($validated['file']);
+        }
+       
+        // Handle file actions
+        if ($request->file_action === 'replace' && $request->hasFile('file')) {
+            // Delete old file if it exists
             if ($card->file_path) {
                 Storage::disk('public')->delete($card->file_path);
             }
-            
+           
             $file = $request->file('file');
             $filePath = $file->store('cards', 'public');
+            
+            // Update file path only
             $validated['file_path'] = $filePath;
+        } elseif ($request->file_action === 'remove' && $card->file_path) {
+            // Remove the file
+            Storage::disk('public')->delete($card->file_path);
+            
+            // Clear file path
+            $validated['file_path'] = null;
         }
-        
+       
         $card->update($validated);
-        
+       
         return redirect()->route('cards.index')
             ->with('success', __('Card updated successfully.'));
     }
