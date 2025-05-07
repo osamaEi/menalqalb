@@ -746,10 +746,9 @@
                    placeholder="{{ __('Enter 4-digit identity number') }}" 
                    maxlength="4" pattern="[0-9]{4}" required>
             <button class="btn btn-outline-primary" type="button" id="verifyCardBtn">
-                <i class="fas fa-check"></i> {{ __('Verify') }}
+                <i class="fas fa-check"></i> {{ __('Verify card') }}
             </button>
         </div>
-        <small class="form-text text-muted">{{ __('Enter the 4-digit identity number from your purchased card pack') }}</small>
         <div id="cardNumberFeedback" class="mt-2" style="display: none;"></div>
         @error('card_number')
             <span class="invalid-feedback" role="alert">
@@ -760,29 +759,7 @@
 </div>
 
 <!-- Card Number Verification Status -->
-<div class="col-md-6">
-    <div class="form-group mb-3">
-        <label class="form-label">{{ __('Card Status') }}</label>
-        <div class="card bg-light">
-            <div class="card-body p-3">
-                <div id="cardStatusLoading" style="display: none;">
-                    <div class="d-flex align-items-center">
-                        <div class="spinner-border spinner-border-sm text-primary me-2" role="status">
-                            <span class="visually-hidden">{{ __('Loading...') }}</span>
-                        </div>
-                        <span>{{ __('Verifying card...') }}</span>
-                    </div>
-                </div>
-                <div id="cardStatusContent">
-                    <div class="d-flex align-items-center text-muted">
-                        <i class="fas fa-info-circle me-2"></i>
-                        <span>{{ __('Enter a card number and click verify') }}</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+
 
 
                             </div>
