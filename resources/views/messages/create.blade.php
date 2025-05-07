@@ -837,7 +837,7 @@
                                 <div class="card-type-tab" data-type="2">
                                     <i class="fas fa-video"></i> {{ __('Videos') }}
                                 </div>
-                                <div class="card-type-tab" data-type="3">
+                                <div class="card-type-tab" data-type="5">
                                     <i class="fas fa-film"></i> {{ __('Animated') }}
                                 </div>
                             </div>
