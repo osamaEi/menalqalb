@@ -178,7 +178,7 @@ class ReadyCardController extends Controller
                     'identity_number' => str_pad(mt_rand(1, 9999), 4, '0', STR_PAD_LEFT), // Keep the identity number as is
                     'qr_code' => $qrCodeContent,
                     'unique_identifier' => $uniqueLetters,
-                    'status' => 'closed' // Default status
+                    'status' => 'open' // Default status
                 ]);
             }
            
