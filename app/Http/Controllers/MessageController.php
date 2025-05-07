@@ -49,9 +49,9 @@ class MessageController extends Controller
         $dedicationTypes = CardType::all();
         $languages = ['ar' => 'العربية', 'en' => 'English'];
         $lockTypes = [
-            'no_lock' => __('No'),
-            'lock_without_heart' => __('Yes without heart lock'),
-            'lock_with_heart' => __('Yes with heart lock')
+            'no_lock' => 'لا',
+            'lock_without_heart' =>'نعم بدون قفل قلب',
+            'lock_with_heart' => 'نعم مع قفل قلب'
         ];
         
         $user = Auth::user();
