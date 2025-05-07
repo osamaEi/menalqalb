@@ -123,7 +123,6 @@
     @else
         <div class="app white messagebox">
             <div class="header">
-                <a href="mailbox.html" class="icondoor"><i class="fas fa-arrow-alt-circle-left"></i></a>
                 <a href="index.html"><img src="{{ asset('message_front/img/black.png')}}" alt="" class="img-fluid logo"></a>
                 <img src="{{ asset('message_front/img/curve.png')}}" alt="" class="img-fluid curve">
                 <img src="{{ asset('message_front/img/curve2.png')}}" alt="" class="img-fluid curveRight">
@@ -203,6 +202,8 @@
                 </div>
             </div>
 
+            @if(!isset($message->scheduled_at))
+
             <ul class="Image_define">
                 <li>
                     <img src="{{ asset('message_front/img/green.png')}}" alt="" style="visibility: hidden;" class="img-fluid">
@@ -223,6 +224,8 @@
                     </a>
                 </li>
             </ul>
+
+@endif
         </div>
     @endif
 
