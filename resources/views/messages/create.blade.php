@@ -1411,7 +1411,7 @@ $(document).ready(function() {
                 $.each(data, function(index, category) {
                     // Support both locale formats
                     var locale = $('html').attr('lang') || 'en';
-                    var name = locale === 'ar' ? category.name_ar : category.name_en;
+                    var name = category.name_ar;
                     
                     subCategorySelect.append('<option value="' + category.id + '">' + name + '</option>');
                 });
