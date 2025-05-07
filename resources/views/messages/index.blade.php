@@ -43,6 +43,7 @@
                                         <th>{{ __('Status') }}</th>
                                         <th>{{ __('Lock Type') }}</th>
                                         <th>{{ __('Password') }}</th>
+                                        <th> </th>
                                         <th>{{ __('Response') }}</th>
                                         <th>{{ __('Created') }}</th>
                                         <th>{{ __('Actions') }}</th>
