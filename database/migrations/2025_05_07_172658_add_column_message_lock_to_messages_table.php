@@ -12,9 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('messages', function (Blueprint $table) {
-            
-            $table->integer('ready_card_item_id')->nullable();
-
+            $table->string('message_lock', 4)->nullable(); 
+            $table->string('lock_number', 3)->nullable();
         });
     }
 

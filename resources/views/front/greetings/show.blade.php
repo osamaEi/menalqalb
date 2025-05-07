@@ -77,8 +77,8 @@
 <div id="rootElement" lang="en">
 
 <body class="">
-    @if($message->lock_type == 'lock_with_heart' || $message->lock_type == 'lock_without_heart' )
-    <!-- Lock with heart view -->
+    @if(!session('unlocked_' . $message->id))
+    <!-- Code input form for unlocking -->
     <div class="app">
         <div class="app formheartpage contactPage">
             <div class="header">
@@ -90,10 +90,10 @@
             <div class="row justify-content-center">
                 <div class="col-12 col-lg-4">
                     <div class="All_Button lang contact">
-                        <h3 for="txtSetting" class="localized" data-content="ادخل رقم رمز القفل المرسل لك بالواتساب"></h3>
-                        <div class="col-12 col-lg-4 ">
+                        <h3 for="txtSetting" class="localized" data-content="ادخل رمز الإطلاع على التهنئة المكون من 4 أرقام"></h3>
+                        <div class="col-12 col-lg-4">
                             <div class="All_Button lang sign Login">
-                                <form action="" method="POST">
+                                <form action="{{ route('unlock.message.code', $message->id) }}" method="POST">
                                     @csrf
                                     <div class="form-group">
                                         <img src="{{ asset('message_front/img/input.png') }}" alt="" class="img-fluid">
@@ -111,6 +111,11 @@
                                         <img src="{{ asset('message_front/img/input.png') }}" alt="" class="img-fluid">
                                         <input type="text" name="code[]" placeholder="🖤" maxlength="1" required>
                                     </div>
+                                    @if(session('error'))
+                                        <div class="alert alert-danger mt-2">
+                                            {{ session('error') }}
+                                        </div>
+                                    @endif
                                     <button type="submit" class="border-0 flex items-center justify-center mx-auto text-[18px] !mt-0 w-100 z-[999999] !bg-black text-white p-2 rounded-[15px] hover:bg-white hover:text-black">تنفيذ</button>
                                 </form>
                             </div>
@@ -134,8 +139,8 @@
                     <div class="All_Button lang Devices w-[100%] h-[100%]">
                         <div class="w-[100%] h-[93%]">
                             <div class="rounded-lg w-[100%] h-[100%] px-0 pb-8 w-full">
-                                <!-- Check scheduled time for lock_without_heart type -->
-                                @if($message->lock_type == 'lock_without_heart' && isset($message->scheduled_at) && $message->scheduled_at > now())
+                                <!-- Check scheduled time -->
+                                @if(isset($message->scheduled_at) && $message->scheduled_at > now())
                                     <!-- Show countdown timer -->
                                     <div class="countdown-container">
                                         <div class="countdown-date">
@@ -202,8 +207,7 @@
                 </div>
             </div>
 
-            @if(!isset($message->scheduled_at))
-
+            @if(!isset($message->scheduled_at) || $message->scheduled_at <= now())
             <ul class="Image_define">
                 <li>
                     <img src="{{ asset('message_front/img/green.png')}}" alt="" style="visibility: hidden;" class="img-fluid">
@@ -224,15 +228,14 @@
                     </a>
                 </li>
             </ul>
-
-@endif
+            @endif
         </div>
     @endif
 
     <!-- JavaScript for countdown -->
     <script>
-        // Set the target date from the message scheduled_at (for lock_without_heart only)
-        @if($message->lock_type == 'lock_without_heart' && isset($message->scheduled_at) && $message->scheduled_at > now())
+        // Set the target date from the message scheduled_at
+        @if(isset($message->scheduled_at) && $message->scheduled_at > now())
             const targetDate = new Date('{{ $message->scheduled_at->format('Y-m-d\TH:i:s') }}');
 
             // Update countdown every second
@@ -278,21 +281,22 @@
             const interval = setInterval(updateCountdown, 1000);
         @endif
 
-        // Auto-focus the first input field for the lock with heart code
-        @if($message->lock_type == 'lock_with_heart')
-            document.addEventListener('DOMContentLoaded', function() {
-                const inputs = document.querySelectorAll('input[name="code[]"]');
-                
+        // Auto-focus the first input field for code input
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputs = document.querySelectorAll('input[name="code[]"]');
+            
+            if (inputs.length > 0) {
                 // Focus first input
-                if (inputs.length > 0) {
-                    inputs[0].focus();
-                }
+                inputs[0].focus();
                 
                 // Auto-focus next input when typing
                 inputs.forEach((input, index) => {
                     input.addEventListener('input', function() {
                         if (input.value.length === 1 && index < inputs.length - 1) {
                             inputs[index + 1].focus();
+                        } else if (input.value.length === 1 && index === inputs.length - 1) {
+                            // Submit form when last input is filled
+                            input.form.submit();
                         }
                     });
                     
@@ -303,8 +307,8 @@
                         }
                     });
                 });
-            });
-        @endif
+            }
+        });
     </script>
 </body>
 

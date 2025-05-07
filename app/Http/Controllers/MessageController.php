@@ -14,11 +14,7 @@ use Illuminate\Support\Facades\Validator;
 
 class MessageController extends Controller
 {
-    /**
-     * Display a listing of the messages.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
         $user = Auth::user();
@@ -38,11 +34,7 @@ class MessageController extends Controller
         return view('messages.index', compact('messages'));
     }
 
-    /**
-     * Show the form for creating a new message.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function create()
     {
         $mainCategories = Category::whereNull('parent_id')->where('is_active', true)->get();
@@ -67,18 +59,6 @@ class MessageController extends Controller
         ));
     }
 
-    /**
-     * Store a newly created message in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-/**
- * Store a newly created message in the database.
- *
- * @param  \Illuminate\Http\Request  $request
- * @return \Illuminate\Http\Response
- */
 public function store(Request $request)
 {
     $user = Auth::user();
@@ -99,7 +79,7 @@ public function store(Request $request)
         'manually_sent' => 'boolean',
     ];
     
-    // Add recipient phone validation for locked cards
+    
     $rules['recipient_phone'] = 'required_if:lock_type,lock_without_heart,lock_with_heart|nullable|string|max:20';
     
     $validator = Validator::make($request->all(), $rules);
@@ -110,11 +90,10 @@ public function store(Request $request)
             ->withInput();
     }
     
-    // Validate card number against ReadyCardItems
+    
     $cardNumber = $request->card_number;
     $userId = $user->id;
     
-    // Get paid ready cards for this user
     $paidReadyCards = \App\Models\ReadyCard::where('customer_id', $userId)
         ->where('is_paid', true)
         ->pluck('id');
@@ -125,7 +104,6 @@ public function store(Request $request)
             ->withInput();
     }
     
-    // Check if card exists and is available
     $cardItem = \App\Models\ReadyCardItem::whereIn('ready_card_id', $paidReadyCards)
         ->where('identity_number', $cardNumber)
         ->first();
@@ -164,10 +142,16 @@ public function store(Request $request)
         $message->user_id = $user->id;
         $message->ready_card_item_id = $cardItem->id; // Store reference to the card item
         
+        // Generate 4-digit message_lock code for opening the message
+        $message->message_lock = sprintf('%04d', mt_rand(1000, 9999));
+        
+        // Generate 3-digit lock_number for either lock type
+        $message->lock_number = sprintf('%03d', mt_rand(100, 999));
+        
         // Handle lock type
         if ($request->lock_type !== 'no_lock') {
             $message->recipient_phone = $request->recipient_phone;
-            $message->unlock_code = $message->generateUnlockCode();
+         
         }
         
         // Set status
@@ -305,108 +289,7 @@ public function store(Request $request)
         ));
     }
 
-    /**
-     * Update the specified message in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Message  $message
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Message $message)
-    {
-        if ($message->status !== 'pending') {
-            return redirect()->route('messages.show', $message)
-                ->with('error', __('Cannot update a message that has already been sent'));
-        }
-        
-        $user = Auth::user();
-        $isSalesOutlet = $user->hasRole('sales_outlet');
-        
-        // Validate request data - same validation as store
-        $rules = [
-            'recipient_language' => 'required|in:ar,en',
-            'main_category_id' => 'required|exists:categories,id',
-            'sub_category_id' => 'required|exists:categories,id',
-            'dedication_type_id' => 'required',
-            'card_number' => 'required|string',
-            'card_id' => 'required|exists:cards,id',
-            'message_content' => 'required|string',
-            'recipient_name' => 'required|string|max:255',
-            'lock_type' => 'required|in:no_lock,lock_without_heart,lock_with_heart',
-            'scheduled_at' => 'nullable|date',
-            'manually_sent' => 'boolean',
-        ];
-        
-        if ($isSalesOutlet) {
-            $rules['sender_name'] = 'required|string|max:255';
-            $rules['sender_phone'] = 'required|string|max:20';
-        }
-        
-        $rules['recipient_phone'] = 'required_if:lock_type,lock_without_heart,lock_with_heart|nullable|string|max:20';
-        
-        $validator = Validator::make($request->all(), $rules);
-        
-        if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput();
-        }
-        
-        // Update the message
-        $message->recipient_language = $request->recipient_language;
-        $message->main_category_id = $request->main_category_id;
-        $message->sub_category_id = $request->sub_category_id;
-        $message->dedication_type_id = $request->dedication_type_id;
-        $message->card_number = $request->card_number;
-        $message->card_id = $request->card_id;
-        $message->message_content = $request->message_content;
-        $message->recipient_name = $request->recipient_name;
-        $message->scheduled_at = $request->scheduled_at;
-        $message->manually_sent = $request->has('manually_sent');
-        
-        // Update sender info for sales outlet
-        if ($isSalesOutlet) {
-            $message->sender_name = $request->sender_name;
-            $message->sender_phone = $request->sender_phone;
-        }
-        
-        // Handle lock type changes
-        if ($message->lock_type !== $request->lock_type) {
-            $message->lock_type = $request->lock_type;
-            
-            if ($request->lock_type === 'no_lock') {
-                $message->recipient_phone = null;
-                $message->unlock_code = null;
-            } else {
-                $message->recipient_phone = $request->recipient_phone;
-                if (!$message->unlock_code) {
-                    $message->unlock_code = $message->generateUnlockCode();
-                }
-            }
-        } elseif ($request->lock_type !== 'no_lock') {
-            $message->recipient_phone = $request->recipient_phone;
-        }
-        
-        // Update status
-        $message->status = $request->has('manually_sent') || $request->scheduled_at ? 'pending' : 'sent';
-        
-        $message->save();
-        
-        // Handle WhatsApp sending logic here if needed
-        // if ($message->status === 'sent') {
-        //     // Send WhatsApp message
-        // }
-        
-        return redirect()->route('messages.show', $message)
-            ->with('success', __('Message updated successfully'));
-    }
 
-    /**
-     * Remove the specified message from storage.
-     *
-     * @param  \App\Models\Message  $message
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Message $message)
     {
         if ($message->status !== 'pending') {

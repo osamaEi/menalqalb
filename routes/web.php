@@ -169,3 +169,5 @@ Route::get('ready-cards/{readyCard}/print-all', [ReadyCardController::class, 'pr
 // This should be at the very bottom of your routes file
 Route::get('/{unique_identifier}', [CardContentController::class, 'showCardContent'])
     ->name('greetings.front.show');
+
+    Route::post('/unlock-message-code/{id}', [CardContentController::class, 'unlockMessageCode'])->name('unlock.message.code');

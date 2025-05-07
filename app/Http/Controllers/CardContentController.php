@@ -54,4 +54,24 @@ class CardContentController extends Controller
             'contentType' => $contentType,
         ]);
     }
+
+
+    // In your routes file
+
+// In your CardContentController
+public function unlockMessageCode(Request $request, $id)
+{
+    $message = Message::findOrFail($id);
+    $submittedCode = implode('', $request->input('code'));
+    
+    // Compare with the message_lock field
+    if ($submittedCode == $message->message_lock) {
+        // Store in session that this message is unlocked
+        session(['unlocked_' . $id => true]);
+        return redirect()->back();
+    }
+    
+    // If incorrect code
+    return back()->with('error', 'الرمز غير صحيح. يرجى المحاولة مرة أخرى.');
+}
 }
