@@ -1525,7 +1525,7 @@ $(document).ready(function() {
                                 </div>
                             </div>
                         `;
-                    } else if (dedicationTypeId == 3) { // Animated image
+                    } else if (dedicationTypeId == 5) { // Animated image
                         cardPreviewHtml = `
                             <div class="col-md-4 col-sm-6 mb-4">
                                 <div class="card-preview animate__animated animate__fadeIn" data-card-id="${card.id}" data-img-src="${card.file_path}">
