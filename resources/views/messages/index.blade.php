@@ -58,9 +58,9 @@
                                             </td>
                                             <td>
                                                 @if ($message->mainCategory)
-                                                    {{ $message->mainCategory->name }}
+                                                    {{ $message->mainCategory->name_ar }}
                                                     @if ($message->subCategory)
-                                                        <br><small>{{ $message->subCategory->name }}</small>
+                                                        <br><small>{{ $message->subCategory->name_ar }}</small>
                                                     @endif
                                                 @endif
                                             </td>

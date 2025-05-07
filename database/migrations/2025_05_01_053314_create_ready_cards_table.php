@@ -17,6 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('customer_id');  // User who ordered the cards
             $table->string('received_card_image')->nullable();
             $table->decimal('cost', 10, 2);
+            $table->boolean('is_paid')->default(0);
             $table->timestamps();
             
             $table->foreign('customer_id')->references('id')->on('users')->onDelete('cascade');

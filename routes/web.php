@@ -146,6 +146,7 @@ Route::get('/test-subcategories', function(Illuminate\Http\Request $request) {
 });
 Route::get('/subcategories-for-main', [App\Http\Controllers\MessageController::class, 'getSubCategories']);
 Route::get('/cards-for-subcategory', [App\Http\Controllers\MessageController::class, 'getCards']);
+Route::post('/verify-card-number', [App\Http\Controllers\MessageController::class, 'verifyCardNumber'])->name('verify-card-number');
 
 Route::get('language/{locale}', function ($locale) {
     if (in_array($locale, ['en', 'ar'])) {
@@ -155,8 +156,12 @@ Route::get('language/{locale}', function ($locale) {
     return redirect()->back()->with('locale_changed', true);
 })->name('language.switch');
 // Add these routes
+
+// Add this to your routes/web.php file
+
 Route::get('ready-cards/{readyCard}/items', [ReadyCardController::class, 'getItems'])->name('ready-cards.items');
 Route::post('ready-card-items/{item}/toggle-status', [ReadyCardItemController::class, 'toggleStatus'])->name('ready-card-items.toggle-status');
 Route::get('ready-card-items/{item}/print', [ReadyCardItemController::class, 'printCard'])->name('ready-card-items.print');
 Route::get('ready-cards/{readyCard}/print-all', [ReadyCardController::class, 'printAllCards'])->name('ready-cards.print-all');
 });
+

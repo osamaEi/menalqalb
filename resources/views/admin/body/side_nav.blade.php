@@ -105,19 +105,19 @@
     <li class="menu-item {{ Request::is('messages*') ? 'active open' : '' }}" style="margin-bottom: 8px;">
       <a href="javascript:void(0);" class="menu-link menu-toggle">
         <i class="menu-icon tf-icons ri-gallery-line"></i>
-        <div>{{ __('Messages') }}</div>
+        <div>{{ __('Greetings') }}</div>
       </a>
       <ul class="menu-sub">
 
 
         <li class="menu-item {{ Request::routeIs('messages.index') ? 'active' : '' }}">
           <a href="{{ route('messages.index') }}" class="menu-link">
-            <div>{{ __('all Messages') }}</div>
+            <div>{{ __('all Greetings') }}</div>
           </a>
         </li>
         <li class="menu-item {{ Request::routeIs('messages.create') ? 'active' : '' }}">
           <a href="{{ route('messages.create') }}" class="menu-link">
-            <div>{{ __('Send Message') }}</div>
+            <div>{{ __('Send Greetings') }}</div>
           </a>
         </li>
         
