@@ -288,7 +288,9 @@
                     "Thursday": "الخميس",
                     "Friday": "الجمعة",
                     "Saturday": "السبت",
-                    
+                    "no_lock": "لا",
+  "lock_without_heart": "نعم بدون قفل قلب",
+  "lock_with_heart": "نعم مع قفل قلب",
                     "Sun": "أحد",
                     "Mon": "اثن",
                     "Tue": "ثلا",

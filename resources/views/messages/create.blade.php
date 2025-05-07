@@ -941,7 +941,7 @@
                                         <label for="lock_type" class="form-label">{{ __('Lock Card') }}</label>
                                         <select class="form-select @error('lock_type') is-invalid @enderror" id="lock_type" name="lock_type" required>
                                             @foreach($lockTypes as $value => $label)
-                                                <option value="{{ $value }}" {{ old('lock_type') == $value ? 'selected' : '' }}>{{ $label }}</option>
+                                                <option value="{{ $value }}" {{ old('lock_type') == $value ? 'selected' : '' }}>{{ __($label) }}</option>
                                             @endforeach
                                         </select>
                                         @error('lock_type')
