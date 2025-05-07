@@ -18,6 +18,7 @@ class Message extends Model
         'main_category_id',
         'sub_category_id',
         'dedication_type_id',
+        'ready_card_item_id',
         'card_number',
         'card_id',
         'message_content',
