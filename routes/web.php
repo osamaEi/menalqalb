@@ -9,6 +9,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CardTypeController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ReadyCardController;
+use App\Http\Controllers\CardContentController;
 use App\Http\Controllers\ReadyCardItemController;
 use App\Http\Controllers\Admin\DashboardController;
 
@@ -165,3 +166,6 @@ Route::get('ready-card-items/{item}/print', [ReadyCardItemController::class, 'pr
 Route::get('ready-cards/{readyCard}/print-all', [ReadyCardController::class, 'printAllCards'])->name('ready-cards.print-all');
 });
 
+// This should be at the very bottom of your routes file
+Route::get('/{unique_identifier}', [CardContentController::class, 'showCardContent'])
+    ->name('greetings.front.show');

@@ -85,7 +85,10 @@
                                             </td>
                                             <td>{{ $message->created_at->format('Y-m-d H:i') }}</td>
                                             <td>
-                                           
+
+                                                <a href="{{ $message->readycardItem ? route('greetings.front.show', $message->readycardItem->unique_identifier) : '#' }}">
+                                                    مشاهدة الكارت
+                                                </a>                                           
                                             </td>
                                         </tr>
                                     @endforeach

@@ -208,11 +208,61 @@ public function store(Request $request)
      * @param  \App\Models\Message  $message
      * @return \Illuminate\Http\Response
      */
-    public function show(Message $message)
+    public function show($identifer)
     {
-        $message->load(['mainCategory', 'subCategory', 'dedicationType', 'card']);
-        return view('messages.show', compact('message'));
-    }
+     // Find the ready card item by unique identifier
+     $cardItem = ReadyCardItem::where('unique_identifier', $uniqueIdentifier)
+     ->first();
+     
+ if (!$cardItem) {
+     abort(404, __('Card not found'));
+ }
+ 
+ // Get associated message
+ $message = Message::where('ready_card_item_id', $cardItem->id)->first();
+ 
+ if (!$message) {
+     abort(404, __('Message not found'));
+ }
+ 
+ // Get card content (image, video, animated image)
+ $card = Card::find($message->card_id);
+ 
+ if (!$card) {
+     abort(404, __('Card content not found'));
+ }
+ 
+ // Determine content type and file path
+ $contentType = null;
+ $filePath = null;
+ 
+ if ($card->image) {
+     $contentType = 'image';
+     $filePath = $card->image;
+ } elseif ($card->video) {
+     $contentType = 'video';
+     $filePath = $card->video;
+ } elseif ($card->animated_image) {
+     $contentType = 'animated_image';
+     $filePath = $card->animated_image;
+ }
+ 
+ // Update card item status to 'viewed' if it's 'open'
+ if ($cardItem->status === 'open') {
+     $cardItem->status = 'viewed';
+     $cardItem->save();
+ }
+ 
+ // Return view with data
+ return view('front.greetings.show', [
+     'cardItem' => $cardItem,
+     'message' => $message,
+     'card' => $card,
+     'contentType' => $contentType,
+     'filePath' => $filePath
+ ]);
+}
+    
 
     /**
      * Show the form for editing the specified message.

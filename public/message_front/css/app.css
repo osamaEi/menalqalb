@@ -1,0 +1,103 @@
+﻿.rainCanvas, .flashDiv {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+}
+
+.flashing {
+
+    -webkit-animation: flashAnim ease-out 1s;
+    -moz-animation: flashAnim ease-out 1s;
+    -o-animation: flashAnim ease-out 1s;
+    animation: flashAnim ease-out 1s;
+}
+
+@keyframes flashAnim {
+    0% {
+        background: transparent;
+    }
+
+    55% {
+        background: rgba(254, 255, 202, 0.27);
+    }
+
+    60% {
+        background: transparent;
+    }
+
+    75% {
+        background: rgba(254, 255, 202, 0.27);
+    }
+
+    80% {
+        background: transparent;
+    }
+
+    95% {
+        background: rgba(254, 255, 202, 0.27);
+    }
+
+    100% {
+        background: transparent;
+    }
+}
+
+@-moz-keyframes flashAnim {
+    0% {
+        background: transparent;
+    }
+
+    55% {
+        background: rgba(254, 255, 202, 0.27);
+    }
+
+    60% {
+        background: transparent;
+    }
+
+    75% {
+        background: rgba(254, 255, 202, 0.27);
+    }
+
+    80% {
+        background: transparent;
+    }
+
+    95% {
+        background: rgba(254, 255, 202, 0.27);
+    }
+
+    100% {
+        background: transparent;
+    }
+}
+
+@-webkit-keyframes flashAnim {
+    0% {
+        background: transparent;
+    }
+
+    55% {
+        background: rgba(254, 255, 202, 0.27);
+    }
+
+    60% {
+        background: transparent;
+    }
+
+    75% {
+        background: rgba(254, 255, 202, 0.27);
+    }
+
+    80% {
+        background: transparent;
+    }
+
+    95% {
+        background: rgba(254, 255, 202, 0.27);
+    }
+
+    100% {
+        background: transparent;
+    }
+}

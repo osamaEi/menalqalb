@@ -139,16 +139,7 @@
                             
                             <!-- Pricing -->
                             <div class="row mb-3">
-                                <div class="col-md-4">
-                                    <div class="form-floating form-floating-outline">
-                                        <input type="number" class="form-control @error('cost_price') is-invalid @enderror" id="cost_price" 
-                                            name="cost_price" value="{{ old('cost_price', $card->cost_price) }}" required step="0.01" min="0">
-                                        <label for="cost_price">{{ __('Cost Price') }}</label>
-                                        @error('cost_price')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
+                                
                                 <div class="col-md-4">
                                     <div class="form-floating form-floating-outline">
                                         <input type="number" class="form-control @error('selling_price') is-invalid @enderror" id="selling_price" 

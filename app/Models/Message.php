@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Card;
 use App\Models\User;
 use App\Models\Category;
+use App\Models\ReadyCardItem;
 use App\Models\DedicationType;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -75,7 +76,10 @@ class Message extends Model
     {
         return $this->belongsTo(Category::class, 'sub_category_id');
     }
-
+    public function readycardItem()
+    {
+        return $this->belongsTo(ReadyCardItem::class, 'ready_card_item_id');
+    }
     /**
      * Get the dedication type of the message.
      */

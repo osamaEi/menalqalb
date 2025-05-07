@@ -579,7 +579,7 @@
             var mainCategoryId = $(this).val();
             if (mainCategoryId) {
                 $.ajax({
-                    url: "{{ url('get-subcategories') }}/" + mainCategoryId,
+                    url: "{{ route('cards.get-subcategories', '') }}/" + mainCategoryId,
                     type: "GET",
                     dataType: "json",
                     success: function(data) {
@@ -587,7 +587,7 @@
                         $('#sub_category_id').append('<option value="">{{ __("Select Subcategory") }}</option>');
                         
                         $.each(data, function(key, value) {
-                            $('#sub_category_id').append('<option value="' + value.id + '">' + value.name_en + '</option>');
+                            $('#sub_category_id').append('<option value="' + value.id + '">' + value.name_ar + '</option>');
                         });
                     }
                 });

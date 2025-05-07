@@ -659,7 +659,6 @@ class CardController extends Controller
     public function getSubcategories($mainCategoryId)
     {
         $subcategories = Category::where('parent_id', $mainCategoryId)
-            ->where('is_active', true)
             ->get(['id', 'name_en', 'name_ar']);
             
         return response()->json($subcategories);
