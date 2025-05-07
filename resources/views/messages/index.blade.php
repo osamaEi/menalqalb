@@ -42,6 +42,7 @@
                                         <th>{{ __('Card Number') }}</th>
                                         <th>{{ __('Status') }}</th>
                                         <th>{{ __('Lock Type') }}</th>
+                                        <th>{{ __('Password') }}</th>
                                         <th>{{ __('Created') }}</th>
                                         <th>{{ __('Actions') }}</th>
                                     </tr>
@@ -78,11 +79,23 @@
                                                 @if ($message->lock_type === 'no_lock')
                                                     <span class="badge bg-secondary">{{ __('No Lock') }}</span>
                                                 @elseif ($message->lock_type === 'lock_without_heart')
+
                                                     <span class="badge bg-info">{{ __('Locked') }}</span>
                                                 @elseif ($message->lock_type === 'lock_with_heart')
-                                                    <span class="badge bg-danger">{{ __('Locked with Heart') }}</span>
+
+                                                    <span class="badge bg-danger">{{ __('Heart') }} {{$message->lock_number}}</span>
                                                 @endif
                                             </td>
+
+                                            <td>
+                                                @if ($message->lock_type === 'lock_with_heart' ||  $message->lock_type === 'lock_without_heart')
+
+                                                
+                                                {{ $message->message_lock}}
+                                            
+                                                @endif
+                                            </td>
+
                                             <td>{{ $message->created_at->format('Y-m-d H:i') }}</td>
                                             <td>
 
