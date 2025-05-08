@@ -174,52 +174,78 @@ class WhatsAppService
      */
     private function makeRequest($data)
     { 
-        $url = $this->baseUrl . $this->projectId; 
-        
-        $headers = [
-            "accept: application/json",
-            "Authorization: Basic " . base64_encode("$this->appId:$this->appSecret"),
-            "Content-Type: application/json"
-        ];
-    
-        // Log the request
-        \Log::info('WhatsApp API Request', [
-            'url' => $url,
-            'data' => $data
-        ]);
-    
-        $ch = curl_init();
-        curl_setopt_array($ch, [
-            CURLOPT_URL => $url,
-            CURLOPT_POST => true,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_HTTPHEADER => $headers,
-            CURLOPT_POSTFIELDS => json_encode($data)
-        ]);
-    
-        $response = curl_exec($ch);
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        
-        // Log the response
-        \Log::info('WhatsApp API Response', [
-            'http_code' => $httpCode,
-            'response' => json_decode($response, true)
-        ]);
-        
-        if (curl_errno($ch)) {
-            $result = [
-                'success' => false,
-                'error' => curl_error($ch)
+        try {
+            $url = $this->baseUrl . $this->projectId; 
+            
+            $headers = [
+                "accept: application/json",
+                "Authorization: Basic " . base64_encode("$this->appId:$this->appSecret"),
+                "Content-Type: application/json"
             ];
-        } else {
-            $result = [
-                'success' => true,
-                'response' => json_decode($response, true)
+        
+       
+        
+            $ch = curl_init();
+            curl_setopt_array($ch, [
+                CURLOPT_URL => $url,
+                CURLOPT_POST => true,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_HTTPHEADER => $headers,
+                CURLOPT_POSTFIELDS => json_encode($data),
+                CURLOPT_TIMEOUT => 15, // Shorter timeout to prevent long waits
+                CURLOPT_CONNECTTIMEOUT => 5
+            ]);
+        
+            $response = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $curlError = curl_error($ch);
+            
+           
+            
+            if (curl_errno($ch)) {
+                $result = [
+                    'success' => false,
+                    'error' => $curlError,
+                    'error_code' => curl_errno($ch)
+                ];
+            } else {
+                $responseData = json_decode($response, true);
+                
+                // Consider HTTP response and response content for success status
+                $success = $httpCode >= 200 && $httpCode < 300;
+                
+                // Check if there's an API error despite HTTP success
+                if ($success && isset($responseData['error'])) {
+                    $success = false;
+                }
+                
+                $result = [
+                    'success' => $success,
+                    'response' => $responseData,
+                    'http_code' => $httpCode
+                ];
+                
+                if (!$success && !isset($result['error']) && isset($responseData['error'])) {
+                    $result['error'] = $responseData['error'];
+                } else if (!$success && !isset($result['error'])) {
+                    $result['error'] = "HTTP Error $httpCode";
+                }
+            }
+        
+            curl_close($ch); 
+            return $result;
+        } catch (\Exception $e) {
+            \Log::error('WhatsApp API Exception', [
+                'error' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine()
+            ]);
+            
+            return [
+                'success' => false,
+                'error' => 'Exception: ' . $e->getMessage()
             ];
         }
-    
-        curl_close($ch); 
-        return $result;
     }
     /**
      * Send a custom WhatsApp template message
