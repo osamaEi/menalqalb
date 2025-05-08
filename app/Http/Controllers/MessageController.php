@@ -202,7 +202,7 @@ $result = $whatsAppService->sendMinalqalnnewqTemplate(
     $imageUrl,
     $message->recipient_name,
     $user->name,
-    $message->message_lock,
+    $message->message_lock
 );
     
 }
