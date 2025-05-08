@@ -8,6 +8,7 @@ use App\Models\CardType;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Models\DedicationType;
+use App\Services\WhatsAppService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -153,8 +154,11 @@ public function store(Request $request)
             $message->recipient_phone = $request->recipient_phone;
          
         }
-        
-        // Set status
+
+
+
+
+
         $message->status = $request->has('manually_sent') || $request->scheduled_at ? 'pending' : 'sent';
         
         $message->save();
@@ -162,13 +166,73 @@ public function store(Request $request)
         // Mark the card as used
         $cardItem->status = 'closed';
         $cardItem->save();
+      
+            // Format recipient phone for WhatsApp
+            $recipientPhone = $message->recipient_phone;
+            
+            // Initialize WhatsApp service
+            $whatsAppService = new WhatsAppService();
+            
+            // Get card image URL
+            $card = Card::find($message->card_id);
+            $imageUrl =  'https://minalqalb.ae/message.png';
+            
+        // Format the scheduled time
+$formattedScheduledTime = '';
+if ($message->scheduled_at) {
+// Add the backslash to indicate it's in the global namespace
+$dateTime = new \DateTime($message->scheduled_at);
+$formattedScheduledTime = $dateTime->format('m/d/Y h:i a');
+}
+
+
+if($message->scheduled_at >now()){
+$result = $whatsAppService->sendMinalqalnnewqTemplateHistory(
+    $recipientPhone,
+    $imageUrl,
+    $message->recipient_name,
+    $user->name,
+    $message->message_lock,
+    $formattedScheduledTime
+);
+}
+else {
+$result = $whatsAppService->sendMinalqalnnewqTemplate(
+    $recipientPhone,
+    $imageUrl,
+    $message->recipient_name,
+    $user->name,
+    $message->message_lock,
+);
+    
+}
+            \Log::channel('daily')->info('WhatsApp Message Details', [
+                'message_id' => $message->id,
+                'recipient_phone' => $recipientPhone,
+                'recipient_name' => $message->recipient_name,
+                'sender_name' => $user->name,
+                'message_lock' => $message->message_lock,
+                'image_url' => $imageUrl
+            ]);
+            
+            \Log::channel('daily')->info('WhatsApp API Response', [
+                'success' => $result['success'] ?? false,
+                'response_data' => $result['response'] ?? null,
+                'error' => $result['error'] ?? null,
+                'whatsapp_message_id' => $result['response']['id'] ?? null,
+                'status' => $result['response']['status'] ?? null,
+                'sent' => $result['response']['sent'] ?? false,
+                'timestamp' => now()->toDateTimeString()
+            ]);
+            
+            // Store WhatsApp response data with message
+            if (isset($result['response']['id'])) {
+                $message->whatsapp_message_id = $result['response']['id'];
+                $message->whatsapp_status = $result['response']['status'] ?? 'unknown';
+                $message->save();
+            }
         
-        // Handle WhatsApp sending logic here if needed
-        // if ($message->status === 'sent') {
-        //     // Send WhatsApp message
-        // }
         
-        // Commit transaction
         DB::commit();
         
         return redirect()->route('messages.index')

@@ -123,7 +123,23 @@
         
       </ul>
     </li>
-   
+    <li class="menu-item {{ Request::is('countries*') ? 'active open' : '' }}" style="margin-bottom: 8px;">
+      <a href="javascript:void(0);" class="menu-link menu-toggle">
+        <i class="menu-icon tf-icons ri-gallery-line"></i>
+        <div>{{ __('Countries') }}</div>
+      </a>
+      <ul class="menu-sub">
+
+
+        <li class="menu-item {{ Request::routeIs('countries.index') ? 'active' : '' }}">
+          <a href="{{ route('countries.index') }}" class="menu-link">
+            <div>{{ __('all Countries') }}</div>
+          </a>
+        </li>
+  
+        
+      </ul>
+    </li>
     
     {{-- <!-- Orders & Sales section -->
     <li class="menu-header" style="margin-top: 30px; margin-bottom: 15px;">

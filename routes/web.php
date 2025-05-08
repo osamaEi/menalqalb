@@ -8,6 +8,7 @@ use App\Http\Controllers\MessageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CardTypeController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\WhatsAppController;
 use App\Http\Controllers\ReadyCardController;
 use App\Http\Controllers\CardContentController;
 use App\Http\Controllers\ReadyCardItemController;
@@ -159,6 +160,7 @@ Route::get('language/{locale}', function ($locale) {
 // Add these routes
 
 // Add this to your routes/web.php file
+Route::resource('countries', \App\Http\Controllers\CountryController::class);
 
 Route::get('ready-cards/{readyCard}/items', [ReadyCardController::class, 'getItems'])->name('ready-cards.items');
 Route::post('ready-card-items/{item}/toggle-status', [ReadyCardItemController::class, 'toggleStatus'])->name('ready-card-items.toggle-status');
@@ -177,3 +179,11 @@ Route::get('/{unique_identifier}', [CardContentController::class, 'showCardConte
 Route::get('/message/{uniqueIdentifier}/respond', [CardContentController::class, 'showResponseForm'])->name('message.respond.form');
 Route::post('/message/{uniqueIdentifier}/respond', [CardContentController::class, 'storeResponse'])->name('message.respond.store');
 Route::get('/message/{uniqueIdentifier}/details', [CardContentController::class, 'showMessageDetails'])->name('message.details');
+
+
+
+Route::prefix('whatsapp')->group(function () {
+    Route::post('/send-templates', [WhatsAppController::class, 'sendTemplates'])->name('whatsapp.send-templates');
+    Route::get('/test-connection', [WhatsAppController::class, 'testConnection'])->name('whatsapp.test-connection');
+});
+
