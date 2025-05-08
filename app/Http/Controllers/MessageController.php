@@ -206,24 +206,7 @@ $result = $whatsAppService->sendMinalqalnnewqTemplate(
 );
     
 }
-            \Log::channel('daily')->info('WhatsApp Message Details', [
-                'message_id' => $message->id,
-                'recipient_phone' => $recipientPhone,
-                'recipient_name' => $message->recipient_name,
-                'sender_name' => $user->name,
-                'message_lock' => $message->message_lock,
-                'image_url' => $imageUrl
-            ]);
-            
-            \Log::channel('daily')->info('WhatsApp API Response', [
-                'success' => $result['success'] ?? false,
-                'response_data' => $result['response'] ?? null,
-                'error' => $result['error'] ?? null,
-                'whatsapp_message_id' => $result['response']['id'] ?? null,
-                'status' => $result['response']['status'] ?? null,
-                'sent' => $result['response']['sent'] ?? false,
-                'timestamp' => now()->toDateTimeString()
-            ]);
+           
             
             // Store WhatsApp response data with message
             if (isset($result['response']['id'])) {
@@ -242,7 +225,6 @@ $result = $whatsAppService->sendMinalqalnnewqTemplate(
         DB::rollBack();
         
         // Log the error
-        \Log::error('Message creation error: ' . $e->getMessage());
         
         return redirect()->back()
             ->withErrors(['error' => __('An error occurred while creating the message. Please try again.')])
