@@ -165,7 +165,52 @@ class WhatsAppService
 
         return $this->makeRequest($data);
     }
+/**
+ * Send OTP code via WhatsApp template
+ * 
+ * @param string $phoneNumber The recipient phone number
+ * @param string $otp The OTP code to send
+ * @return array Response from the API
+ */
+public function sendOtpTemplate($phoneNumber, $otp)
+{
+    $data = [
+        "path" => "message/template",
+        "params" => [
+            "phone" => $phoneNumber,
+            "template" => "pass",
+            "language" => [
+                "policy" => "deterministic",
+                "code" => "ar"
+            ],
+            "namespace" => "d62f7444_aa0b_40b8_8f46_0bb55ef2862e",
+            "params" => [
+                [
+                    "type" => "body",
+                    "parameters" => [
+                        [
+                            "type" => "text",
+                            "text" => (string)$otp
+                        ]
+                    ]
+                ],
+                [
+                    "type" => "button",
+                    "index" => 0,
+                    "sub_type" => "URL",
+                    "parameters" => [
+                        [
+                            "type" => "text",
+                            "text" => (string)$otp
+                        ]
+                    ]
+                ]
+            ]
+        ]
+    ];
 
+    return $this->makeRequest($data);
+}
     /**
      * Make a request to the WhatsApp API
      * 

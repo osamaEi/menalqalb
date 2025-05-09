@@ -1,0 +1,2319 @@
+@import url(components/css/select.css);
+@import url(components/css/select2.min.css);
+@import url(components/css/bootstrap.min.css);
+@import url(components/css/all.min.css);
+@import url(components/css/font-cairo.css);
+@import url(components/css/font.css);
+@import url("https://fonts.googleapis.com/css?family=Cairo&display=swap");
+
+@font-face {
+
+
+
+  font-family: heart;
+  src: url("components/fonts/FoolForLove-KeMy.ttf");
+}
+
+*::-webkit-scrollbar {
+  width: 0px;
+}
+
+*.thin::-webkit-scrollbar {
+  width: 0px;
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 0;
+  background-color: #fff;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 0px;
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb:window-inactive {
+  background: transparent;
+}
+
+body {
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
+  background: url(../img/back2.png);
+}
+
+.app {
+  align-items: center;
+  justify-content: center;
+  display: block;
+  height: 100vh;
+  overflow: hidden;
+  flex-flow: column-reverse;
+}
+
+.app .header,
+.app .footer {
+  height: 15vh;
+  display: block;
+  width: 100%;
+  text-align: center;
+  padding: 9px;
+  margin-bottom: 25px;
+  position: relative;
+  overflow: hidden;
+  border-bottom-right-radius: 25px;
+  border-bottom-left-radius: 25px;
+}
+
+.app .header .iconuser,
+.app .header .icondoor,
+.app .footer .iconuser,
+.app .footer .icondoor {
+  position: absolute;
+  left: 10px;
+  top: 5px;
+  z-index: 99999;
+  font-size: 24px;
+  color: #fff;
+}
+
+.app .header .iconuser,
+.app .footer .iconuser {
+  top: 5px;
+}
+
+.app .header .icondoor,
+.app .footer .icondoor {
+  color: #fff;
+  top: 5px;
+  z-index: 999;
+  left: auto;
+  right: 18px;
+}
+
+.app .header .curve,
+.app .footer .curve {
+  position: fixed;
+  z-index: 99;
+  top: 0;
+  width: 85px;
+  right: 0;
+}
+
+.app .header .curveRight,
+.app .footer .curveRight {
+  position: fixed;
+  left: 0;
+  z-index: 999;
+  width: 85px;
+  top: 0;
+  right: auto;
+}
+
+.app .header .top,
+.app .footer .top {
+  position: absolute;
+  right: 0;
+  left: 0;
+  width: 100%;
+  top: 0em;
+}
+
+.app .footer {
+  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0;
+}
+
+.app .footer .message {
+  width: 70%;
+}
+
+.app .header {
+  height: 30vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.app img.bk {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.app .logo {
+  height: auto;
+  margin: 0 auto;
+  position: relative;
+  z-index: 9899;
+  width: 80%;
+  display: block;
+  margin: 0 auto;
+}
+
+.app .text {
+  position: relative;
+  width: auto;
+  height: 50%;
+  text-align: center;
+}
+
+.app .row {
+  width: 100%;
+  margin: 0;
+  z-index: 9999;
+  position: relative;
+}
+
+.app .All_Button {
+  display: inline-flex;
+  width: 100%;
+  flex-flow: wrap;
+  height: 60vh;
+}
+
+.app .All_Button a {
+  font-family: heart;
+  width: 45%;
+  margin: 10px auto;
+  padding: 20px 3px;
+  border: 3px solid #fff;
+  background: #c61f25;
+  color: #fff;
+  border-radius: 9px;
+  position: relative;
+  outline: none;
+  outline: none;
+  text-align: center;
+  text-decoration: none;
+  font-weight: 900;
+  border: 2px solid red;
+  height: 70px;
+  background: transparent;
+  color: #060606;
+  font-weight: 900;
+}
+
+.app .All_Button a p {
+  transform: rotate(0deg);
+  margin-bottom: 0;
+  font-size: 16px;
+}
+
+.app .All_Button a:last-child, .app .All_Button a:first-child {
+  background: transparent;
+  color: #060606;
+  font-weight: 900;
+}
+
+.app .All_Button a .fa-heart.bottom {
+  position: absolute;
+  left: -0;
+  bottom: -0;
+  transform: rotate(45deg);
+}
+
+.app .All_Button a .fa-heart.top {
+  top: -1px;
+  right: 0px;
+  transform: rotate(225deg);
+  position: absolute;
+}
+
+.app .All_Button .form-group {
+  width: 100%;
+  position: relative;
+  margin-top: 10px;
+}
+
+.app .All_Button .form-group .right,
+.app .All_Button .form-group .left {
+  position: absolute;
+  right: -11px;
+  top: 0%;
+  z-index: 9;
+  font-size: 44px;
+  transform: rotate(90deg);
+  color: #fff;
+  z-index: 0;
+}
+
+.app .All_Button .form-group .left {
+  right: auto;
+  left: -11px;
+  transform: rotate(-90deg) !important;
+}
+
+.app .All_Button .form-group input {
+  background: #fffdfd;
+  border: 2px solid #fff;
+  padding: 8px 30px;
+  width: 90%;
+  margin: 0 auto;
+  display: block;
+  border-radius: 20px;
+  outline: none;
+  text-align: center;
+}
+
+.app .lang {
+  padding-top: 50px;
+  height: 65vh !important;
+}
+
+.app .lang button {
+  position: relative;
+  z-index: 99;
+  background: #fff;
+  width: 120px;
+  padding: 6px;
+  margin: 10px;
+  border: 0;
+  margin-top: 50px;
+  outline: none;
+  border-radius: 20px;
+}
+
+.app .lang button i {
+  position: absolute;
+  top: -24px;
+  font-size: 51px;
+  left: -5px;
+  right: 0;
+  z-index: -6;
+  color: #fff;
+}
+
+.app .lang h3 {
+  font-family: heart;
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: 2.5px;
+  position: relative;
+  font-size: 17px;
+}
+
+.app .lang h3 hr {
+  border: 2px solid #fff;
+  width: 20%;
+}
+
+.app .lang h3 i {
+  position: absolute;
+  top: 45%;
+  width: 28px;
+  right: 31%;
+  background: #fff;
+  font-size: 14px;
+  height: 22px;
+  color: red;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+}
+
+.app .lang textarea {
+  width: 85%;
+  display: block;
+  margin: 0 auto;
+  resize: none;
+  height: 100px;
+  border: 0;
+  text-align: center;
+  padding: 16px;
+  border-radius: 10px;
+}
+
+.app .lang .textarea {
+  margin-top: 0 !important;
+}
+
+.app .lang .textarea i {
+  top: 27% !important;
+}
+
+.app .fromheart .textarea {
+  margin-top: -140px !important;
+  margin-bottom: -70px;
+}
+
+.app .fromheart .first {
+  margin-left: 0;
+  margin-top: 50px;
+  margin-top: -170px;
+}
+
+.app .fromheart .sceconed {
+  margin-right: 0;
+  margin-top: 40px;
+  margin-top: -170px;
+}
+
+.app .fromheart h3 {
+  display: block;
+  width: 100%;
+  text-align: center;
+  margin-bottom: 20px;
+  line-height: 2;
+}
+
+.app .fromheart h3 hr {
+  border: 2px solid #fff;
+  width: 5%;
+}
+
+.app .fromheart h3 i {
+  right: 46%;
+  top: 63%;
+}
+
+.app .fromheart a {
+  font-family: heart;
+  width: 20%;
+  transform: rotate(55deg);
+  margin-top: -60px;
+}
+
+.app .fromheart a p {
+  transform: rotate(-55deg);
+  font-size: 14px;
+}
+
+.app .contact a {
+  width: 40%;
+  padding: 15px 8px;
+}
+
+.app .contact .divSelect .select2.select2-container .select2-selection {
+  border: 2px solid #c61f25;
+  border-radius: 20px;
+  height: 45px;
+  transition: all 0.15s ease-in-out;
+}
+
+.app .contact .select2.select2-container .select2-selection .select2-selection__arrow {
+  background: transparent;
+  border-left: 0;
+  height: 44px;
+  width: 44px;
+}
+
+.app .contact .form-group.divSelect {
+  width: 90%;
+  display: block;
+  margin: 0 auto;
+}
+
+.app .contact .select2.select2-container .select2-selection .select2-selection__rendered {
+  line-height: 44px;
+  text-align: center;
+}
+
+.app .sign {
+  overflow: hidden;
+  overflow-y: auto;
+  padding-top: 0;
+}
+
+.app .sign .form-group {
+  width: 90%;
+}
+
+.app .sign .form-group.divSelect {
+  width: 80% !important;
+  display: block;
+}
+
+.app .sign .form-group.divSelect .select2.select2-container .select2-selection .select2-selection__arrow {
+  background: transparent;
+  border-left: 0;
+  height: 46px;
+  width: 50px;
+}
+
+.app .sign .form-group.divSelect .select2.select2-container .select2-selection {
+  border: 0;
+  -moz-border-radius: 20px;
+  border-radius: 20px;
+  height: 45px;
+  transition: all 0.15s ease-in-out;
+}
+
+.app .sign .form-group.divSelect .left {
+  left: -25px;
+}
+
+.app .sign .form-group.divSelect .right {
+  right: -25px;
+}
+
+.app .sign .form-group.divSelect .select2.select2-container .select2-selection .select2-selection__rendered {
+  color: #525252;
+  line-height: 2.9;
+  padding-right: 0;
+  text-align: center;
+}
+
+.app .sign .form-group.divSelect .select2-container .select2-dropdown .select2-results ul {
+  background: #fff;
+  border: 1px solid #c61f25 !important;
+}
+
+.app .sign .form-group.divSelect .select2-container .select2-dropdown .select2-results ul .select2-results__option--highlighted[aria-selected] {
+  background-color: #c61f25 !important;
+}
+
+.app .sign .btn {
+  margin-top: 0;
+  position: relative;
+  z-index: 99;
+  background: #fff;
+  width: auto;
+  padding: 6px;
+  margin: 10px;
+  border: 0;
+  outline: none;
+  border-radius: 20px;
+  padding: 8px 20px;
+}
+
+.app .sign .btn p {
+  margin-bottom: 0;
+  color: #757575;
+  font-size: 15px;
+  font-weight: 100;
+  font-family: monospace;
+  transform: rotate(0);
+}
+
+.app .sign .btn i {
+  position: absolute;
+  top: -24px;
+  font-size: 51px;
+  left: -5px;
+  right: 0;
+  z-index: -6;
+  color: #fff;
+  transform: rotate(0) !important;
+}
+
+.app.white .All_Button {
+  height: 70vh !important;
+  display: block;
+  text-align: center;
+  overflow: auto;
+  padding-top: 0;
+}
+
+.app.white .All_Button h3 {
+  font-weight: 900;
+  color: #dc0017;
+}
+
+.app.white .All_Button h3 hr {
+  border: 2px solid #dc0017;
+  width: 5%;
+}
+
+.app.white .All_Button ul.allMessage {
+  padding: 0;
+  line-height: 3;
+  text-align: left;
+  list-style: none;
+  padding-bottom: 80px;
+}
+
+.app.white .All_Button ul.allMessage p.dateMessage {
+  text-align: center;
+  margin-bottom: 0;
+  font-weight: 600;
+  margin-left: 0px;
+  background: #f1f1f1;
+  border: 1px solid #cccccc63;
+  padding-left: 7px;
+  color: #c61f25;
+}
+
+.app.white .All_Button ul.allMessage li {
+  border: 1px solid #f3f1f1;
+  margin: 5px 0;
+  padding: 10px 5px;
+  font-family: heart;
+  display: block;
+  height: 75px;
+  word-spacing: -3px;
+  background: #fff;
+  position: relative;
+  overflow: hidden;
+}
+
+.app.white .All_Button ul.allMessage li i {
+  width: 20px;
+  display: inline-block;
+  float: right;
+  line-height: 4;
+  color: #eb4d4b;
+}
+
+.app.white .All_Button ul.allMessage li img {
+  width: 55px;
+  /* background: #eb4d4b; */
+  padding: 7px;
+  border-radius: 6px;
+  margin-right: 5px;
+  height: auto;
+  float: left;
+}
+
+.app.white .All_Button ul.allMessage li img.emojy {
+  width: 35px;
+  height: 35px;
+  margin-top: 0;
+  padding: 4px;
+  right: 0;
+  position: absolute;
+  top: 6px;
+}
+
+.app.white .All_Button ul.allMessage li p {
+  white-space: nowrap;
+  width: 78%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: 'Open Sans', Arial, sans-serif;
+  padding-right: 26px;
+  display: inline-block;
+  word-spacing: 0px;
+  font-size: 14px;
+}
+
+.app.white .All_Button ul.allMessage li b.name {
+  font-weight: bolder;
+  position: absolute;
+  right: 0;
+  display: block;
+  bottom: 0;
+  width: 83%;
+  font-family: "Josefin Sans";
+  color: #888;
+  font-size: 13px;
+  font-weight: 100;
+  word-spacing: 1px;
+}
+
+.app.white .All_Button ul.allMessage li b.name .date {
+  position: absolute;
+  right: 10px;
+  color: green;
+}
+
+.app.white .footer,
+.app.white .header {
+  height: 12vh;
+}
+
+.app.white .footer img {
+  height: 80%;
+}
+
+.app.white .Image_define {
+  position: fixed;
+  bottom: 0;
+  z-index: 999999;
+  padding: 10px 5px;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  margin-bottom: 3px;
+}
+
+.app.white .Image_define li {
+  width: 33.3333333333%;
+  display: inline-block;
+  background: #fff;
+  margin: -3px;
+  border: 1px solid #ccc;
+  padding: 2px;
+}
+
+.app.white .Image_define li img {
+  width: 30%;
+  margin: 0 auto;;
+}
+
+.app.white .Image_define li p {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.indexApp {
+  overflow: hidden;
+}
+
+.indexApp .All_Button {
+  display: inline-flex;
+  height: 200px;
+  align-items: center;
+  justify-content: center;
+}
+
+.indexApp .footer {
+  position: absolute;
+  bottom: 30px;
+}
+
+.messagebox .header .logo {
+  height: auto;
+  margin: 0 auto;
+  position: relative;
+  z-index: 9899;
+  width: 60%;
+  display: block;
+  margin: 0 auto;
+  margin-top: 15px;
+}
+
+.messagebox .footer img {
+  height: 100% !important;
+  width: auto !important;
+}
+
+.formheartpage .header {
+  height: 17vh !important;
+}
+
+.formheartpage .header .logo {
+  height: auto;
+  margin: 0 auto;
+  position: relative;
+  z-index: 9899;
+  width: 60%;
+  display: block;
+  margin: 0 auto;
+  margin-top: 15px;
+}
+
+.formheartpage .fromheart {
+  display: block;
+  min-height: 85vh !important;
+}
+
+.formheartpage .fromheart h3 {
+  color: #c81f25;
+}
+
+.formheartpage .fromheart h3 hr {
+  border: 2px solid #c81f25;
+}
+
+.formheartpage .fromheart textarea {
+  height: 160px;
+  text-align: center;
+  padding: 16px;
+  border-radius: 10px;
+  border: 2px solid #c81f25;
+}
+
+.formheartpage .fromheart .textarea {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+.formheartpage .fromheart .divSelect .select2.select2-container .select2-selection {
+  border: 2px solid #c61f25;
+  border-radius: 20px;
+  height: 45px;
+  transition: all 0.15s ease-in-out;
+}
+
+.formheartpage .fromheart .select2.select2-container .select2-selection .select2-selection__arrow {
+  background: transparent;
+  border-left: 0;
+  height: 44px;
+  width: 44px;
+}
+
+.formheartpage .fromheart .form-group.divSelect {
+  width: 85%;
+  display: block;
+  margin: 0 auto;
+}
+
+.formheartpage .fromheart .select2.select2-container .select2-selection .select2-selection__rendered {
+  line-height: 44px;
+  text-align: center;
+}
+
+.formheartpage .fromheart .btnsMessage {
+  width: 85%;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.formheartpage .fromheart .btnsMessage a {
+  font-family: heart;
+  width: 48%;
+  transform: rotate(0);
+  margin: 0 auto;
+  margin-top: 20px;
+  padding: 10px 5px;
+  border-radius: 5px;
+  background-color: #fff;
+  border: 2px solid #c81f25;
+  height: auto;
+  display: inline-block;
+}
+
+.formheartpage .fromheart .btnsMessage a p {
+  transform: rotate(0);
+  display: inline-block;
+}
+
+.formheartpage .footer img {
+  height: 100% !important;
+  width: auto !important;
+}
+
+.All_Button.lang.contact {
+  display: block;
+  height: 85vh !important;
+}
+
+.All_Button.lang.contact .form-group input,
+.All_Button.lang.contact .form-group textarea {
+  border: 2px solid #c81f25;
+}
+
+.All_Button.lang.contact h3 {
+  color: #ca1f25;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.All_Button.lang.contact h3 hr {
+  border: 1px solid #ca1f25;
+  width: 5%;
+}
+
+.All_Button.lang.contact .btnsMessage {
+  width: 85%;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.All_Button.lang.contact .btnsMessage a {
+  font-family: heart;
+  width: 48%;
+  transform: rotate(0);
+  margin: 0 auto;
+  margin-top: 20px;
+  padding: 10px 5px;
+  border-radius: 5px;
+  background-color: #fff;
+  border: 2px solid #c81f25;
+  height: auto;
+  display: inline-block;
+}
+
+.All_Button.lang.contact .btnsMessage a p {
+  transform: rotate(0);
+  display: inline-block;
+}
+
+.contactPage .footer img {
+  height: auto !important;
+  width: 40% !important;
+}
+
+.All_Button.lang.sign {
+  display: block;
+  width: 100%;
+  height: 80vh !important;
+  text-transform: capitalize;
+  overflow: auto;
+}
+
+.All_Button.lang.sign .made {
+  margin-top: 20px;
+}
+
+.All_Button.lang.sign .made p {
+  text-align: center;
+  margin-bottom: 0;
+  color: #ca1f25;
+  text-transform: lowercase;
+}
+
+.All_Button.lang.sign .made h3 {
+  font-weight: 600;
+  color: #555;
+  letter-spacing: 0;
+  font-size: 23px;
+  text-transform: capitalize;
+  line-height: 1.4;
+}
+
+.All_Button.lang.sign .made h3 p {
+  font-size: 17px;
+  color: #ca1f25;
+  text-transform: capitalize;
+  font-family: sans-serif;
+}
+
+.All_Button.lang.sign h3 {
+  color: #ca1f25;
+  text-align: center;
+}
+
+.All_Button.lang.sign h3 hr {
+  border: 1px solid #ca1f25;
+  width: 5%;
+}
+
+.All_Button.lang.sign .form-group {
+  width: 100%;
+  text-transform: capitalize;
+}
+
+.All_Button.lang.sign .form-group input {
+  border: 2px solid #c91f25;
+  text-transform: capitalize;
+}
+
+.All_Button.lang.sign .form-group.divSelect {
+  width: 90% !important;
+  display: block;
+  margin: 0 auto;
+}
+
+.All_Button.lang.sign .form-group.divSelect .select2.select2-container .select2-selection {
+  border: 2px solid #c61f25;
+}
+
+.All_Button.lang.sign .btnsMessage {
+  width: 85%;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.All_Button.lang.sign .btnsMessage a {
+  font-family: heart;
+  width: 48%;
+  transform: rotate(0);
+  margin: 0 auto;
+  margin-top: 20px;
+  padding: 10px 5px;
+  border-radius: 5px;
+  background-color: #fff;
+  border: 2px solid #c81f25;
+  height: auto;
+  display: inline-block;
+}
+
+.All_Button.lang.sign .btnsMessage a p {
+  transform: rotate(0);
+  display: inline-block;
+}
+
+.select2-container--open .select2-dropdown {
+  z-index: 999999999999999;
+}
+
+.select2-container .select2-dropdown .select2-results ul .select2-results__option--highlighted[aria-selected] {
+  background-color: #c91f25 !Important;
+}
+
+.profile .All_Button.lang.contact h3 {
+  color: #ca1f25;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.profile ul {
+  list-style: none;
+  line-height: 3;
+  padding: 0 15px;
+}
+
+.profile ul li span {
+  margin-right: 10px;
+  font-weight: 600;
+  color: #3e1010;
+}
+
+.profile ul li P {
+  display: inline-block;
+  color: #c61f25;
+}
+
+.profile ul li i {
+  font-family: "Font Awesome 5 Free";
+  color: #ffffff;
+  margin-right: 10px;
+  width: 25px;
+  height: 25px;
+  background: #ce3338;
+  text-align: center;
+  line-height: 1.9;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.modal-open .modal {
+  z-index: 99999999999;
+}
+
+.modal-open .modal input {
+  overflow: visible;
+  background: #fffdfd;
+  padding: 8px 30px;
+  border: 2px solid #c81f25;
+  width: 90%;
+  margin: 0 auto;
+  display: block;
+  border-radius: 20px;
+  outline: none;
+  text-align: center;
+}
+
+.modal-open .modal .divSelect .select2.select2-container .select2-selection {
+  border: 2px solid #c61f25;
+  border-radius: 20px;
+  height: 45px;
+  transition: all 0.15s ease-in-out;
+}
+
+.modal-open .modal .select2.select2-container .select2-selection .select2-selection__arrow {
+  background: transparent;
+  border-left: 0;
+  height: 44px;
+  width: 44px;
+}
+
+.modal-open .modal .form-group.divSelect {
+  width: 90%;
+  display: block;
+  margin: 0 auto;
+}
+
+.modal-open .modal .select2.select2-container .select2-selection .select2-selection__rendered {
+  line-height: 44px;
+  text-align: center;
+}
+
+.modal-open .modal button.btn.btn-primary {
+  border: 0;
+  border-radius: 0;
+  padding: 8px;
+  outline: none;
+  background: #c61f25;
+  box-shadow: none;
+}
+
+.modal-open .modal .btn-secondary {
+  border: 0;
+  border-radius: 0;
+  padding: 8px;
+  outline: none;
+  box-shadow: none;
+  background: #000;
+}
+
+.modal-open .modal .btn-secondary span.newcharacter {
+  font-weight: 900 !important;
+  margin: 3px !important;
+  -webkit-text-stroke: 1px #f00;
+}
+
+.modal-open .modal .select2-container--open .select2-dropdown {
+  z-index: 999999999999999;
+}
+
+.modal-backdrop {
+  z-index: 9999;
+}
+
+.All_Button.lang.Devices {
+  height: 85vh !important;
+}
+
+.All_Button.lang.Devices .allDevice {
+  padding: 0;
+}
+
+.All_Button.lang.Devices .allDevice li {
+  width: 96%;
+  display: flex;
+  flex-direction: column;
+  border-radius: 15px;
+  background: transparent;
+  border: 1px solid #aaaa;
+  margin: 12px 7px;
+  box-shadow: 0 0 5px #bbb4b4;
+  text-transform: capitalize;
+  padding-bottom: 10px;
+  padding: 0px !important;
+}
+
+.All_Button.lang.Devices .allDevice li p.name {
+  font-weight: 600;
+  color: #333;
+}
+
+.All_Button.lang.Devices .allDevice li img {
+  /* margin-top: -52px; */
+  border-top-right-radius: 15px;
+  border-bottom-right-radius: 15px;
+  width: 97%;
+  height: 243px;
+  margin-left: auto;
+  /* margin-right: auto; */
+}
+
+.All_Button.lang.Devices .allDevice li a.btn.btn-primary {
+  height: auto;
+  padding: 5px;
+  font-family: monospace;
+  border-radius: 5px;
+  border: 2px solid #c81f25;
+  margin-top: 0;
+  box-shadow: none;
+  background: #c81f25;
+  color: #fff;
+}
+
+.All_Button.lang.Devices .allDevice li p {
+  margin-bottom: 5px;
+  text-align: center;
+  color: #555;
+}
+
+.All_Button.lang.Devices .allDevice li p i {
+  color: #c61f25;
+}
+
+ul.allDevice.viewPage p.name {
+  font-weight: 600;
+  color: #333;
+  font-size: 25px;
+}
+
+
+ul.allDevice.viewPage li img {
+  width: 40% !important;
+}
+
+ul.allDevice.viewPage li:nth-child(2),
+ul.allDevice.viewPage li:nth-child(3) {
+  background: #fff !important;
+  color: #c61f25;
+  position: relative;
+  position: relative;
+  height: 157px;
+  overflow: hidden;
+}
+
+ul.allDevice.viewPage li:nth-child(2) i,
+ul.allDevice.viewPage li:nth-child(3) i {
+  font-size: 46px;
+  margin-top: 10px;
+}
+
+ul.allDevice.viewPage li:nth-child(2) h3,
+ul.allDevice.viewPage li:nth-child(3) h3 {
+  color: #292929;
+  line-height: 3;
+  font-family: monospace;
+  letter-spacing: 0px;
+  font-weight: 100;
+}
+
+ul.allDevice.viewPage li:nth-child(2) a,
+ul.allDevice.viewPage li:nth-child(3) a {
+  font-weight: 900;
+  position: absolute;
+  bottom: 0;
+  margin: 0;
+  right: 0;
+  left: 0;
+  width: 100%;
+  border-radius: 0 !important;
+  height: 42px !important;
+  line-height: 2;
+  font-size: 15px;
+  color: #ffffff;
+  border: 1px solid #ddd !important;
+  background: #bf2025;
+}
+
+.All_Button.lang.sign.Login .form-group {
+  width: 22%;
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
+  height: 80px;
+}
+
+.All_Button.lang.sign.Login .form-group input {
+  border: 0;
+  border-radius: 0;
+  position: absolute;
+  top: 26%;
+  left: 0;
+  background: transparent;
+  color: #000;
+  padding: 0;
+  text-align: center;
+  width: 100%;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.All_Button.lang.sign.Login .form-group img {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.All_Button.lang.sign.Login .made {
+  margin-top: 20px;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  left: 0;
+}
+
+.editProfile {
+  background: #fff !important;
+  display: block !important;
+  height: auto !important;
+  border-radius: 0 !important;
+  padding: 15px !important;
+  width: 96% !important;
+}
+
+.editProfile i {
+  font-size: 20px;
+  color: #c61f25;
+  margin-left: 7px;
+}
+
+ul.allMessage.allUsers {
+  padding-bottom: 10px !important;
+}
+
+ul.allMessage.allUsers li {
+  padding: 0 !important;
+  height: auto !important;
+  line-height: 1.5;
+}
+
+ul.allMessage.allUsers li p {
+  margin-bottom: 0;
+  padding: 15px;
+  display: inline-block !important;
+}
+
+ul.allMessage.allUsers span.delete,
+ul.allMessage.allUsers span.pin {
+  position: absolute;
+  background: red;
+  height: 25px;
+  width: 25px;
+  top: 25%;
+  right: 0;
+  overflow: hidden;
+  color: #fff;
+  border-radius: 5px;
+}
+
+ul.allMessage.allUsers span.delete i,
+ul.allMessage.allUsers span.pin i {
+  width: auto !important;
+  display: block !important;
+  float: none !important;
+  line-height: 1.6 !important;
+  color: #fff !important;
+  text-align: center !important;
+}
+
+ul.allMessage.allUsers span.pin {
+  right: 30px;
+  background: green;
+}
+
+div#exampleModalCenter2 {
+  text-align: center;
+}
+
+div#exampleModalCenter2 i {
+  font-size: 60px;
+  display: block;
+  text-align: center;
+  color: #c61f25;
+  margin-bottom: 29px;
+}
+
+div#exampleModalCenter {
+  text-align: center;
+}
+
+div#exampleModalCenter i {
+  font-size: 60px;
+  display: block;
+  text-align: center;
+  color: #080;
+  margin-bottom: 10px;
+}
+
+.red {
+  color: red;
+}
+
+#result {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+input[type="email"] {
+  text-transform: none !important;
+}
+
+span.newcharacter {
+  text-transform: lowercase !important;
+  margin: 1px !important;
+  color: #bc2025 !important;
+  font-family: heart;
+  font-weight: 600;
+}
+
+.btnLang {
+  font-family: cairo;
+}
+
+.header li.icon {
+  z-index: 999999999;
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 25px;
+  color: #fff;
+  width: 50px;
+  list-style: none;
+}
+
+.header li.icon img {
+  width: 29px;
+  display: inline-block;
+}
+
+.languages {
+  background: #f3f3f3;
+  width: 260px;
+  height: 230px;
+  position: fixed;
+  z-index: 99999999;
+  right: -100%;
+  top: -100%;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 0 15px #b7b7b7;
+  transition: all 0.7s ease-in-out;
+}
+
+.languages li {
+  line-height: 3;
+}
+
+.languages li .img-fluid {
+  width: 31px;
+  line-height: 2;
+}
+
+.languages ul {
+  list-style: none;
+}
+
+.languages ul li a {
+  color: #555;
+}
+
+.languages ul li:first-child {
+  position: absolute;
+  transform: rotate(-43deg);
+  top: 40px;
+  left: 6px;
+}
+
+.languages ul li:nth-child(2) {
+  position: absolute;
+  top: 95px;
+  left: 20px;
+  transform: rotate(-45deg);
+}
+
+.languages ul li:nth-child(3) {
+  position: absolute;
+  top: 142px;
+  left: 38px;
+  transform: rotate(-54deg);
+}
+
+.languages ul li:nth-child(4) {
+  position: absolute;
+  top: 140px;
+  left: 148px;
+  transform: rotate(-64deg);
+}
+
+.languages ul li:nth-child(5) {
+  position: absolute;
+  top: 156px;
+  left: 86px;
+  transform: rotate(-64deg);
+}
+
+.languages.active {
+  right: -40px;
+  top: -30px;
+  transition: all 0.7s ease-in-out;
+}
+
+.app.formheartpage.contactPage.setting .icondoor {
+  z-index: 99999;
+  left: 18px;
+  right: auto;
+}
+
+.index li.icon {
+  z-index: 999999999;
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  font-size: 15px;
+  color: #fff;
+  width: 30px;
+  list-style: none;
+  transition: all 0.7s ease-in-out;
+}
+
+.index .languages {
+  background: #f3f3f3;
+  width: 260px;
+  height: 260px;
+  position: fixed;
+  z-index: 99999999;
+  right: -100%;
+  bottom: -100%;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 0 15px #b7b7b7;
+  transition: all 0.7s ease-in-out;
+}
+
+.index .languages ul {
+  position: relative;
+  overflow: hidden;
+  height: 100%;
+}
+
+.index .languages ul li:first-child {
+  position: absolute;
+  transform: rotate(-5deg);
+  top: 10px;
+  left: 60px;
+}
+
+.index .languages ul li:nth-child(2) {
+  position: absolute;
+  top: 55px;
+  left: 29px;
+  transform: rotate(-4deg);
+}
+
+.index .languages ul li:nth-child(3) {
+  position: absolute;
+  top: 105px;
+  left: 16px;
+  transform: rotate(0);
+}
+
+.index .languages ul li:nth-child(4) {
+  position: absolute;
+  top: 145px;
+  left: 35px;
+  transform: rotate(0);
+}
+
+.index .languages ul li:nth-child(5) {
+  position: absolute;
+  top: 185px;
+  left: 65px;
+  transform: rotate(0);
+}
+
+.index .languages.active {
+  right: -40px !important;
+  bottom: -30px !important;
+  transition: all 0.7s ease-in-out !important;
+  top: auto;
+}
+
+.linkSetting {
+  position: fixed;
+  bottom: -20px;
+  left: -20px;
+  right: auto;
+  font-size: 30px;
+  color: #fdfdfd;
+  background: red;
+  width: 80px;
+  height: 80px;
+  text-align: center;
+  border-radius: 50%;
+  line-height: 2.5;
+  z-index: 9999;
+}
+
+.linkSetting .fa-cog {
+  position: absolute;
+  top: 20px;
+  right: 16px;
+  left: auto;
+}
+
+a {
+  text-decoration: none !important;
+}
+
+/*# sourceMappingURL=style.css.map */
+
+
+
+/* Show the default language for all localized elements */
+
+.localized:after {
+  content: attr(data-content);
+}
+
+
+/* __Translations__
+The idea here is that each langugage could be contained in its own file.
+*/
+
+/* ar.css ____________________________________*/
+
+[lang="ar"] [data-content="Enter your PinCode"]:after {
+  content: "أدخل رمز الدخول";
+}
+
+[lang="ar"] [data-content="OK"]:after {
+  content: "تنفيذ";
+}
+
+[lang="ar"] [data-content="Sign"]:after {
+  content: "تسجيل";
+}
+
+[lang="ar"] [data-content="Setting"]:after {
+  content: "الإعدادات";
+}
+
+[lang="ar"] [data-content="Back"]:after {
+  content: "رجوع";
+}
+
+[lang="ar"] [data-content="Message Box"]:after {
+  content: "صناديق الرسائل";
+}
+
+[lang="ar"] [data-content="From Heart"]:after {
+  content: "من القلب";
+}
+
+[lang="ar"] [data-content="New Message Box"]:after {
+  content: "صندوق رسائل جديد";
+}
+
+[lang="ar"] [data-content="Contact US"]:after {
+  content: "تواصل معنا";
+}
+
+[lang="ar"] [data-content="Profile"]:after {
+  content: "الملف الشخصي";
+}
+
+[lang="ar"] [data-content="Name"]:after {
+  content: "الاسم";
+}
+
+[lang="ar"] [data-content="Email"]:after {
+  content: "البريد الإلكتروني";
+}
+
+[lang="ar"] [data-content="Phone"]:after {
+  content: "رقم الهاتف";
+}
+
+[lang="ar"] [data-content="Country"]:after {
+  content: "دولتك";
+}
+
+[lang="ar"] [data-content="My language"]:after {
+  content: "لغة المفضلة";
+}
+
+[lang="ar"] [data-content="Edit"]:after {
+  content: "تعديل";
+}
+
+[lang="ar"] [data-content="Edit Profile"]:after {
+  content: "تعديل الملف الشخصي";
+}
+
+[lang="ar"] [data-content="Close"]:after {
+  content: "إغلاق";
+}
+
+[lang="ar"] [data-content="Save"]:after {
+  content: "حفظ";
+}
+
+[lang="ar"] [data-content="Send"]:after {
+  content: "إرسال";
+}
+
+[lang="ar"] [data-content="New Message FrOm Heart"]:after {
+  content: "رسالة جديدة من القلب";
+}
+
+[lang="ar"] [data-content="User"]:after {
+  content: "مستخدم";
+}
+
+[lang="ar"] [data-content="Message"]:after {
+  content: "رسالة";
+}
+
+[lang="ar"] [data-content="View"]:after {
+  content: "عرض";
+}
+
+[lang="ar"] [data-content="Message Box Details"]:after {
+  content: "تفاصيل صندوق الرسائل";
+}
+
+[lang="ar"] [data-content="Add New Message Receiver"]:after {
+  content: "إضافة مستقبل رسائل جديد";
+}
+
+[lang="ar"] [data-content="Inbox"]:after {
+  content: "صندوق الرسائل الواردة";
+}
+
+[lang="ar"] [data-content="Today"]:after {
+  content: "اليوم";
+}
+
+[lang="ar"] [data-content="Received"]:after {
+  content: "تم استلامها";
+}
+
+[lang="ar"] [data-content="Sent"]:after {
+  content: "أرسلت";
+}
+
+[lang="ar"] [data-content="Read"]:after {
+  content: "قرأت";
+}
+
+[lang="ar"] [data-content="Message Receiver"]:after {
+  content: "متلقي الرسائل";
+}
+
+[lang="ar"] [data-content="Delete Receiver"]:after {
+  content: "حذف متلقي";
+}
+
+[lang="ar"] [data-content="Yes"]:after {
+  content: "نعم";
+}
+
+[lang="ar"] [data-content="Are you Sure ?"]:after {
+  content: "هل أنت متأكد";
+}
+
+[lang="ar"] [data-content="New Pincode"]:after {
+  content: "رمز دخول جديد";
+}
+
+[lang="ar"] [data-content="Send New Pincode"]:after {
+  content: "إرسال رمز دخول جديد";
+}
+
+[lang="ar"] [data-content="New message box"]:after {
+  content: "صندوق رسائل جديد";
+}
+
+[lang="ar"] [data-content="Connect a new box"]:after {
+  content: "ربط صندوق جديد";
+}
+
+[lang="ar"] [data-content="Buy a new message box"]:after {
+  content: "شراء صندوق جديد";
+}
+
+[lang="ar"] [data-content="Contact Us"]:after {
+  content: "تواصل معنا";
+}
+
+[lang="ar"] [data-content="Already have an account"]:after {
+  content: "لدي حساب بالفعل";
+}
+
+
+/* pa.css ____________________________________*/
+[lang="pa"] [data-content="Enter your PinCode"]:after {
+  content: "اپنا پن کوڈ درج کریں";
+}
+
+[lang="pa"] [data-content="OK"]:after {
+  content: "تنفيذ";
+}
+
+[lang="pa"] [data-content="Sign"]:after {
+  content: "تسجيل";
+}
+
+[lang="pa"] [data-content="Setting"]:after {
+  content: "سیٹنگ";
+}
+
+[lang="pa"] [data-content="Back"]:after {
+  content: "پیچھے";
+}
+
+[lang="pa"] [data-content="Message Box"]:after {
+  content: "پیغام خانہ";
+}
+
+[lang="pa"] [data-content="From Heart"]:after {
+  content: "دل سے";
+}
+
+[lang="pa"] [data-content="New Message Box"]:after {
+  content: "نیا پیغام خانہ";
+}
+
+[lang="pa"] [data-content="Contact US"]:after {
+  content: "ہم سے رابطہ کریں";
+}
+
+[lang="pa"] [data-content="Profile"]:after {
+  content: "پروفائل";
+}
+
+[lang="pa"] [data-content="Name"]:after {
+  content: "نام";
+}
+
+[lang="pa"] [data-content="Email"]:after {
+  content: "ای میل";
+}
+
+[lang="pa"] [data-content="Phone"]:after {
+  content: "فون";
+}
+
+[lang="pa"] [data-content="Country"]:after {
+  content: "ملک";
+}
+
+[lang="pa"] [data-content="My language"]:after {
+  content: "میری زبان";
+}
+
+[lang="pa"] [data-content="Edit"]:after {
+  content: "ترمیم";
+}
+
+[lang="pa"] [data-content="Edit Profile"]:after {
+  content: "پروفائل میں ترمیم کریں";
+}
+
+[lang="pa"] [data-content="Close"]:after {
+  content: "بند کریں";
+}
+
+[lang="pa"] [data-content="Save"]:after {
+  content: "محفوظ کریں";
+}
+
+[lang="pa"] [data-content="Send"]:after {
+  content: "بھیجیں";
+}
+
+[lang="pa"] [data-content="New Message FrOm Heart"]:after {
+  content: "دل سے نیا پیغام";
+}
+
+[lang="pa"] [data-content="User"]:after {
+  content: "صارف";
+}
+
+[lang="pa"] [data-content="Message"]:after {
+  content: "پیغام";
+}
+
+[lang="pa"] [data-content="View"]:after {
+  content: "دیکھیں";
+}
+
+[lang="pa"] [data-content="Message Box Details"]:after {
+  content: "پیغام خانہ کی تفصیلات";
+}
+
+[lang="pa"] [data-content="Add New Message Receiver"]:after {
+  content: "نیا پیغام رسید شامل کریں";
+}
+
+[lang="pa"] [data-content="Inbox"]:after {
+  content: "ان باکس";
+}
+
+[lang="pa"] [data-content="Today"]:after {
+  content: "آج";
+}
+
+[lang="pa"] [data-content="Received"]:after {
+  content: "موصول ہوا";
+}
+
+[lang="pa"] [data-content="Sent"]:after {
+  content: "بھیجا گیا";
+}
+
+[lang="pa"] [data-content="Read"]:after {
+  content: "پڑھیں";
+}
+
+[lang="pa"] [data-content="Message Receiver"]:after {
+  content: "پیغام وصول کرنے والا";
+}
+
+[lang="pa"] [data-content="Delete Receiver"]:after {
+  content: "وصول کنندہ کو حذف کریں";
+}
+
+[lang="pa"] [data-content="Yes"]:after {
+  content: "ہاں";
+}
+
+[lang="pa"] [data-content="Are you Sure ?"]:after {
+  content: "کیا آپ کو یقین ہے؟";
+}
+
+[lang="pa"] [data-content="New Pincode"]:after {
+  content: "نیا پین کوڈ";
+}
+
+[lang="pa"] [data-content="Send New Pincode"]:after {
+  content: "نیا پین کوڈ بھیجیں";
+}
+
+[lang="pa"] [data-content="New message box"]:after {
+  content: "نیا پیغام خانہ";
+}
+
+[lang="pa"] [data-content="Connect a new box"]:after {
+  content: "نیا باکس جوڑیں";
+}
+
+[lang="pa"] [data-content="Buy a new message box"]:after {
+  content: "نیا میسج باکس خریدیں";
+}
+
+[lang="pa"] [data-content="Contact Us"]:after {
+  content: "ہم سے رابطہ کریں";
+}
+
+[lang="pa"] [data-content="Already have an account"]:after {
+  content: "پہلے سے ہی ایک اکاؤنٹ ہے";
+}
+
+/* zh.css _______________________________________*/
+[lang="zh"] [data-content="Enter your PinCode"]:after {
+  content: "输入您的密码";
+}
+
+[lang="zh"] [data-content="OK"]:after {
+  content: "好";
+}
+
+[lang="zh"] [data-content="Sign"]:after {
+  content: "标志";
+}
+
+[lang="zh"] [data-content="Setting"]:after {
+  content: "设置";
+}
+
+[lang="zh"] [data-content="Back"]:after {
+  content: "背部";
+}
+
+[lang="zh"] [data-content="Message Box"]:after {
+  content: "留言框";
+}
+
+[lang="zh"] [data-content="From Heart"]:after {
+  content: "发自内心";
+}
+
+[lang="zh"] [data-content="New Message Box"]:after {
+  content: "新留言框";
+}
+
+[lang="zh"] [data-content="Contact US"]:after {
+  content: "联系我们";
+}
+
+[lang="zh"] [data-content="Profile"]:after {
+  content: "轮廓";
+}
+
+[lang="zh"] [data-content="Name"]:after {
+  content: "名称";
+}
+
+[lang="zh"] [data-content="Email"]:after {
+  content: "电子邮件";
+}
+
+[lang="zh"] [data-content="Phone"]:after {
+  content: "电话";
+}
+
+[lang="zh"] [data-content="Country"]:after {
+  content: "国家";
+}
+
+[lang="zh"] [data-content="My language"]:after {
+  content: "我的语言";
+}
+
+[lang="zh"] [data-content="Edit"]:after {
+  content: "编辑";
+}
+
+[lang="zh"] [data-content="Edit Profile"]:after {
+  content: "编辑个人资料";
+}
+
+[lang="zh"] [data-content="Close"]:after {
+  content: "关";
+}
+
+[lang="zh"] [data-content="Save"]:after {
+  content: "保存";
+}
+
+[lang="zh"] [data-content="Send"]:after {
+  content: "发送";
+}
+
+[lang="zh"] [data-content="New Message FrOm Heart"]:after {
+  content: "发自内心的新讯息";
+}
+
+[lang="zh"] [data-content="User"]:after {
+  content: "用户";
+}
+
+[lang="zh"] [data-content="Message"]:after {
+  content: "信息";
+}
+
+[lang="zh"] [data-content="View"]:after {
+  content: "视图";
+}
+
+[lang="zh"] [data-content="Message Box Details"]:after {
+  content: "消息框详细信息";
+}
+
+[lang="zh"] [data-content="Add New Message Receiver"]:after {
+  content: "添加新的消息接收器";
+}
+
+[lang="zh"] [data-content="Inbox"]:after {
+  content: "收件箱";
+}
+
+[lang="zh"] [data-content="Today"]:after {
+  content: "今天";
+}
+
+[lang="zh"] [data-content="Received"]:after {
+  content: "已收到";
+}
+
+[lang="zh"] [data-content="Sent"]:after {
+  content: "已发送";
+}
+
+[lang="zh"] [data-content="Read"]:after {
+  content: "已读";
+}
+
+[lang="zh"] [data-content="Message Receiver"]:after {
+  content: "讯息接收者";
+}
+
+[lang="zh"] [data-content="Delete Receiver"]:after {
+  content: "删除接收者";
+}
+
+[lang="zh"] [data-content="Yes"]:after {
+  content: "是的";
+}
+
+[lang="zh"] [data-content="Are you Sure ?"]:after {
+  content: "你确定吗";
+}
+
+[lang="zh"] [data-content="New Pincode"]:after {
+  content: "新密码";
+}
+
+[lang="zh"] [data-content="Send New Pincode"]:after {
+  content: "发送新密码";
+}
+
+[lang="zh"] [data-content="New message box"]:after {
+  content: "新留言框";
+}
+
+[lang="zh"] [data-content="Connect a new box"]:after {
+  content: "连接一个新盒子";
+}
+
+[lang="zh"] [data-content="Buy a new message box"]:after {
+  content: "购买新的留言框";
+}
+
+[lang="zh"] [data-content="Contact Us"]:after {
+  content: "联系我们";
+}
+
+[lang="zh"] [data-content="Already have an account"]:after {
+  content: "已经有一个帐号";
+}
+
+/* in.css _______________________________________*/
+[lang="in"] [data-content="Enter your PinCode"]:after {
+  content: "अपना पिनकोड दर्ज करें";
+}
+
+[lang="in"] [data-content="OK"]:after {
+  content: "ठीक";
+}
+
+[lang="in"] [data-content="Sign"]:after {
+  content: "संकेत";
+}
+
+[lang="in"] [data-content="Setting"]:after {
+  content: "स्थापना";
+}
+
+[lang="in"] [data-content="Back"]:after {
+  content: "वापस";
+}
+
+[lang="in"] [data-content="Message Box"]:after {
+  content: "संदेश पात्र";
+}
+
+[lang="in"] [data-content="From Heart"]:after {
+  content: "दिल से";
+}
+
+[lang="in"] [data-content="New Message Box"]:after {
+  content: "नया संदेश बॉक्स";
+}
+
+[lang="in"] [data-content="Contact US"]:after {
+  content: "संपर्क करें";
+}
+
+[lang="in"] [data-content="Profile"]:after {
+  content: "प्रोफ़ाइल";
+}
+
+[lang="in"] [data-content="Name"]:after {
+  content: "नाम";
+}
+
+[lang="in"] [data-content="Email"]:after {
+  content: "ईमेल";
+}
+
+[lang="in"] [data-content="Phone"]:after {
+  content: "फ़ोन";
+}
+
+[lang="in"] [data-content="Country"]:after {
+  content: "देश";
+}
+
+[lang="in"] [data-content="My language"]:after {
+  content: "मेरी भाषा";
+}
+
+[lang="in"] [data-content="Edit"]:after {
+  content: "संपादित करें";
+}
+
+[lang="in"] [data-content="Edit Profile"]:after {
+  content: "प्रोफ़ाइल संपादित करें";
+}
+
+[lang="in"] [data-content="Close"]:after {
+  content: "बंद करे";
+}
+
+[lang="in"] [data-content="Save"]:after {
+  content: "सहेजें";
+}
+
+[lang="in"] [data-content="Send"]:after {
+  content: "संदेश";
+}
+
+[lang="in"] [data-content="New Message FrOm Heart"]:after {
+  content: "नया संदेश फ्रॉम हार्ट";
+}
+
+[lang="in"] [data-content="User"]:after {
+  content: "उपयोगकर्ता";
+}
+
+[lang="in"] [data-content="Message"]:after {
+  content: "संदेश";
+}
+
+[lang="in"] [data-content="View"]:after {
+  content: "राय";
+}
+
+[lang="in"] [data-content="Message Box Details"]:after {
+  content: "संदेश बॉक्स विवरण";
+}
+
+[lang="in"] [data-content="Add New Message Receiver"]:after {
+  content: "नया संदेश प्राप्तकर्ता जोड़ें";
+}
+
+[lang="in"] [data-content="Inbox"]:after {
+  content: "इनबॉक्स";
+}
+
+[lang="in"] [data-content="Today"]:after {
+  content: "आज";
+}
+
+[lang="in"] [data-content="Received"]:after {
+  content: "प्राप्त";
+}
+
+[lang="in"] [data-content="Sent"]:after {
+  content: "भेजा गया";
+}
+
+[lang="in"] [data-content="Read"]:after {
+  content: "पढ़ें";
+}
+
+[lang="in"] [data-content="Message Receiver"]:after {
+  content: "संदेश प्राप्तकर्ता";
+}
+
+[lang="in"] [data-content="Delete Receiver"]:after {
+  content: "रिसीवर को हटा दें";
+}
+
+[lang="in"] [data-content="Yes"]:after {
+  content: "हां";
+}
+
+[lang="in"] [data-content="Are you Sure ?"]:after {
+  content: "क्या आप सुनिश्चित हैं?";
+}
+
+[lang="in"] [data-content="New Pincode"]:after {
+  content: "न्यू पिनकोड";
+}
+
+[lang="in"] [data-content="Send New Pincode"]:after {
+  content: "नया पिनकोड भेजें";
+}
+
+[lang="in"] [data-content="New message box"]:after {
+  content: "नया संदेश बॉक्स";
+}
+
+[lang="in"] [data-content="Connect a new box"]:after {
+  content: "एक नया बॉक्स कनेक्ट करें";
+}
+
+[lang="in"] [data-content="Buy a new message box"]:after {
+  content: "एक नया संदेश बॉक्स खरीदें";
+}
+
+[lang="in"] [data-content="Contact Us"]:after {
+  content: "संपर्क करें";
+}
+
+[lang="in"] [data-content="Already have an account"]:after {
+  content: "क्या आपके पास पहले से एक खाता मौजूद है";
+}
+
+/* End _______________________________________*/
+
+html[lang="ar"] @import url("https://fonts.googleapis.com/css?family=Cairo&display=swap");
+
+body {
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
+  direction: rtl;
+  font-family: "Cairo" !important;
+}
+
+.app .header .iconuser {
+  left: auto;
+  right: 10px;
+}
+
+.app .header .icondoor {
+  left: 10px;
+  right: auto;
+  z-index: 9999;
+}
+
+.select2-results__option[aria-selected],
+.select2-container .select2-dropdown .select2-results ul .select2-results__option--highlighted[aria-selected] {
+  text-align: right;
+}
+
+.app.white .All_Button ul.allMessage li {
+  direction: rtl;
+}
+
+ul.allMessage.allUsers span.delete {
+  left: 5px;
+  right: auto;
+}
+
+ul.allMessage.allUsers span.pin {
+  left: 35px;
+  right: auto;
+}
+
+.app.white .All_Button ul.allMessage li p {
+  float: right;
+  text-align: right;
+  padding-right: 0;
+  padding-left: 11px;
+}
+
+.formheartpage .fromheart {
+  direction: rtl;
+}
+
+.modal-header .close {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+.modal-open .modal .btn-secondary {
+  padding: 7px 16px;
+  background: #000;
+  margin-left: 5px;
+}
+
+.app.white .All_Button ul.allMessage li img {
+  float: right;
+}
+
+.app.white .All_Button ul.allMessage li img.emojy {
+  right: auto;
+  left: 5px;
+}
+
+.app.white .All_Button ul.allMessage li b.name .date {
+  left: 10px;
+  right: auto;
+}
+
+.app.white .All_Button ul.allMessage li b.name {
+  left: 0;
+  right: auto;
+  text-align: right;
+}
+
+.profile ul {
+  text-align: right;
+}
+
+.app.white .All_Button ul.allMessage li p,
+.app.white .All_Button ul.allMessage li b.name,
+.app .All_Button a,
+.All_Button.lang.contact .btnsMessage a,
+.app .lang h3 {
+  letter-spacing: 0;
+  font-family: "Cairo" !important;
+}
+
+.app.white .Image_define li p {
+  font-size: 11px;
+}
+
+.app .All_Button a p {
+  font-size: 14px;
+}
+
+.All_Button.lang.sign .form-group input {
+  direction: ltr;
+}
+
+.ml4 {
+  position: relative;
+  font-weight: 50%;
+  font-size: 150px;
+  color: #fff !important
+}
+
+.ml4 .letters {
+  position: absolute;
+  margin: auto;
+  left: 0;
+  top: 0.8em;
+  right: 0;
+  opacity: 0;
+}
+
+
+
+/*# sourceMappingURL=style-ar.css.map */

@@ -11,6 +11,8 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\WhatsAppController;
 use App\Http\Controllers\ReadyCardController;
 use App\Http\Controllers\CardContentController;
+use App\Http\Controllers\RegisterAppController;
+use App\Http\Controllers\RegisterUserController;
 use App\Http\Controllers\ReadyCardItemController;
 use App\Http\Controllers\Admin\DashboardController;
 
@@ -187,3 +189,23 @@ Route::prefix('whatsapp')->group(function () {
     Route::get('/test-connection', [WhatsAppController::class, 'testConnection'])->name('whatsapp.test-connection');
 });
 
+
+
+// Registration Routes with 'app' prefix and namespace
+Route::prefix('app')->name('app.')->group(function () {
+    // Registration flow
+    Route::get('/register', [RegisterAppController::class, 'showRegistrationForm'])->name('register');
+    Route::post('/register', [RegisterAppController::class, 'submitRegistrationForm']);
+
+    Route::get('/register/phone', [RegisterAppController::class, 'showPhoneForm'])->name('register.phone');
+    Route::post('/register/phone', [RegisterAppController::class, 'submitPhoneForm']);
+
+    Route::get('/register/otp', [RegisterAppController::class, 'showOtpForm'])->name('register.otp');
+    Route::post('/register/otp', [RegisterAppController::class, 'verifyOtp']);
+    Route::post('/register/otp/resend', [RegisterAppController::class, 'resendOtp'])->name('register.otp.resend');
+
+    Route::get('/register/password', [RegisterAppController::class, 'showPasswordForm'])->name('register.password');
+    Route::post('/register/password', [RegisterAppController::class, 'completeRegistration']);
+
+    Route::get('/register/complete', [RegisterAppController::class, 'showCompletePage'])->name('register.complete');
+});
