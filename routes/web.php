@@ -8,6 +8,7 @@ use App\Http\Controllers\MessageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CardTypeController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\LoginAppController;
 use App\Http\Controllers\WhatsAppController;
 use App\Http\Controllers\ReadyCardController;
 use App\Http\Controllers\CardContentController;
@@ -208,4 +209,16 @@ Route::prefix('app')->name('app.')->group(function () {
     Route::post('/register/password', [RegisterAppController::class, 'completeRegistration']);
 
     Route::get('/register/complete', [RegisterAppController::class, 'showCompletePage'])->name('register.complete');
+});
+
+Route::prefix('app')->name('app.')->group(function () {
+    // Login routes
+    Route::get('/login', [LoginAppController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [LoginAppController::class, 'login']);
+    Route::post('/logout', [LoginAppController::class, 'logout'])->name('logout');
+    
+    // Forgot password routes
+    Route::get('/forgot-password', [LoginAppController::class, 'showForgotPasswordForm'])->name('forgot-password');
+    Route::post('/forgot-password', [LoginAppController::class, 'forgotPassword'])->name('forgot-password.post');
+
 });

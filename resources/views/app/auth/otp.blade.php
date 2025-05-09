@@ -15,7 +15,7 @@
         <div class="All_Button lang Devices">
             <div>
                 <div class="rounded-lg px-0 pb-8 w-full">
-                    <form class="space-y-6" method="POST" action="{{ route('register.otp') }}">
+                    <form class="space-y-6" method="POST" action="{{ route('app.register.otp') }}" id="otpForm">
                         @csrf
                         <div class="flex items-center justify-center gap-3">
                             <a href="{{ route('app.register.phone') }}" class="flex items-center justify-center !w-[68px] m-0 p-0 !text-[#B62326] !border-0 text-[16px] !font-[400]">
@@ -31,25 +31,36 @@
                             </div>
                         @endif
                         
+                        <!-- Combined error message for OTP -->
                         @error('otp')
                             <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
                                 <span class="block sm:inline">{{ $message }}</span>
                             </div>
                         @enderror
 
+                        <!-- Individual error messages for each OTP digit -->
+                        @if($errors->has('otp0') || $errors->has('otp1') || $errors->has('otp2') || $errors->has('otp3'))
+                            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                                <span class="block sm:inline">الرجاء إدخال رمز التحقق كاملاً</span>
+                            </div>
+                        @endif
+
+                        <!-- Hidden field for combined OTP -->
+                        <input type="hidden" name="otp" id="combinedOtp" value="">
+
                         <div>
                             <div class="flex justify-between items-center mb-8">
                                 <input type="text" maxlength="1" name="otp0" placeholder="0"
-                                    class="w-16 h-16 text-center text-2xl font-normal border !border-black rounded-full focus:border-blue-500 focus:outline-none mx-1"
+                                    class="w-16 h-16 text-center text-2xl font-normal border !border-black rounded-full focus:border-blue-500 focus:outline-none mx-1 @error('otp0') border-red-500 @enderror"
                                     id="otp0" autofocus>
                                 <input type="text" maxlength="1" name="otp1" placeholder="0"
-                                    class="w-16 h-16 text-center text-2xl font-normal border !border-black rounded-full focus:border-blue-500 focus:outline-none mx-1"
+                                    class="w-16 h-16 text-center text-2xl font-normal border !border-black rounded-full focus:border-blue-500 focus:outline-none mx-1 @error('otp1') border-red-500 @enderror"
                                     id="otp1">
                                 <input type="text" maxlength="1" name="otp2" placeholder="0"
-                                    class="w-16 h-16 text-center text-2xl font-normal border !border-black rounded-full focus:border-blue-500 focus:outline-none mx-1"
+                                    class="w-16 h-16 text-center text-2xl font-normal border !border-black rounded-full focus:border-blue-500 focus:outline-none mx-1 @error('otp2') border-red-500 @enderror"
                                     id="otp2">
                                 <input type="text" maxlength="1" name="otp3" placeholder="0"
-                                    class="w-16 h-16 text-center text-2xl font-normal border !border-black rounded-full focus:border-blue-500 focus:outline-none mx-1"
+                                    class="w-16 h-16 text-center text-2xl font-normal border !border-black rounded-full focus:border-blue-500 focus:outline-none mx-1 @error('otp3') border-red-500 @enderror"
                                     id="otp3">
                             </div>
                         </div>
@@ -70,7 +81,7 @@
                         <div dir="ltr" class="text-xl font-normal" id="countdown">00 : 60</div>
                     </div>
                     
-                    <form method="POST" action="{{ route('register.otp.resend') }}" class="mt-3">
+                    <form method="POST" action="{{ route('app.register.otp.resend') }}" class="mt-3">
                         @csrf
                         <button type="submit" id="resendBtn" disabled
                             class="text-[#5B186B] font-bold flex items-center justify-center mx-auto gap-2 opacity-50 cursor-not-allowed">
@@ -96,6 +107,12 @@
         document.getElementById('otp3')
     ];
 
+    // Function to update the combined OTP hidden field
+    function updateCombinedOtp() {
+        document.getElementById('combinedOtp').value = 
+            inputs.map(input => input.value || '').join('');
+    }
+
     // Add event listeners to each input
     inputs.forEach((input, index) => {
         // Handle input changes
@@ -105,6 +122,9 @@
                 this.value = '';
                 return;
             }
+
+            // Update combined OTP value
+            updateCombinedOtp();
 
             // Move to next input if a value is entered
             if (this.value && index < inputs.length - 1) {
@@ -119,27 +139,43 @@
             }
         });
 
-        // Handle paste event (only on the first input)
-        if (index === 0) {
-            input.addEventListener('paste', function (e) {
-                e.preventDefault();
-                const pastedData = e.clipboardData.getData('text');
+        // Update combined OTP on change events as well
+        input.addEventListener('change', updateCombinedOtp);
+    });
 
-                // Check if pasted content is numeric
-                if (!/^\d+$/.test(pastedData)) return;
+    // Handle paste event (only on the first input)
+    inputs[0].addEventListener('paste', function (e) {
+        e.preventDefault();
+        const pastedData = e.clipboardData.getData('text');
 
-                // Distribute the pasted digits to the inputs
-                const digits = pastedData.split('');
-                inputs.forEach((input, idx) => {
-                    if (idx < digits.length) {
-                        input.value = digits[idx];
-                    }
-                });
+        // Check if pasted content is numeric
+        if (!/^\d+$/.test(pastedData)) return;
 
-                // Focus on the appropriate input
-                const focusIndex = Math.min(digits.length, inputs.length - 1);
-                inputs[focusIndex].focus();
-            });
+        // Distribute the pasted digits to the inputs
+        const digits = pastedData.split('');
+        inputs.forEach((input, idx) => {
+            if (idx < digits.length) {
+                input.value = digits[idx];
+            }
+        });
+
+        // Update the combined OTP
+        updateCombinedOtp();
+
+        // Focus on the appropriate input
+        const focusIndex = Math.min(digits.length, inputs.length - 1);
+        inputs[focusIndex].focus();
+    });
+
+    // Form submission - ensure OTP is combined
+    document.getElementById('otpForm').addEventListener('submit', function(e) {
+        updateCombinedOtp();
+        const combinedValue = document.getElementById('combinedOtp').value;
+        
+        // Validate that we have all 4 digits before submitting
+        if (combinedValue.length !== 4) {
+            e.preventDefault();
+            alert('الرجاء إدخال رمز التحقق المكون من 4 أرقام');
         }
     });
 

@@ -2,7 +2,7 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="UTF-8">
-    <link rel="shortcut icon" href="{{ asset('app/img/black.png') }}" type="image/x-icon">
+    <link rel="shortcut icon" href="{{ url('app/img/black.png') }}" type="image/x-icon">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link href="{{ asset('app/sass/style.css') }}" rel="stylesheet">
@@ -33,7 +33,8 @@
     <body class="">
         <div class="app white messagebox">
             <div class="header">
-                <a href="{{ route('login') }}"><img src="{{ asset('img/black.png') }}" alt="" class="img-fluid logo"></a>
+
+                <a href="#"><img src="{{ asset('app/img/black.png') }}" alt="" class="img-fluid logo"></a>
             </div>
             
             @yield('content')

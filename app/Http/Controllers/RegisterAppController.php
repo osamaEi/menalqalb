@@ -112,7 +112,7 @@ class RegisterAppController extends Controller
     public function verifyOtp(Request $request)
     {
         $validated = $request->validate([
-            'otp' => 'required|string',
+            'otp' => 'required',
         ]);
 
         // Combine the individual OTP digits
