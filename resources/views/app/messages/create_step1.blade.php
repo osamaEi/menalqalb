@@ -206,7 +206,7 @@
                                                 <option value="">اختر نوع الاهداء</option>
                                                 @foreach($dedicationTypes as $type)
                                                     <option value="{{ $type->id }}" {{ (old('dedication_type_id', $sessionData['dedication_type_id'] ?? '') == $type->id) ? 'selected' : '' }}>
-                                                        {{ $type->type }}
+                                                        {{ __($type->type) }}
                                                     </option>
                                                 @endforeach
                                             </select>
@@ -220,14 +220,14 @@
 
                                         <!-- Card Number Field -->
                                         <div class="!mt-1">
-                                            <label for="card_number" class="localized" data-content=" رقم البطاقة"></label>
+                                            <label for="card_number" class="localized" data-content="رقم البطاقة"></label>
                                         </div>
                                         <div class="bg-[#F9F9F9] max-h-[59px] relative rounded-[35px] mt-0 border !border-black">
                                             <div class="flex items-center">
                                                 <input type="text" id="card_number" name="card_number" 
                                                     value="{{ old('card_number', $sessionData['card_number'] ?? '') }}"
                                                     maxlength="4" pattern="[0-9]{4}"
-                                                    class="relative right-[-20px] w-[100px] bg-transparent h-[57px] flex-grow text-lg focus:outline-none text-center"
+                                                    class="relative right-[29px] w-[100px] bg-transparent h-[57px] flex-grow text-lg focus:outline-none text-center"
                                                     placeholder="0000" required 
                                                     oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
                                                 <div class="px-4">
