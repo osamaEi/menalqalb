@@ -191,15 +191,15 @@
                                 @else
                                     <!-- Show actual content -->
                                     @if($message->dedication_type_id == 1)
-                                    <img class="w-full mx-auto pb-4" src="{{ asset('storage/' . $card->file_path) }}" alt="Greeting card">
-                                @elseif($message->dedication_type_id == 2)
-                                <video class="w-full mx-auto pb-4" autoplay muted playsinline loop controls controlslist="nodownload nofullscreen noremoteplayback" disablepictureinpicture oncontextmenu="return false;">
-                                    <source src="{{ asset('storage/' . $card->file_path) }}" type="video/mp4">
-                                    Your browser does not support the video tag.
-                                </video>
-                                @elseif($message->dedication_type_id == 5)
-                                    <img class="w-full mx-auto pb-4" src="{{ asset('storage/' . $card->file_path) }}" alt="Animated greeting card">
-                                @endif
+                                        <img class="w-full mx-auto pb-4" src="{{ asset('storage/' . $card->file_path) }}" alt="Greeting card">
+                                    @elseif($message->dedication_type_id == 2)
+                                        <video class="w-full mx-auto pb-4" controls>
+                                            <source src="{{ asset('storage/' . $card->file_path) }}" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                        </video>
+                                    @elseif($message->dedication_type_id == 5)
+                                        <img class="w-full mx-auto pb-4" src="{{ asset('storage/' . $card->file_path) }}" alt="Animated greeting card">
+                                    @endif
                                 @endif
                             </div>
                         </div>
@@ -231,41 +231,7 @@
             @endif
         </div>
     @endif
-<!-- Add this script at the bottom of your page -->
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Try to play the video automatically
-        const video = document.querySelector('video');
-        if (video) {
-            // First attempt to play
-            const playPromise = video.play();
-            
-            if (playPromise !== undefined) {
-                playPromise.then(_ => {
-                    // Autoplay started successfully
-                    console.log("Video started playing automatically with sound");
-                })
-                .catch(error => {
-                    // Autoplay was prevented
-                    console.log("Autoplay was prevented by the browser", error);
-                    
-                    // Add a click handler to the document to play on first interaction
-                    const playVideoOnce = function() {
-                        video.play()
-                            .then(() => {
-                                console.log("Video started after user interaction");
-                                // Remove the event listener once the video is playing
-                                document.removeEventListener('click', playVideoOnce);
-                            })
-                            .catch(e => console.log("Still couldn't play video", e));
-                    };
-                    
-                    document.addEventListener('click', playVideoOnce);
-                });
-            }
-        }
-    });
-</script>
+
     <!-- JavaScript for countdown -->
     <script>
         // Set the target date from the message scheduled_at
