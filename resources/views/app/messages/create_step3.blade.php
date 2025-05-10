@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -146,9 +145,6 @@
                                 </div>
                             </div>
                             
-                         
-                     
-                            
                             <!-- Recipient Name -->
                             <div class="!mt-1">
                                 <label for="recipient_name" class="localized" data-content="اسم المرسل له"></label>
@@ -212,29 +208,28 @@
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                                         </svg>
                                     </div>
-
-                                    
-
                                 </div>
                             </div>
+
                             <!-- Scheduled Date Field -->
-<div class="relative !mt-3 scheduled-date-container">
-    <label for="scheduled_at" class="block text-lg font-medium text-[#4B4B4B] bg-transparent text-center scheduled-date-label">
-        موعد الإرسال المجدول
-    </label>
-    <div class="bg-[#F9F9F9] max-h-[59px] relative rounded-[35px] mt-2 border !border-black">
-        <div class="flex items-center">
-            <input type="datetime-local" id="scheduled_at" name="scheduled_at"
-                class="relative bg-transparent h-[57px] flex-grow text-center text-lg focus:outline-none"
-                value="{{ old('scheduled_at', $sessionData['scheduled_at'] ?? '') }}" />
-            <div class="px-4">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-            </div>
-        </div>
-    </div>
-</div>
+                            <div class="relative !mt-3 scheduled-date-container">
+                                <label for="scheduled_at" class="block text-lg font-medium text-[#4B4B4B] bg-transparent text-center scheduled-date-label">
+                                    موعد الإرسال المجدول
+                                </label>
+                                <div class="bg-[#F9F9F9] max-h-[59px] relative rounded-[35px] mt-2 border !border-black">
+                                    <div class="flex items-center">
+                                        <input type="datetime-local" id="scheduled_at" name="scheduled_at"
+                                            class="relative bg-transparent h-[57px] flex-grow text-center text-lg focus:outline-none"
+                                            value="{{ old('scheduled_at', $sessionData['scheduled_at'] ?? '') }}" />
+                                        <div class="px-4">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                             <!-- Heart Lock Option -->
                             <div class="relative !mt-3">
                                 <label for="lock_type" class="block text-lg font-medium text-[#4B4B4B] bg-transparent text-center">
@@ -287,7 +282,6 @@
         ];
         
         // Populate country lists
-        const senderCountryList = document.querySelector('.sender-country-list');
         const recipientCountryList = document.querySelector('.recipient-country-list');
         
         // Function to populate country list
@@ -306,21 +300,8 @@
             });
         }
         
-        // Populate both country lists
-        populateCountryList(senderCountryList, countries);
+        // Populate recipient country list
         populateCountryList(recipientCountryList, countries);
-        
-        // Sender country dropdown toggle
-        const senderCountryButton = document.getElementById('senderCountryButton');
-        const senderCountryDropdown = document.getElementById('senderCountryDropdown');
-        const senderCountryCode = document.getElementById('senderCountryCode');
-        const senderCountryCodeInput = document.getElementById('sender_country_code_input');
-        const senderCountrySearch = document.getElementById('senderCountrySearch');
-        
-        senderCountryButton.addEventListener('click', function() {
-            senderCountryDropdown.classList.toggle('hidden');
-            recipientCountryDropdown.classList.add('hidden'); // Close the other dropdown
-        });
         
         // Recipient country dropdown toggle
         const recipientCountryButton = document.getElementById('recipientCountryButton');
@@ -331,36 +312,14 @@
         
         recipientCountryButton.addEventListener('click', function() {
             recipientCountryDropdown.classList.toggle('hidden');
-            senderCountryDropdown.classList.add('hidden'); // Close the other dropdown
         });
         
         // Close dropdowns when clicking outside
         document.addEventListener('click', function(event) {
-            if (!senderCountryButton.contains(event.target) && !senderCountryDropdown.contains(event.target)) {
-                senderCountryDropdown.classList.add('hidden');
-            }
-            
             if (!recipientCountryButton.contains(event.target) && !recipientCountryDropdown.contains(event.target)) {
                 recipientCountryDropdown.classList.add('hidden');
             }
         });
-        
-        // Search functionality for sender country
-        if (senderCountrySearch) {
-            senderCountrySearch.addEventListener('input', function() {
-                const searchTerm = this.value.toLowerCase();
-                const filteredCountries = countries.filter(country => 
-                    country.name.toLowerCase().includes(searchTerm) || 
-                    country.code.includes(searchTerm)
-                );
-                populateCountryList(senderCountryList, filteredCountries);
-                
-                // Re-attach event listeners for filtered items
-                document.querySelectorAll('.sender-country-list .country-item').forEach(item => {
-                    attachSenderCountryClickEvent(item);
-                });
-            });
-        }
         
         // Search functionality for recipient country
         if (recipientCountrySearch) {
@@ -379,19 +338,6 @@
             });
         }
         
-        // Function to attach click event to sender country items
-        function attachSenderCountryClickEvent(item) {
-            item.addEventListener('click', function() {
-                const code = this.getAttribute('data-code');
-                const flag = this.getAttribute('data-flag');
-                
-                senderCountryButton.querySelector('.flag-icon').innerHTML = flag;
-                senderCountryCode.textContent = code;
-                senderCountryCodeInput.value = code; // Update hidden input
-                senderCountryDropdown.classList.add('hidden');
-            });
-        }
-        
         // Function to attach click event to recipient country items
         function attachRecipientCountryClickEvent(item) {
             item.addEventListener('click', function() {
@@ -405,54 +351,52 @@
             });
         }
         
-        // Country selection for sender
-        document.querySelectorAll('.sender-country-list .country-item').forEach(item => {
-            attachSenderCountryClickEvent(item);
-        });
-        
         // Country selection for recipient
         document.querySelectorAll('.recipient-country-list .country-item').forEach(item => {
             attachRecipientCountryClickEvent(item);
         });
         
+        // Lock type selection handling
         const lockTypeSelect = document.getElementById('lock_type');
-const recipientPhoneContainer = document.querySelector('.recipient-phone-container');
-const recipientPhoneLabel = document.querySelector('.recipient-phone-label');
-const scheduledDateContainer = document.querySelector('.scheduled-date-container');
-const scheduledDateLabel = document.querySelector('.scheduled-date-label');
+        const recipientPhoneContainer = document.querySelector('.recipient-phone-container');
+        const recipientPhoneLabel = document.querySelector('.recipient-phone-label');
+        const scheduledDateContainer = document.querySelector('.scheduled-date-container');
+        const scheduledDateLabel = document.querySelector('.scheduled-date-label');
         
-lockTypeSelect.addEventListener('change', function() {
-    if (this.value === 'no_lock') {
-        // Hide recipient phone field
-        recipientPhoneContainer.style.display = 'none';
-        recipientPhoneLabel.style.display = 'none';
-        document.getElementById('recipient_phone').removeAttribute('required');
-        document.getElementById('recipient_country_code_input').removeAttribute('required');
+        lockTypeSelect.addEventListener('change', function() {
+            if (this.value === 'no_lock') {
+                // Hide recipient phone field
+                recipientPhoneContainer.style.display = 'none';
+                recipientPhoneLabel.style.display = 'none';
+                document.getElementById('recipient_phone').removeAttribute('required');
+                document.getElementById('recipient_country_code_input').removeAttribute('required');
+                
+                // Hide scheduled date field
+                scheduledDateContainer.style.display = 'none';
+                document.getElementById('scheduled_at').removeAttribute('required');
+            } else {
+                // Show recipient phone field
+                recipientPhoneContainer.style.display = 'block';
+                recipientPhoneLabel.style.display = 'block';
+                document.getElementById('recipient_phone').setAttribute('required', 'required');
+                document.getElementById('recipient_country_code_input').setAttribute('required', 'required');
+                
+                // Show scheduled date field
+                scheduledDateContainer.style.display = 'block';
+            }
+        });
         
-        // Hide scheduled date field
-        scheduledDateContainer.style.display = 'none';
-        document.getElementById('scheduled_at').removeAttribute('required');
-    } else {
-        // Show recipient phone field
-        recipientPhoneContainer.style.display = 'block';
-        recipientPhoneLabel.style.display = 'block';
-        document.getElementById('recipient_phone').setAttribute('required', 'required');
-        document.getElementById('recipient_country_code_input').setAttribute('required', 'required');
-        
-        // Show scheduled date field
-        scheduledDateContainer.style.display = 'block';
-    }
-});
-        // Initialize recipient phone visibility based on initial lock type value
+        // Initialize recipient phone and scheduled date visibility based on initial lock type value
         if (lockTypeSelect.value === 'no_lock') {
-    recipientPhoneContainer.style.display = 'none';
-    recipientPhoneLabel.style.display = 'none';
-    document.getElementById('recipient_phone').removeAttribute('required');
-    document.getElementById('recipient_country_code_input').removeAttribute('required');
-    
-    scheduledDateContainer.style.display = 'none';
-    document.getElementById('scheduled_at').removeAttribute('required');
-}
+            recipientPhoneContainer.style.display = 'none';
+            recipientPhoneLabel.style.display = 'none';
+            document.getElementById('recipient_phone').removeAttribute('required');
+            document.getElementById('recipient_country_code_input').removeAttribute('required');
+            
+            scheduledDateContainer.style.display = 'none';
+            document.getElementById('scheduled_at').removeAttribute('required');
+        }
+        
         // Form validation
         const form = document.querySelector('form');
         form.addEventListener('submit', function(e) {
@@ -465,24 +409,6 @@ lockTypeSelect.addEventListener('change', function() {
                 isValid = false;
             } else {
                 messageContent.classList.remove('border-red-500');
-            }
-            
-            // Validate sender name
-            const senderName = document.getElementById('sender_name');
-            if (!senderName.value.trim()) {
-                senderName.parentElement.classList.add('border-red-500');
-                isValid = false;
-            } else {
-                senderName.parentElement.classList.remove('border-red-500');
-            }
-            
-            // Validate sender phone
-            const senderPhone = document.getElementById('sender_phone');
-            if (!senderPhone.value.trim()) {
-                senderPhone.parentElement.parentElement.classList.add('border-red-500');
-                isValid = false;
-            } else {
-                senderPhone.parentElement.parentElement.classList.remove('border-red-500');
             }
             
             // Validate recipient name
@@ -521,7 +447,5 @@ lockTypeSelect.addEventListener('change', function() {
         });
     });
 </script>
-</body>
 </div>
-
 </html>

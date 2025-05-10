@@ -140,42 +140,58 @@ class MessageAppController extends Controller
     {
         // Validation rules
         $rules = [
-    
             'lock_type' => 'required|in:no_lock,lock_without_heart,lock_with_heart',
-
             'message_content' => 'required|string|max:500',
+            'recipient_name' => 'required|string|max:255',
         ];
-       
+        
         // Add recipient fields validation if lock type is not 'no_lock'
         if ($request->lock_type !== 'no_lock') {
-            $rules['recipient_name'] = 'required|string|max:255';
-            $rules['recipient_phone'] = 'required|string|max:20';
+            $rules['recipient_phone'] = [
+                'required',
+                'string',
+                'max:20',
+                function ($attribute, $value, $fail) use ($request) {
+                    // Combine country code and phone number
+                    $git = $request->recipient_country_code . $value;
+                    
+                    // Basic phone number validation (adjust as needed)
+                    if (!preg_match('/^\+?[0-9]{8,15}$/', $fullNumber)) {
+                        $fail('رقم الهاتف غير صالح. يجب أن يتكون من أرقام فقط وبطول مناسب.');
+                    }
+                }
+            ];
             $rules['recipient_country_code'] = 'required|string|max:10';
             $rules['scheduled_at'] = 'nullable|date';
         }
-       
+        
         // Validate the input
         $validator = Validator::make($request->all(), $rules);
-       
+        
         if ($validator->fails()) {
             return redirect()->back()
                 ->withErrors($validator)
                 ->withInput();
         }
         
-        // Format phone numbers with country codes
+        // Get all data from the request
         $data = $request->all();
         
-        // Format the sender phone number
+        // Combine country code and phone number for recipient if not 'no_lock'
+        if ($request->lock_type !== 'no_lock') {
+            // Create combined phone field for database in format "9715012345678"
+            $data['recipient_phone'] = $request->recipient_country_code . $request->recipient_phone;
+            
+            // We can remove the country code from the data since it's now part of the phone number
+            // But keeping it for backwards compatibility if needed elsewhere
+        }
         
-       
         // Store in session
         Session::put('message_step3', $data);
-       
+        
         // Redirect to step 4 (review)
         return redirect()->route('app.messages.create.step4');
     }
-    
     /**
      * Show the form for creating a new message - Step 4 (Review)
      */
