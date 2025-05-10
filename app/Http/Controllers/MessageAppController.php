@@ -144,7 +144,7 @@ class MessageAppController extends Controller
             'message_content' => 'required|string|max:500',
             'recipient_name' => 'required|string|max:255',
         ];
-        
+       
         // Add recipient fields validation if lock type is not 'no_lock'
         if ($request->lock_type !== 'no_lock') {
             $rules['recipient_phone'] = [
@@ -153,8 +153,8 @@ class MessageAppController extends Controller
                 'max:20',
                 function ($attribute, $value, $fail) use ($request) {
                     // Combine country code and phone number
-                    $git = $request->recipient_country_code . $value;
-                    
+                    $fullNumber = $request->recipient_country_code . $value;
+                   
                     // Basic phone number validation (adjust as needed)
                     if (!preg_match('/^\+?[0-9]{8,15}$/', $fullNumber)) {
                         $fail('رقم الهاتف غير صالح. يجب أن يتكون من أرقام فقط وبطول مناسب.');
@@ -164,31 +164,31 @@ class MessageAppController extends Controller
             $rules['recipient_country_code'] = 'required|string|max:10';
             $rules['scheduled_at'] = 'nullable|date';
         }
-        
+       
         // Validate the input
         $validator = Validator::make($request->all(), $rules);
-        
+       
         if ($validator->fails()) {
             return redirect()->back()
                 ->withErrors($validator)
                 ->withInput();
         }
-        
+       
         // Get all data from the request
         $data = $request->all();
-        
+       
         // Combine country code and phone number for recipient if not 'no_lock'
         if ($request->lock_type !== 'no_lock') {
             // Create combined phone field for database in format "9715012345678"
             $data['recipient_phone'] = $request->recipient_country_code . $request->recipient_phone;
-            
+           
             // We can remove the country code from the data since it's now part of the phone number
             // But keeping it for backwards compatibility if needed elsewhere
         }
-        
+       
         // Store in session
         Session::put('message_step3', $data);
-        
+       
         // Redirect to step 4 (review)
         return redirect()->route('app.messages.create.step4');
     }
@@ -242,8 +242,15 @@ class MessageAppController extends Controller
      */
     public function store(Request $request)
     {
+        \Log::info('Starting message creation process');
+        
         // Check if all steps were completed
         if (!Session::has('message_step1') || !Session::has('message_step2') || !Session::has('message_step3')) {
+            \Log::warning('Message creation aborted: Missing session data', [
+                'has_step1' => Session::has('message_step1'),
+                'has_step2' => Session::has('message_step2'),
+                'has_step3' => Session::has('message_step3')
+            ]);
             return redirect()->route('app.messages.create.step1')
                 ->with('error', 'يرجى إكمال جميع الخطوات أولا');
         }
@@ -253,32 +260,44 @@ class MessageAppController extends Controller
         $step2Data = Session::get('message_step2');
         $step3Data = Session::get('message_step3');
         
+        \Log::info('Session data retrieved', [
+            'step1' => array_keys($step1Data),
+            'step2' => array_keys($step2Data),
+            'step3' => array_keys($step3Data),
+        ]);
+        
         // Get current user
         $user = Auth::user();
+        \Log::info('User retrieved', ['user_id' => $user->id, 'user_name' => $user->name]);
         
         // Verify card number exists and is available
         $cardNumber = $step1Data['card_number'];
         $userId = $user->id;
         
+        \Log::info('Verifying card', ['card_number' => $cardNumber, 'user_id' => $userId]);
+        
         $paidReadyCards = \App\Models\ReadyCard::where('is_paid', true)
             ->pluck('id');
         
-        // if ($paidReadyCards->isEmpty()) {
-        //     return redirect()->back()
-        //         ->withErrors(['card_number' => __('You do not have any paid card packs. Please purchase a card pack first.')])
-        //         ->withInput();
-        // }
+        \Log::info('Found paid ready cards', ['count' => $paidReadyCards->count()]);
         
         $cardItem = \App\Models\ReadyCardItem::where('identity_number', $cardNumber)
             ->first();
         
         if (!$cardItem) {
+            \Log::warning('Card not found', ['card_number' => $cardNumber]);
             return redirect()->back()
                 ->withErrors(['card_number' => __('Card number not found in your purchased card packs.')])
                 ->withInput();
         }
         
+        \Log::info('Card found', [
+            'card_id' => $cardItem->id, 
+            'status' => $cardItem->status
+        ]);
+        
         if ($cardItem->status !== 'open') {
+            \Log::warning('Card already used', ['card_id' => $cardItem->id, 'status' => $cardItem->status]);
             return redirect()->back()
                 ->withErrors(['card_number' => __('This card has already been used. Please use another card.')])
                 ->withInput();
@@ -286,6 +305,7 @@ class MessageAppController extends Controller
         
         // Begin database transaction
         DB::beginTransaction();
+        \Log::info('Starting database transaction');
         
         try {
             // Create message
@@ -301,8 +321,8 @@ class MessageAppController extends Controller
             $message->lock_type = $step3Data['lock_type'];
             $message->scheduled_at = $step3Data['scheduled_at'] ?? null;
             $message->manually_sent = 1;
-            $message->sender_name = auth()->user()->name ?auth()->user()->name : 'Sender' ;
-            $message->sender_phone = auth()->user()->phone ?auth()->user()->phone : '1212121' ;
+            $message->sender_name = auth()->user()->name ? auth()->user()->name : 'Sender';
+            $message->sender_phone = auth()->user()->phone ? auth()->user()->phone : '1212121';
             $message->user_id = $user->id;
             $message->ready_card_item_id = $cardItem->id;
             
@@ -312,83 +332,129 @@ class MessageAppController extends Controller
             // Generate 3-digit lock_number for either lock type
             $message->lock_number = sprintf('%03d', mt_rand(100, 999));
             
+            \Log::info('Message created with lock data', [
+                'message_lock' => $message->message_lock,
+                'lock_number' => $message->lock_number,
+                'lock_type' => $message->lock_type
+            ]);
+            
             // Set recipient phone if lock type requires it
             if ($step3Data['lock_type'] !== 'no_lock') {
                 $message->recipient_phone = $step3Data['recipient_phone'];
+                \Log::info('Recipient phone set', ['recipient_phone' => $message->recipient_phone]);
+            } else {
+                \Log::info('No recipient phone set (no_lock type)');
             }
             
-            $message->status =  'sent';
+            $message->status = 'sent';
             
+            \Log::info('Saving message to database');
             $message->save();
+            \Log::info('Message saved successfully', ['message_id' => $message->id]);
             
             // Mark the card as used
             $cardItem->status = 'closed';
             $cardItem->save();
+            \Log::info('Card marked as used', ['card_id' => $cardItem->id]);
             
             // Send WhatsApp message if there's a recipient phone
             if ($message->lock_type !== 'no_lock' && $message->recipient_phone) {
                 // Format recipient phone for WhatsApp
                 $recipientPhone = $message->recipient_phone;
+                \Log::info('Preparing to send WhatsApp message', ['recipient_phone' => $recipientPhone]);
                 
                 // Initialize WhatsApp service
                 $whatsAppService = new WhatsAppService();
+                \Log::info('WhatsApp service initialized');
                 
                 // Get card image URL
                 $card = Card::find($message->card_id);
                 $imageUrl = 'https://minalqalb.ae/message.png'; // Default image URL
                 
-                if ($card && $card->file_path) {
-                    $imageUrl = $card->file_path;
-                }
-                
+              
                 // Format the scheduled time
                 $formattedScheduledTime = '';
                 if ($message->scheduled_at) {
                     $dateTime = new \DateTime($message->scheduled_at);
                     $formattedScheduledTime = $dateTime->format('m/d/Y h:i a');
+                    \Log::info('Scheduled time formatted', [
+                        'raw' => $message->scheduled_at,
+                        'formatted' => $formattedScheduledTime
+                    ]);
                 }
                 
-                if ($message->scheduled_at && strtotime($message->scheduled_at) > time()) {
-                    $result = $whatsAppService->sendMinalqalnnewqTemplateHistory(
-                        $recipientPhone,
-                        $imageUrl,
-                        $message->recipient_name,
-                        $user->name,
-                        $message->message_lock,
-                        $formattedScheduledTime
-                    );
-                } else {
-                    $result = $whatsAppService->sendMinalqalnnewqTemplate(
-                        $recipientPhone,
-                        $imageUrl,
-                        $message->recipient_name,
-                        $user->name,
-                        $message->message_lock
-                    );
+                try {
+                    if ($message->scheduled_at && strtotime($message->scheduled_at) > time()) {
+                        \Log::info('Sending scheduled WhatsApp message');
+                        $result = $whatsAppService->sendMinalqalnnewqTemplateHistory(
+                            $recipientPhone,
+                            $imageUrl,
+                            $message->recipient_name,
+                            $user->name,
+                            $message->message_lock,
+                            $formattedScheduledTime
+                        );
+                        \Log::info('Scheduled WhatsApp message result', ['result' => $result]);
+                    } else {
+                        \Log::info('Sending immediate WhatsApp message');
+                        $result = $whatsAppService->sendMinalqalnnewqTemplate(
+                            $recipientPhone,
+                            $imageUrl,
+                            $message->recipient_name,
+                            $user->name,
+                            $message->message_lock
+                        );
+                        \Log::info('Immediate WhatsApp message result', ['result' => $result]);
+                    }
+                    
+                    // Store WhatsApp response data with message
+                    if (isset($result['response']['id'])) {
+                        $message->whatsapp_message_id = $result['response']['id'];
+                        $message->whatsapp_status = $result['response']['status'] ?? 'unknown';
+                        $message->save();
+                        \Log::info('WhatsApp response stored', [
+                            'whatsapp_message_id' => $message->whatsapp_message_id,
+                            'whatsapp_status' => $message->whatsapp_status
+                        ]);
+                    } else {
+                        \Log::warning('WhatsApp response missing ID', ['result' => $result]);
+                    }
+                } catch (\Exception $whatsappException) {
+                    \Log::error('WhatsApp sending error', [
+                        'error' => $whatsappException->getMessage(),
+                        'trace' => $whatsappException->getTraceAsString()
+                    ]);
+                    // Continue execution even if WhatsApp fails
                 }
-                
-                // Store WhatsApp response data with message
-                if (isset($result['response']['id'])) {
-                    $message->whatsapp_message_id = $result['response']['id'];
-                    $message->whatsapp_status = $result['response']['status'] ?? 'unknown';
-                    $message->save();
-                }
+            } else {
+                \Log::info('Skipping WhatsApp message - no recipient phone or no lock required', [
+                    'lock_type' => $message->lock_type,
+                    'has_recipient_phone' => !empty($message->recipient_phone)
+                ]);
             }
             
             // Clear session data
             Session::forget(['message_step1', 'message_step2', 'message_step3']);
+            \Log::info('Session data cleared');
             
             DB::commit();
+            \Log::info('Database transaction committed');
             
             // Redirect to success page
+            \Log::info('Message creation completed successfully', ['message_id' => $message->id]);
             return redirect()->route('app.messages.create.step5', ['message_id' => $message->id]);
             
         } catch (\Exception $e) {
             // Something went wrong, rollback transaction
             DB::rollBack();
             
-            // Log the error
-            \Log::error('Message creation error: ' . $e->getMessage());
+            // Log the error with detailed information
+            \Log::error('Message creation error', [
+                'error' => $e->getMessage(),
+                'line' => $e->getLine(),
+                'file' => $e->getFile(),
+                'trace' => $e->getTraceAsString()
+            ]);
             
             return redirect()->back()
                 ->withErrors(['error' => __('An error occurred while creating the message. Please try again.')])
