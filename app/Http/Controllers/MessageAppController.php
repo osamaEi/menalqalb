@@ -140,10 +140,9 @@ class MessageAppController extends Controller
     {
         // Validation rules
         $rules = [
-            'sender_name' => 'required|string|max:255',
-            'sender_phone' => 'required|string|max:20',
-            'sender_country_code' => 'required|string|max:10',
+    
             'lock_type' => 'required|in:no_lock,lock_without_heart,lock_with_heart',
+
             'message_content' => 'required|string|max:500',
         ];
        
@@ -168,12 +167,7 @@ class MessageAppController extends Controller
         $data = $request->all();
         
         // Format the sender phone number
-        $data['formatted_sender_phone'] = '+' . $data['sender_country_code'] . $data['sender_phone'];
         
-        // Format the recipient phone number if it exists
-        if ($request->lock_type !== 'no_lock' && isset($data['recipient_phone'])) {
-            $data['formatted_recipient_phone'] = '+' . $data['recipient_country_code'] . $data['recipient_phone'];
-        }
        
         // Store in session
         Session::put('message_step3', $data);
@@ -291,8 +285,8 @@ class MessageAppController extends Controller
             $message->lock_type = $step3Data['lock_type'];
             $message->scheduled_at = $step3Data['scheduled_at'] ?? null;
             $message->manually_sent = 1;
-            $message->sender_name = $user->name;
-            $message->sender_phone = $user->phone ?? '0000000000';
+            $message->sender_name = auth()->user()->name ?auth()->user()->name : 'Sender' ;
+            $message->sender_phone = auth()->user()->phone ?auth()->user()->phone : '1212121' ;
             $message->user_id = $user->id;
             $message->ready_card_item_id = $cardItem->id;
             

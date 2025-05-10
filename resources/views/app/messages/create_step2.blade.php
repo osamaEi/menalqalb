@@ -102,6 +102,8 @@
 
     <img src="{{ asset('app/img/curve2.png') }}" class="z-50 w-[106px] absolute" alt="">
 
+
+    
     <body class>
 
         <div class="app white messagebox">
@@ -209,7 +211,11 @@
                             </p>
                         </div>
                     </div>
+                    @php
                     
+                    $sessionData = session()->all();
+                
+                    @endphp
                     <!-- Start Form for Card Selection -->
                     <form method="POST" action="{{ route('app.messages.post.step2') }}" id="cardSelectionForm">
                         @csrf
@@ -244,7 +250,21 @@
                                                         
                                                         <div class="flex flex-row-reverse w-[100%]">
                                                             <div class="w-[100%]">
+
+                                                                @if($sessionData['message_step1']['dedication_type_id'] == 2)
+
+                                                                <video class="object-fill w-full h-auto" controls>
+                                                                    <source src="{{ asset('storage/'. $card->file_path) }}" type="video/mp4">
+                                                                    Your browser does not support the video tag.
+                                                                </video>
+
+                                                                @else
+
+
+
                                                                 <img src="{{ asset('storage/'. $card->file_path) }}" alt="{{ $card->title }}" class="object-fill">
+
+                                                                @endif
                                                                 <div class="card-title-bar">
                                                                     <p class="name !text-white flex items-center justify-center pr-2 gap-2">
                                                                         {{ $card->title }}

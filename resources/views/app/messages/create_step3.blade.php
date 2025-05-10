@@ -146,71 +146,8 @@
                                 </div>
                             </div>
                             
-                            <!-- Sender Name -->
-                            <div class="!mt-1">
-                                <label for="sender_name" class="localized" data-content="اسم المرسل"></label>
-                            </div>
-                            <div class="bg-[#F9F9F9] max-h-[59px] relative rounded-[35px] mt-0 border !border-black">
-                                <div class="flex items-center">
-                                    <input type="text" id="sender_name" name="sender_name"
-                                        class="relative right-[-20px] w-[100px] bg-transparent h-[57px] flex-grow text-lg focus:outline-none text-center"
-                                        placeholder="الاسم" value="{{ old('sender_name', $sessionData['sender_name'] ?? auth()->user()->name ?? '') }}" />
-                                </div>
-                            </div>
-                            
-                            <!-- Sender Phone -->
-                            <label for="sender_phone" class="!mt-1 localized sender-phone-label" data-content="رقم المرسل"></label>
-                            <div class="bg-transparent !mt-1 h-[59px] relative rounded-[31px] border !border-black sender-phone-container">
-                                <div class="flex items-center">
-                                    <!-- Country Flag and Code -->
-                                    <div class="flex items-center p-0 max-w-[126px] h-[59px]">
-                                        <!-- Country Selector Component -->
-                                        <div class="country-selector relative">
-                                            <button type="button" class="!bg-[#F9F9F9] m-0 justify-between flex items-center space-x-2 p-2 rounded-md" id="senderCountryButton">
-                                                <div class="flag-icon w-8 h-5 ml-2">
-                                                    <svg viewBox="0 0 40 24" class="w-full h-full">
-                                                        <rect width="40" height="8" fill="#00732f" />
-                                                        <rect y="8" width="40" height="8" fill="#ffffff" />
-                                                        <rect y="16" width="40" height="8" fill="#000000" />
-                                                        <rect width="12" height="24" fill="#ff0000" />
-                                                    </svg>
-                                                </div>
-                                                <span class="text-lg font-extrabold text-black" id="senderCountryCode">{{ old('sender_country_code', $sessionData['sender_country_code'] ?? '971') }}</span>
-                                            </button>
-                                            
-                                            <!-- Hidden input for sender country code -->
-                                            <input type="hidden" name="sender_country_code" id="sender_country_code_input" 
-                                                value="{{ old('sender_country_code', $sessionData['sender_country_code'] ?? '971') }}">
-                                            
-                                            <!-- Country Dropdown (Hidden by Default) -->
-                                            <div class="country-dropdown bg-white absolute z-[999999] mt-1 w-64 shadow-lg rounded-[9px] border border-gray-200 hidden" id="senderCountryDropdown">
-                                                <!-- Search Box -->
-                                                <div class="p-2 border-b border-gray-200">
-                                                    <input type="text" id="senderCountrySearch" placeholder="ابحث عن دولة..." 
-                                                        class="w-full p-2 border border-gray-300 rounded-[9px] focus:outline-none">
-                                                </div>
-                                                
-                                                <!-- Countries List -->
-                                                <div class="max-h-60 overflow-y-auto py-1 sender-country-list">
-                                                    <!-- Countries will be dynamically added here -->
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <!-- Phone Input -->
-                                    <input type="tel" id="sender_phone" name="sender_phone" required 
-                                        class="text-center w-[100px] bg-[#F9F9F9] flex-grow px-0 text-lg focus:outline-none"
-                                        placeholder="-- -- ---" value="{{ old('sender_phone', $sessionData['sender_phone'] ?? auth()->user()->phone ?? '') }}" />
-                                    
-                                    <!-- Phone Icon -->
-                                    <div class="px-4">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="relative z-50 h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                                        </svg>
-                                    </div>
-                                </div>
-                            </div>
+                         
+                     
                             
                             <!-- Recipient Name -->
                             <div class="!mt-1">
@@ -341,7 +278,7 @@
         const countries = [
             { code: '971', name: 'الإمارات العربية المتحدة', flag: '<svg viewBox="0 0 40 24" class="w-full h-full"><rect width="40" height="8" fill="#00732f" /><rect y="8" width="40" height="8" fill="#ffffff" /><rect y="16" width="40" height="8" fill="#000000" /><rect width="12" height="24" fill="#ff0000" /></svg>' },
             { code: '966', name: 'المملكة العربية السعودية', flag: '<svg viewBox="0 0 40 24" class="w-full h-full"><rect width="40" height="24" fill="#006c35" /><g transform="translate(13, 8)"><path d="M0,0 H18 M0,4 H18 M9,0 V8" stroke="#fff" stroke-width="1" /><text x="9" y="6" font-size="4" text-anchor="middle" fill="#fff">لا إله إلا الله</text></g></svg>' },
-            { code: '20', name: 'مصر', flag: '<svg viewBox="0 0 40 24" class="w-full h-full"><rect width="40" height="8" fill="#ce1126" /><rect y="8" width="40" height="8" fill="#ffffff" /><rect y="16" width="40" height="8" fill="#000000" /><g transform="translate(20, 12)" fill="#c09300"><circle r="3" /></g></svg>' },
+            { code: '2', name: 'مصر', flag: '<svg viewBox="0 0 40 24" class="w-full h-full"><rect width="40" height="8" fill="#ce1126" /><rect y="8" width="40" height="8" fill="#ffffff" /><rect y="16" width="40" height="8" fill="#000000" /><g transform="translate(20, 12)" fill="#c09300"><circle r="3" /></g></svg>' },
             { code: '974', name: 'قطر', flag: '<svg viewBox="0 0 40 24" class="w-full h-full"><rect width="40" height="24" fill="#8d1b3d" /><path d="M 0,0 L 11,0 L 11,24 L 0,24 Z" fill="#ffffff" /><path d="M 0,0 L 11,0 L 11,24 L 0,24 L 9,12 Z" fill="#8d1b3d" /></svg>' },
             { code: '965', name: 'الكويت', flag: '<svg viewBox="0 0 40 24" class="w-full h-full"><rect width="40" height="8" fill="#007a3d" /><rect y="8" width="40" height="8" fill="#ffffff" /><rect y="16" width="40" height="8" fill="#ce1126" /><polygon points="0,0 0,24 13,16 13,8" fill="#000000" /></svg>' },
             { code: '973', name: 'البحرين', flag: '<svg viewBox="0 0 40 24" class="w-full h-full"><rect width="40" height="24" fill="#ce1126" /><path d="M 0,0 L 13,0 L 8,4 L 13,8 L 8,12 L 13,16 L 8,20 L 13,24 L 0,24 Z" fill="#ffffff" /></svg>' },
