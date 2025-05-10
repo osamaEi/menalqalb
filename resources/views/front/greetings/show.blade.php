@@ -191,15 +191,15 @@
                                 @else
                                     <!-- Show actual content -->
                                     @if($message->dedication_type_id == 1)
-                                        <img class="w-full mx-auto pb-4" src="{{ asset('storage/' . $card->file_path) }}" alt="Greeting card">
-                                    @elseif($message->dedication_type_id == 2)
-                                        <video class="w-full mx-auto pb-4" controls>
-                                            <source src="{{ asset('storage/' . $card->file_path) }}" type="video/mp4">
-                                            Your browser does not support the video tag.
-                                        </video>
-                                    @elseif($message->dedication_type_id == 5)
-                                        <img class="w-full mx-auto pb-4" src="{{ asset('storage/' . $card->file_path) }}" alt="Animated greeting card">
-                                    @endif
+    <img class="w-full mx-auto pb-4" src="{{ asset('storage/' . $card->file_path) }}" alt="Greeting card">
+@elseif($message->dedication_type_id == 2)
+    <video class="w-full mx-auto pb-4" autoplay  playsinline loop controls controlslist="nodownload nofullscreen" disablepictureinpicture oncontextmenu="return false;">
+        <source src="{{ asset('storage/' . $card->file_path) }}" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+@elseif($message->dedication_type_id == 5)
+    <img class="w-full mx-auto pb-4" src="{{ asset('storage/' . $card->file_path) }}" alt="Animated greeting card">
+@endif
                                 @endif
                             </div>
                         </div>
