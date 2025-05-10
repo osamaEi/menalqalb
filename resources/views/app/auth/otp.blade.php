@@ -9,7 +9,7 @@
     max-w-[327px] mx-auto font-[400] text-[#4B4B4B] z-50 relative">
     الواتساب
 </p>
-
+{{-- {{dd(session()->all())}} --}}
 <div class="row justify-content-center">
     <div class="col-12 col-lg-4 ">
         <div class="All_Button lang Devices">

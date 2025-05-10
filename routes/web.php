@@ -10,7 +10,9 @@ use App\Http\Controllers\CardTypeController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\LoginAppController;
 use App\Http\Controllers\WhatsAppController;
+use App\Http\Controllers\MessageAppContoller;
 use App\Http\Controllers\ReadyCardController;
+use App\Http\Controllers\MessageAppController;
 use App\Http\Controllers\CardContentController;
 use App\Http\Controllers\RegisterAppController;
 use App\Http\Controllers\RegisterUserController;
@@ -221,4 +223,63 @@ Route::prefix('app')->name('app.')->group(function () {
     Route::get('/forgot-password', [LoginAppController::class, 'showForgotPasswordForm'])->name('forgot-password');
     Route::post('/forgot-password', [LoginAppController::class, 'forgotPassword'])->name('forgot-password.post');
 
+});
+// Routes that require authentication
+Route::middleware(['auth'])->prefix('app')->name('app.')->group(function () {
+    // Home route
+    Route::get('/home', function() {
+        return view('app.home');
+    })->name('home');
+    
+    // Placeholder for new message route
+    Route::get('/message/new', function() {
+        // This is a placeholder, you'll implement this later
+        return view('app.message.new');
+    })->name('new-message');
+    
+    // Placeholder for dashboard route
+    Route::get('/dashboard', function() {
+        // This is a placeholder, you'll implement this later
+        return view('app.dashboard');
+    })->name('dashboard');
+});
+
+// Protected routes (require authentication)
+Route::middleware(['auth'])->prefix('app')->name('app.')->group(function () {
+    // Messages routes
+    Route::get('/messages/create', [MessageAppController::class, 'create'])->name('messages.create');
+    
+    // API routes for AJAX
+    Route::get('/subcategories/{mainCategoryId}', [MessageAppController::class, 'getSubcategories']);
+
+    Route::get('/cards', [MessageAppController::class, 'getCards']);
+
+
+});
+
+Route::middleware(['auth'])->prefix('app/messages')->group(function () {
+    // Step 1: Basic Information
+    Route::get('/create/step1', [MessageAppController::class, 'createStep1'])->name('app.messages.create.step1');
+    Route::post('/create/step1', [MessageAppController::class, 'postStep1'])->name('app.messages.post.step1');
+    
+    // Step 2: Card Selection
+    Route::get('/create/step2', [MessageAppController::class, 'createStep2'])->name('app.messages.create.step2');
+    Route::post('/create/step2', [MessageAppController::class, 'postStep2'])->name('app.messages.post.step2');
+    
+    // Step 3: Recipient Information
+    Route::get('/create/step3', [MessageAppController::class, 'createStep3'])->name('app.messages.create.step3');
+    Route::post('/create/step3', [MessageAppController::class, 'postStep3'])->name('app.messages.post.step3');
+    
+    // Step 4: Review
+    Route::get('/create/step4', [MessageAppController::class, 'createStep4'])->name('app.messages.create.step4');
+    
+    // Final Submission
+    Route::post('/store', [MessageAppController::class, 'store'])->name('app.messages.store');
+    
+    // Step 5: Success/Completion
+    Route::get('/create/step5/{message_id}', [MessageAppController::class, 'createStep5'])->name('app.messages.create.step5');
+    
+    // AJAX routes for dynamic loading
+    Route::get('/subcategories/{mainCategoryId}', [MessageAppController::class, 'getSubcategories'])->name('app.messages.subcategories');
+    Route::get('/cards', [MessageAppController::class, 'getCards'])->name('app.messages.cards');
 });
