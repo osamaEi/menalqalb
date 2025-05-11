@@ -82,7 +82,7 @@
                                                 </div>
 
                                                 <!-- Egypt -->
-                                                <div class="country-item flex items-center p-2 hover:bg-gray-100 cursor-pointer" data-code="20">
+                                                <div class="country-item flex items-center p-2 hover:bg-gray-100 cursor-pointer" data-code="2">
                                                     <div class="flag-icon w-8 h-5 mr-3">
                                                         <svg viewBox="0 0 40 24" class="w-full h-full">
                                                             <rect width="40" height="8" fill="#ce1126" />

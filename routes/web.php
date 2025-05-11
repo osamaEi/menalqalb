@@ -8,6 +8,7 @@ use App\Http\Controllers\MessageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CardTypeController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\GreetingController;
 use App\Http\Controllers\LoginAppController;
 use App\Http\Controllers\WhatsAppController;
 use App\Http\Controllers\MessageAppContoller;
@@ -294,4 +295,14 @@ Route::middleware(['auth'])->prefix('app')->name('app.')->group(function () {
     Route::delete('/profile/delete', [ProfileAppController::class, 'deleteAccount'])->name('profile.delete');
     Route::get('/profile/change-password', [ProfileAppController::class, 'showChangePasswordForm'])->name('profile.change-password');
     Route::put('/profile/change-password', [ProfileAppController::class, 'updatePassword'])->name('profile.update-password');
+
+    Route::get('/greetings', [GreetingController::class, 'index'])->name('greetings.index');
+    Route::get('/greetings/{id}', [GreetingController::class, 'show'])->name('greetings.show');
+    Route::get('/greetings/{id}/card', [GreetingController::class, 'showCard'])->name('greetings.show-card');
+    Route::get('/greetings/{id}/response', [GreetingController::class, 'showResponse'])->name('greetings.show-response');
+    Route::get('/greetings/{id}/private', [GreetingController::class, 'showPrivateMessage'])->name('greetings.private-message');
+    Route::get('/greetings/{id}/schedule', [GreetingController::class, 'showScheduledTime'])->name('greetings.scheduled-time');
+    Route::post('/greetings/{id}/send', [GreetingController::class, 'sendMessage'])->name('greetings.send');
+    Route::get('/greetings/{id}/edit', [GreetingController::class, 'edit'])->name('greetings.edit');
 });
+
