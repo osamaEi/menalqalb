@@ -146,12 +146,17 @@ $totalItemsCount = \App\Models\ReadyCardItem::whereHas('readyCard', function($qu
                 <div style="border-top-right-radius: 13px; border-bottom-left-radius: 13px;"
                     class="w-[162px] h-[80px] bg-[#B62326] flex flex-col text-white text-center items-between justify-between py-2">
                     <p>
-                        <a href="grating.html">
+                        <a href="{{ route('app.greetings.index')}}">
                             التهاني المرسلة
                         </a>
 
                     </p>
-                    <p>123</p>
+                    <p>
+                    
+                        {{ $messagesCount}}
+
+
+                    </p>
                 </div>
             </div>
             <div class="justify-center !mx-auto mt-3 flex gap-3">

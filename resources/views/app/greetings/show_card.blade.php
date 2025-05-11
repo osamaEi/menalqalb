@@ -16,9 +16,12 @@
             {{ $message->mainCategory ? $message->mainCategory->name : 'غير محدد' }}
         </p>
         
-        @if($message->card && $message->card->image_path)
-        <img src="{{ asset('storage/' . $message->card->file_path) }}" class="h-[450px] w-[100%] rounded-[15px] mt-[20px]" alt="صورة البطاقة">
+        @if($message->card && $message->card->file_path)
+
+        <img src="{{ asset('storage/'. $message->card->file_path) }}" class="h-[450px] w-[100%] rounded-[15px] mt-[20px]" alt="صورة البطاقة">
         @else
+
+
         <img src="{{ asset('app/img/show-card.png') }}" class="h-[450px] w-[100%] rounded-[15px] mt-[20px]" alt="صورة البطاقة افتراضية">
         @endif
     </div>

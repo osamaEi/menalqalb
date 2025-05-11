@@ -6,7 +6,6 @@
         <a href="{{ route('app.greetings.index') }}" class="z-50 !p-2 !absolute left-0 !mt-2 icondoor">
             <i class="fas fa-arrow-alt-circle-left text-white text-[19px] pl-3 w-[65px]"></i>
         </a>
-        <a href="{{ route('home') }}"><img src="{{ asset('img/black.png') }}" alt="" class="img-fluid logo"></a>
     </div>
     <p class="text-center text-[16px] mb-2 leading-[29px] max-w-[327px] mx-auto font-[400] text-[#4B4B4B] z-50 mt-0 relative">
         لوحة تحكم البطاقات الخاصة
@@ -46,7 +45,7 @@
     </div>
     
     <div class="flex items-center justify-between !bg-transparent p-3 text-center rounded-[13px] mx-2 relative">
-        <a href="{{ route('app.messages.show-response', $message->id) }}" class="h-[48px] w-[48%] bg-[#B62326] text-[#FFF] p-2 text-[12px] text-center flex items-center justify-center gap-1"
+        <a href="{{ route('app.greetings.show-response', $message->id) }}" class="h-[48px] w-[48%] bg-[#B62326] text-[#FFF] p-2 text-[12px] text-center flex items-center justify-center gap-1"
             style="border-top-right-radius: 13px; border-bottom-left-radius: 13px;">
             عرض الرد
         </a>

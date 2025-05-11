@@ -3,7 +3,7 @@
 @section('content')
 <div class="app white messagebox pb-[25px] !overflow-auto">
     <div class="header !mb-0">
-        <a href="{{ route('app.messages.show', $message->id) }}" class="z-50 !p-2 !absolute left-0 !mt-2 icondoor">
+        <a href="{{ route('app.greetings.show', $message->id) }}" class="z-50 !p-2 !absolute left-0 !mt-2 icondoor">
             <i class="fas fa-arrow-alt-circle-left text-white text-[19px] pl-3 w-[65px]"></i>
         </a>
     </div>

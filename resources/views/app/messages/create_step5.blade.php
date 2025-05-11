@@ -63,7 +63,7 @@
                                                                     z-50 relative">
                                     تم خصم 200 نقطة رسوم لبطاقة التهنة </p>
 
-                                <a href="#" type="submit"
+                                <a href="{{ route('app.dashboard')}}" type="submit"
                                     class="!m-0 !h-[55px] !text-[18px] !w-[100%] mt-0 !mb-3 !font-[500] flex items-center justify-center 
                                                                             !bg-[#000] border-0 text-white font-bold
                                                                             !rounded-full font-bold hover:bg-[#B62326]-700 transition-colors 

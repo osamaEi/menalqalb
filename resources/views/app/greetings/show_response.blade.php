@@ -1,4 +1,4 @@
-@extends('lapp.index')
+@extends('app.index')
 
 @section('content')
 <div class="app white messagebox pb-[25px] !overflow-auto">

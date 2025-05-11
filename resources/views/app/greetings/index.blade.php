@@ -16,7 +16,7 @@
                         <div class="w-[50px] text-[12px] h-[50px] flex items-center justify-center p-3 absolute right-[-5px] top-[-4px] bg-[#B62326] text-white rounded-full">
                             20<br />نقطة
                         </div>
-                        <img src="{{ asset('img/card.png') }}" alt="" class="mx-auto mt-[-32px]">
+                        <img src="{{ asset('storage/'. $message->card->file_path) }}" alt="" class="mx-auto mt-[-32px]">
                         <a class="border-0 w-100 p-0 m-0" href="{{ route('app.greetings.show', $message->id) }}">
                             <div class="mt-[-33px]">
                                 <p class="name flex items-center justify-end pr-2 gap-2">
