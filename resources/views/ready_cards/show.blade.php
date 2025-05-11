@@ -176,39 +176,7 @@
                     </div>
                     <div class="card-body p-0">
                         <div class="cards-list">
-                            @forelse($readyCard->items as $item)
-                                <div class="card-item">
-                                    <div class="d-flex justify-content-between align-items-center mb-2">
-                                        <span class="fw-medium">Card #{{ $item->card->id }}</span>
-                                        @if(isset($item->card->card_type))
-                                            <span class="badge bg-label-info">{{ $item->card->card_type->name_en ?? 'N/A' }}</span>
-                                        @endif
-                                    </div>
-                                    <div class="d-flex align-items-center">
-                                        @if(isset($item->card->image) && $item->card->image)
-                                            <div class="avatar me-2">
-                                                <img src="{{ asset('storage/' . $item->card->image) }}" alt="Card" class="rounded">
-                                            </div>
-                                        @else
-                                            <div class="avatar me-2">
-                                                <span class="avatar-initial rounded bg-label-primary">
-                                                    <i class="ri-credit-card-line"></i>
-                                                </span>
-                                            </div>
-                                        @endif
-                                        <div>
-                                            <span class="d-block">{{ isset($item->card->serial) ? $item->card->serial : 'N/A' }}</span>
-                                            <small class="text-muted">
-                                                {{ isset($item->card->code) ? $item->card->code : 'N/A' }}
-                                            </small>
-                                        </div>
-                                    </div>
-                                </div>
-                            @empty
-                                <div class="p-4 text-center">
-                                    <p class="mb-0">{{ __('No cards associated with this ready card.') }}</p>
-                                </div>
-                            @endforelse
+                 
                         </div>
                     </div>
                 </div>

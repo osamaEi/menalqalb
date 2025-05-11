@@ -142,14 +142,14 @@
                                     @enderror
                                 </div>
                                 
-                                <div class="col-md-3 mb-3">
+                                {{-- <div class="col-md-3 mb-3">
                                     <label for="card_count" class="form-label">{{ __('Card Count') }} <span class="text-danger">*</span></label>
                                     <input type="number" class="form-control @error('card_count') is-invalid @enderror" id="card_count" 
                                         name="card_count" value="{{ old('card_count', $readyCard->card_count) }}" required min="1">
                                     @error('card_count')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
-                                </div>
+                                </div> --}}
                                 
                                 <div class="col-md-3 mb-3">
                                     <label for="cost" class="form-label">{{ __('Cost') }} <span class="text-danger">*</span></label>

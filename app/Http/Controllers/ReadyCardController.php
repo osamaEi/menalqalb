@@ -238,7 +238,7 @@ class ReadyCardController extends Controller
      */
     public function show(ReadyCard $readyCard)
     {
-        $readyCard->load(['customer', 'items.card']);
+        $readyCard->load(['customer', 'items']);
         
         return view('ready_cards.show', compact('readyCard'));
     }
@@ -251,7 +251,7 @@ class ReadyCardController extends Controller
      */
     public function edit(ReadyCard $readyCard)
     {
-        $readyCard->load(['items.card']);
+        $readyCard->load(['items']);
         $customers = User::orderBy('name')->get();
         $cards = Card::orderBy('id')->get();
         $selectedCards = $readyCard->items->pluck('card_id')->toArray();
@@ -269,9 +269,8 @@ class ReadyCardController extends Controller
     public function update(Request $request, ReadyCard $readyCard)
     {
         $validated = $request->validate([
-            'customer_id' => 'required|exists:users,id',
-            'card_count' => 'required|integer|min:1',
-            'cost' => 'required|numeric|min:0',
+            'customer_id' => 'nullable|exists:users,id',
+            'cost' => 'nullable|numeric|min:0',
             'received_card_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
         
@@ -285,50 +284,19 @@ class ReadyCardController extends Controller
             $path = $request->file('received_card_image')->store('ready_cards', 'public');
             $validated['received_card_image'] = $path;
         }
-        
-        DB::beginTransaction();
-        
-        try {
-            // Update the ready card
+      
+            // Only update the customer, cost, and image (if provided)
             $readyCard->update([
                 'customer_id' => $validated['customer_id'],
-                'card_count' => $validated['card_count'],
                 'cost' => $validated['cost'],
                 'received_card_image' => $validated['received_card_image'] ?? $readyCard->received_card_image,
             ]);
             
-            // Delete existing items
-            $readyCard->items()->delete();
-            
-            // Create new items based on updated card count
-            for ($i = 1; $i <= $validated['card_count']; $i++) {
-                // Generate a 4-digit identity number
-                $identityNumber = str_pad(mt_rand(1, 9999), 4, '0', STR_PAD_LEFT);
-                
-                // Generate QR code content
-                $qrCodeContent = 'RC-' . $readyCard->id . '-' . $identityNumber . '-' . $i;
-                
-                // Create the ready card item
-                ReadyCardItem::create([
-                    'ready_card_id' => $readyCard->id,
-                    'identity_number' => $identityNumber,
-                    'qr_code' => $qrCodeContent,
-                    'sequence_number' => $i,
-                    'status' => 'open' // Default status
-                ]);
-            }
-            
-            DB::commit();
-            
             return redirect()->route('ready-cards.index')
-                ->with('success', __('Ready card updated successfully.'));
-        } catch (\Exception $e) {
-            DB::rollback();
+                ->with('success', __('Ready card details updated successfully.'));
+       
             
-            return redirect()->back()->withInput()
-                ->with('error', __('Failed to update ready card.') . ' ' . $e->getMessage());
         }
-    }
     /**
      * Remove the specified ready card from storage.
      *
