@@ -117,7 +117,7 @@ $totalItemsCount = \App\Models\ReadyCardItem::whereHas('readyCard', function($qu
             <div class="flex flex-col items-center justify-between p-3 m-0 text-center mx-2 relative">
                 <div class="flex gap-3 justify-between items-center h-[30px]">
                     <div>
-                        <a href="delete_account.html"
+                        <a href="{{ route('app.profile.delete-confirmation') }}"
                             class="bg-[#000] text-[#FFF] p-2 rounded-[13px] w-[141px] mx-auto mt-0">
                             حذف الحساب
                         </a>

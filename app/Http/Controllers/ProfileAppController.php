@@ -90,4 +90,31 @@ class ProfileAppController extends Controller
         
         return redirect()->route('profile.edit')->with('success', 'تم تحديث كلمة المرور بنجاح');
     }
+
+
+public function showDeleteConfirmation()
+{
+    return view('app.profile.delete-confirmation');
+}
+
+
+public function deleteAccount()
+{
+    $user = Auth::user();
+    
+    // Log the user out
+    Auth::logout();
+    
+    // Delete the user
+    $user->delete();
+    
+    // Invalidate the session
+    request()->session()->invalidate();
+    request()->session()->regenerateToken();
+    
+    // Redirect to home with success message
+    return redirect()->route('app.home')->with('success', 'تم حذف حسابك بنجاح.');
+}
+
+
 }

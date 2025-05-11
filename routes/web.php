@@ -290,6 +290,8 @@ Route::middleware(['auth'])->prefix('app/messages')->group(function () {
 Route::middleware(['auth'])->prefix('app')->name('app.')->group(function () {
     Route::get('/profile', [ProfileAppController::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [ProfileAppController::class, 'update'])->name('profile.update');
+    Route::get('/profile/delete-confirmation', [ProfileAppController::class, 'showDeleteConfirmation'])->name('profile.delete-confirmation');
+    Route::delete('/profile/delete', [ProfileAppController::class, 'deleteAccount'])->name('profile.delete');
     Route::get('/profile/change-password', [ProfileAppController::class, 'showChangePasswordForm'])->name('profile.change-password');
     Route::put('/profile/change-password', [ProfileAppController::class, 'updatePassword'])->name('profile.update-password');
 });
