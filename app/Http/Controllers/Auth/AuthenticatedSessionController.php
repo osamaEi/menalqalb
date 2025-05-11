@@ -59,6 +59,8 @@ public function store(LoginRequest $request): RedirectResponse
             return redirect()->route('dashboard.designer.index');
             
         case 'admin':
+            return redirect()->route('dashboard.index');
+
         default:
             return redirect()->route('welcome');
     }

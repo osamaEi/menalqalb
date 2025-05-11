@@ -49,11 +49,12 @@ Route::middleware('auth')->group(function () {
 
 require __DIR__.'/auth.php';
 
-// User routes
-Route::middleware(['auth'])->group(function () {
-    // Basic CRUD routes
+Route::middleware(['auth', 'user.type:admin'])->group(function(){
+
+    Route::get('/admin/dashboard',[DashboardController::class ,'index'])->name('dashboard.index');
+
     Route::resource('users', UserController::class);
-    
+
     // Additional filter routes
     Route::get('users/type/{type}', [UserController::class, 'filterByType'])->name('users.filter.type');
     Route::get('users/status/{status}', [UserController::class, 'filterByStatus'])->name('users.filter.status');
@@ -64,8 +65,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('users/{user}/block', [UserController::class, 'blockUser'])->name('users.block');
     Route::get('users/{user}/verify-email', [UserController::class, 'verifyEmail'])->name('users.verify.email');
     Route::get('users/{user}/verify-whatsapp', [UserController::class, 'verifyWhatsapp'])->name('users.verify.whatsapp');
-    
-    // API route for getting user data
+
     Route::get('api/users/{id}', [UserController::class, 'getUser'])->name('api.users.get');
 
     Route::resource('categories', CategoryController::class);
@@ -77,11 +77,7 @@ Route::middleware(['auth'])->group(function () {
     
     // Toggle status route
     Route::get('categories/{category}/toggle-status', [CategoryController::class, 'toggleStatus'])->name('categories.toggle.status');
-});
 
-Route::get('/admin/dashboard',[DashboardController::class ,'index'])->name('dashboard.index');
-Route::middleware(['auth'])->group(function () {
-    // Basic CRUD routes
     Route::resource('card_types', CardTypeController::class);
     
     // Additional filter routes
@@ -90,12 +86,7 @@ Route::middleware(['auth'])->group(function () {
     
     // Toggle status route
     Route::get('card_types/{cardType}/toggle-status', [CardTypeController::class, 'toggleStatus'])->name('card_types.toggle.status');
-});
 
-
-// Card routes
-Route::middleware(['auth'])->group(function () {
-    // Basic CRUD routes
     Route::resource('cards', CardController::class);
     Route::resource('locks', LockController::class);
 Route::post('locks/{lock}/toggle-status', [LockController::class, 'toggleStatus'])->name('locks.toggle.status');
@@ -123,13 +114,6 @@ Route::post('ready-cards/filter/date', [ReadyCardController::class, 'filterByDat
     
     // Get subcategories for a main category (for AJAX)
     Route::get('get-subcategories/{mainCategory}', [CardController::class, 'getSubcategories'])->name('cards.get-subcategories');
-});
-
-
-
-// Messages Routes
-Route::middleware(['auth'])->group(function () {
-    // Resourceful routes
     Route::get('/messages', [MessageController::class, 'index'])->name('messages.index');
     Route::get('/messages/create', [MessageController::class, 'create'])->name('messages.create');
     Route::post('/messages', [MessageController::class, 'store'])->name('messages.store');
@@ -146,14 +130,22 @@ Route::middleware(['auth'])->group(function () {
 Route::post('/messages/{message}/resend', [MessageController::class, 'resendMessage'])->name('messages.resend');
     Route::post('/messages/{message}/send-manual', [MessageController::class, 'sendManual'])
         ->name('messages.send-manual');
+
+        Route::resource('countries', \App\Http\Controllers\CountryController::class);
+
+        Route::get('ready-cards/{readyCard}/items', [ReadyCardController::class, 'getItems'])->name('ready-cards.items');
+        Route::post('ready-card-items/{item}/toggle-status', [ReadyCardItemController::class, 'toggleStatus'])->name('ready-card-items.toggle-status');
+        Route::get('ready-card-items/{item}/print', [ReadyCardItemController::class, 'printCard'])->name('ready-card-items.print');
+        Route::get('ready-cards/{readyCard}/print-all', [ReadyCardController::class, 'printAllCards'])->name('ready-cards.print-all');
+        
 });
-// Add this to routes/web.php for testing
-Route::get('/test-subcategories', function(Illuminate\Http\Request $request) {
-    $mainCategoryId = $request->input('main_category_id');
-    $subCategories = App\Models\Category::where('parent_id', $mainCategoryId)
-        ->get(['id', 'name_ar', 'name_en']);
-    return response()->json($subCategories);
-});
+
+
+
+
+
+
+
 Route::get('/subcategories-for-main', [App\Http\Controllers\MessageController::class, 'getSubCategories']);
 Route::get('/cards-for-subcategory', [App\Http\Controllers\MessageController::class, 'getCards']);
 Route::post('/verify-card-number', [App\Http\Controllers\MessageController::class, 'verifyCardNumber'])->name('verify-card-number');
@@ -168,15 +160,10 @@ Route::get('language/{locale}', function ($locale) {
 // Add these routes
 
 // Add this to your routes/web.php file
-Route::resource('countries', \App\Http\Controllers\CountryController::class);
-
-Route::get('ready-cards/{readyCard}/items', [ReadyCardController::class, 'getItems'])->name('ready-cards.items');
-Route::post('ready-card-items/{item}/toggle-status', [ReadyCardItemController::class, 'toggleStatus'])->name('ready-card-items.toggle-status');
-Route::get('ready-card-items/{item}/print', [ReadyCardItemController::class, 'printCard'])->name('ready-card-items.print');
-Route::get('ready-cards/{readyCard}/print-all', [ReadyCardController::class, 'printAllCards'])->name('ready-cards.print-all');
 });
 
 // This should be at the very bottom of your routes file
+
 Route::get('/{unique_identifier}', [CardContentController::class, 'showCardContent'])
     ->name('greetings.front.show');
 
