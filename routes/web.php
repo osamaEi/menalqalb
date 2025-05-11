@@ -13,6 +13,7 @@ use App\Http\Controllers\WhatsAppController;
 use App\Http\Controllers\MessageAppContoller;
 use App\Http\Controllers\ReadyCardController;
 use App\Http\Controllers\MessageAppController;
+use App\Http\Controllers\ProfileAppController;
 use App\Http\Controllers\CardContentController;
 use App\Http\Controllers\RegisterAppController;
 use App\Http\Controllers\RegisterUserController;
@@ -283,4 +284,12 @@ Route::middleware(['auth'])->prefix('app/messages')->group(function () {
     // AJAX routes for dynamic loading
     Route::get('/subcategories/{mainCategoryId}', [MessageAppController::class, 'getSubcategories'])->name('app.messages.subcategories');
     Route::get('/cards', [MessageAppController::class, 'getCards'])->name('app.messages.cards');
+});
+
+
+Route::middleware(['auth'])->prefix('app')->name('app.')->group(function () {
+    Route::get('/profile', [ProfileAppController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile', [ProfileAppController::class, 'update'])->name('profile.update');
+    Route::get('/profile/change-password', [ProfileAppController::class, 'showChangePasswordForm'])->name('profile.change-password');
+    Route::put('/profile/change-password', [ProfileAppController::class, 'updatePassword'])->name('profile.update-password');
 });

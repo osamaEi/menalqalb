@@ -53,26 +53,39 @@
                 <div>
                     <p class="relative font-bold text-[#B62326]"> البطاقات الخاصة</p>
                     <p class="font-bold text-[#4B4B4B]">
-                        1234
+
+                     @php
+
+$totalItemsCount = \App\Models\ReadyCardItem::whereHas('readyCard', function($query) {
+    $query->where('customer_id', auth()->user()->id);
+})->count();                         
+                     @endphp
+
+{{$totalItemsCount}}
+                        
                     </p>
                     <p class="relative mt-1 font-bold text-[#B62326]">
                         نوع الحساب
                     </p>
                     <p class="font-bold text-[#4B4B4B]">
-                        مستخدم
+                        {{ __(auth()->user()->user_type)}}
                     </p>
                 </div>
                 <div class="h-[90px] w-[1px] bg-[#C5C5C5]"></div>
                 <div>
                     <p class="relative font-bold text-[#B62326]">عدد التهاني</p>
                     <p class="font-bold text-[#4B4B4B]">
-                        100
+
+                        @php
+                            $messagesCount = \App\Models\Message::where('user_id',auth()->user()->id)->count();
+                        @endphp
+                      {{ $messagesCount}}
                     </p>
                     <p class="relative mt-1 font-bold text-[#B62326]">
                         تاريخ التسجيل
                     </p>
                     <p class="font-bold text-[#4B4B4B]">
-                        2001/01/01
+                        {{auth()->user()->created_at}}
                     </p>
                 </div>
                 <div class="h-[90px] w-[1px] bg-[#C5C5C5]"></div>
@@ -88,7 +101,7 @@
             </div>
             <div
                 class="flex items-center justify-between !bg-transparent p-3 text-center shadow-lg rounded-[13px] mx-2 relative">
-                <a href="profile.html" class="bg-[#000] text-[#FFF] p-2"
+                <a href="{{ route('app.profile.edit')}}" class="bg-[#000] text-[#FFF] p-2"
                     style="border-top-right-radius: 13px; border-bottom-left-radius: 13px;">
                     تعديل الملف الشخصي
                 </a>
@@ -116,7 +129,7 @@
                     </div>
                 </div>
                 <a href="#" class="text-[#B62326] mx-auto mt-3">
-                    اجمالي عدد التهاني 1234
+                    اجمالي عدد التهاني {{$messagesCount}}
                 </a>
             </div>
 
