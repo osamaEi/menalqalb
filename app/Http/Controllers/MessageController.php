@@ -241,13 +241,9 @@ public function resendMessage(Message $message)
             ->with('error', __('Cannot resend message - no recipient phone number.'));
     }
     
-    try {
+   
         // Log the resend attempt
-        \Log::info('Attempting to resend message', [
-            'message_id' => $message->id,
-            'recipient_phone' => $message->recipient_phone
-        ]);
-        
+      
         // Format recipient phone for WhatsApp if needed
         $recipientPhone = $message->recipient_phone;
         
@@ -291,34 +287,16 @@ public function resendMessage(Message $message)
             $message->whatsapp_message_id = $result['response']['id'];
             $message->whatsapp_status = $result['response']['status'] ?? 'unknown';
             $message->save();
+        }
             
-            \Log::info('Message resent successfully', [
-                'message_id' => $message->id,
-                'whatsapp_message_id' => $result['response']['id']
-            ]);
-            
+        
+          
             return redirect()->route('messages.index')
                 ->with('success', __('Message resent successfully'));
-        } else {
-            \Log::error('Failed to resend message - no message ID in response', [
-                'message_id' => $message->id,
-                'result' => $result
-            ]);
+       
             
-            return redirect()->route('messages.index')
-                ->with('error', __('Failed to resend message. Please try again.'));
-        }
-    } catch (\Exception $e) {
-        // Log the error
-        \Log::error('Error resending message', [
-            'message_id' => $message->id,
-            'error' => $e->getMessage(),
-            'trace' => $e->getTraceAsString()
-        ]);
-        
-        return redirect()->route('messages.index')
-            ->with('error', __('An error occurred while resending the message: ') . $e->getMessage());
-    }
+   
+   
 }
     /**
      * Display the specified message.
