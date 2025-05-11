@@ -296,7 +296,7 @@ class MessageAppController extends Controller
             $message->scheduled_at = $step3Data['scheduled_at'] ?? null;
             $message->manually_sent = 1;
             $message->sender_name = auth()->user()->name ? auth()->user()->name : 'Sender';
-            $message->sender_phone = auth()->user()->phone ? auth()->user()->phone : '1212121';
+            $message->sender_phone = auth()->user()->whatsapp ? auth()->user()->whatsapp : '1212121';
             $message->user_id = $user->id;
             $message->ready_card_item_id = $cardItem->id;
             

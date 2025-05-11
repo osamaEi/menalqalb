@@ -7,6 +7,7 @@ use App\Models\Message;
 use App\Models\CardType;
 use Illuminate\Http\Request;
 use App\Models\ReadyCardItem;
+use App\Services\WhatsAppService;
 
 class CardContentController extends Controller
 {
@@ -143,19 +144,39 @@ public function storeResponse(Request $request, $uniqueIdentifier)
         'response' => 'required|string|max:1000',
     ]);
     
-    // Find the card item
     $cardItem = ReadyCardItem::where('unique_identifier', $uniqueIdentifier)->firstOrFail();
     
-    // Get associated message
+
+
     $message = Message::where('ready_card_item_id', $cardItem->id)->firstOrFail();
     
-    // Save the response
+   
+
+
+
     $message->response = $request->response;
-    $message->response_at = now();
-    $message->save();
     
-    // Redirect back with success message
+    $message->response_at = now();
+
+    $message->save();
+
+    $whatsAppService = new WhatsAppService();
+    $imageUrl =  'https://minalqalb.ae/message.png';
+
+    $result = $whatsAppService->sendFeelingsTemplate(
+
+        $message->sender_phone,
+
+        $imageUrl,
+
+        $request->response,
+     
+    );
+    
     return redirect()->route('message.respond.form', $uniqueIdentifier)
         ->with('success', 'تم إرسال ردك بنجاح');
 }
+
+
+
 }
