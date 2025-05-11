@@ -139,7 +139,7 @@ public function store(Request $request)
         $message->scheduled_at = $request->scheduled_at;
         $message->manually_sent = $request->has('manually_sent');
         $message->sender_name = $user->name;
-        $message->sender_phone = $user->phone ? $user->phone : 4546456;
+        $message->sender_phone = $user->whatsapp ? $user->whatsapp : 4546456;
         $message->user_id = $user->id;
         $message->ready_card_item_id = $cardItem->id; // Store reference to the card item
         
