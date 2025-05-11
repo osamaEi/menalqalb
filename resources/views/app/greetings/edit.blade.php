@@ -3,10 +3,9 @@
 @section('content')
 <div class="app white messagebox pb-[25px] !overflow-auto">
     <div class="header !mb-0">
-        <a href="{{ route('app.messages.show', $message->id) }}" class="z-50 !p-2 !absolute left-0 !mt-2 icondoor">
+        <a href="{{ route('app.greetings.show', $message->id) }}" class="z-50 !p-2 !absolute left-0 !mt-2 icondoor">
             <i class="fas fa-arrow-alt-circle-left text-white text-[19px] pl-3 w-[65px]"></i>
         </a>
-        <a href="{{ route('home') }}"><img src="{{ asset('img/black.png') }}" alt="" class="img-fluid logo"></a>
     </div>
     <h1 class="text-[24px] text-[#242424] font-[900] z-50 relative text-center">تعديل بيانات البطاقة</h1>
     <p class="text-center text-[14px] leading-[29px] max-w-[327px] mx-auto font-[400] text-[#4B4B4B] z-50 mt-2 relative">

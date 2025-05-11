@@ -87,7 +87,6 @@
                             <select id="user_type" name="user_type" 
                                 class="text-[#4B4B4B] bg-transparent text-center block appearance-none w-[99%] border !border-[#4B4B4B] rounded-full py-3 px-4 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
                                 <option value="">اختر النوع</option>
-                                <option value="regular_user" {{ old('user_type') == 'regular_user' ? 'selected' : '' }}>مستخدم عادي</option>
                                 <option value="privileged_user" {{ old('user_type') == 'privileged_user' ? 'selected' : '' }}>مستخدم مميز</option>
                                 <option value="sales_point" {{ old('user_type') == 'sales_point' ? 'selected' : '' }}>منفذ بيع</option>
                             </select>

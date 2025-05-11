@@ -35,7 +35,7 @@ use App\Http\Controllers\Admin\DashboardController;
 Route::middleware(['language'])->group(function () {
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('welcome');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
