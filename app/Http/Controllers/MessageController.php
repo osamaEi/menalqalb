@@ -159,7 +159,7 @@ public function store(Request $request)
 
 
 
-        $message->status = $request->has('manually_sent') || $request->scheduled_at ? 'pending' : 'sent';
+        $message->status = $request->has('manually_sent') ? 'pending' : 'sent';
         
         $message->save();
         
@@ -185,6 +185,7 @@ $dateTime = new \DateTime($message->scheduled_at);
 $formattedScheduledTime = $dateTime->format('m/d/Y h:i a');
 }
 
+if($message->status == 'sent'){
 
 if($message->scheduled_at >now()){
 $result = $whatsAppService->sendMinalqalnnewqTemplateHistory(
@@ -205,6 +206,7 @@ $result = $whatsAppService->sendMinalqalnnewqTemplate(
     $message->message_lock
 );
     
+}
 }
            
             
@@ -231,7 +233,93 @@ $result = $whatsAppService->sendMinalqalnnewqTemplate(
             ->withInput();
     }
 }
-
+public function resendMessage(Message $message)
+{
+    // Check if the message has a recipient phone
+    if (!$message->recipient_phone) {
+        return redirect()->route('messages.index')
+            ->with('error', __('Cannot resend message - no recipient phone number.'));
+    }
+    
+    try {
+        // Log the resend attempt
+        \Log::info('Attempting to resend message', [
+            'message_id' => $message->id,
+            'recipient_phone' => $message->recipient_phone
+        ]);
+        
+        // Format recipient phone for WhatsApp if needed
+        $recipientPhone = $message->recipient_phone;
+        
+        // Initialize WhatsApp service
+        $whatsAppService = new WhatsAppService();
+        
+        // Get card image URL
+        $imageUrl = 'https://minalqalb.ae/message.png';
+        
+        // Format the scheduled time if needed
+        $formattedScheduledTime = '';
+        if ($message->scheduled_at) {
+            $dateTime = new \DateTime($message->scheduled_at);
+            $formattedScheduledTime = $dateTime->format('m/d/Y h:i a');
+        }
+        
+        // Determine which template to use
+        if ($message->scheduled_at && $message->scheduled_at > now()) {
+            // Future scheduled message
+            $result = $whatsAppService->sendMinalqalnnewqTemplateHistory(
+                $recipientPhone,
+                $imageUrl,
+                $message->recipient_name,
+                $message->sender_name,
+                $message->message_lock,
+                $formattedScheduledTime
+            );
+        } else {
+            // Regular message or past scheduled time
+            $result = $whatsAppService->sendMinalqalnnewqTemplate(
+                $recipientPhone,
+                $imageUrl,
+                $message->recipient_name,
+                $message->sender_name,
+                $message->message_lock
+            );
+        }
+        
+        // Store WhatsApp response data with message
+        if (isset($result['response']['id'])) {
+            $message->whatsapp_message_id = $result['response']['id'];
+            $message->whatsapp_status = $result['response']['status'] ?? 'unknown';
+            $message->save();
+            
+            \Log::info('Message resent successfully', [
+                'message_id' => $message->id,
+                'whatsapp_message_id' => $result['response']['id']
+            ]);
+            
+            return redirect()->route('messages.index')
+                ->with('success', __('Message resent successfully'));
+        } else {
+            \Log::error('Failed to resend message - no message ID in response', [
+                'message_id' => $message->id,
+                'result' => $result
+            ]);
+            
+            return redirect()->route('messages.index')
+                ->with('error', __('Failed to resend message. Please try again.'));
+        }
+    } catch (\Exception $e) {
+        // Log the error
+        \Log::error('Error resending message', [
+            'message_id' => $message->id,
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ]);
+        
+        return redirect()->route('messages.index')
+            ->with('error', __('An error occurred while resending the message: ') . $e->getMessage());
+    }
+}
     /**
      * Display the specified message.
      *

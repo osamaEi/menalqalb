@@ -140,7 +140,8 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('/messages/get-cards', [MessageController::class, 'getCards'])
         ->name('messages.get-cards');
-    
+    // In your routes/web.php
+Route::post('/messages/{message}/resend', [MessageController::class, 'resendMessage'])->name('messages.resend');
     Route::post('/messages/{message}/send-manual', [MessageController::class, 'sendManual'])
         ->name('messages.send-manual');
 });

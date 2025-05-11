@@ -47,6 +47,7 @@
                                         <th>{{ __('Response') }}</th>
                                         <th>{{ __('Created') }}</th>
                                         <th>{{ __('Actions') }}</th>
+                                        <th>{{ __('Resend') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -133,8 +134,21 @@
                                             <td>
                                                 <a href="{{ $message->readycardItem ? route('greetings.front.show', $message->readycardItem->unique_identifier) : '#' }}">
                                                     {{ __('View Card') }}
-                                                </a>                                           
+                                                </a>        
+                                                
+                                      
                                             </td>
+
+                                            <td>          
+                                                @if($message->recipient_phone)
+                                                <form action="{{ route('messages.resend', $message) }}" method="POST" class="d-inline">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-sm btn-success ms-1" 
+                                                        onclick="return confirm('{{ __('Are you sure you want to resend this message?') }}')">
+                                                        <i class="fas fa-paper-plane me-1"></i>{{ __('Resend') }}
+                                                    </button>
+                                                </form>
+                                            @endif</td>
                                         </tr>
                                     @endforeach
                                 </tbody>
