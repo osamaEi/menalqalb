@@ -17,13 +17,7 @@
                     <li><a href="{{ url('/where') }}">{{ __('Where to Find the Card') }}</a></li>
                     <li><a href="{{ url('/feeling') }}">{{ __('Learn About Card Recipients\' Feelings') }}</a></li>
                     <li><a href="{{ url('/contact') }}">{{ __('Contact Us') }}</a></li>
-                    @if (Route::has('login'))
-                        @auth
-                        <li><a href="{{ url('/admin/dashboard') }}">{{ __('Dashboard') }}</a></li>
-                        @else
-                        <li><a href="{{ url('/login') }}">{{ __('Login') }}</a></li>
-                        @endif
-                    @endauth
+                 
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                             @if(app()->getLocale() == 'ar')
@@ -48,7 +42,7 @@
                     </li>
                     <li class="no_border vision-logo">
                         <a href="javascript:void(0)">
-                            <img src="{{url('/site')}}/images/arab.png" />
+                            <img src="{{asset('front/images/arab.png')}}" />
                         </a>
                     </li>
                 </ul>
