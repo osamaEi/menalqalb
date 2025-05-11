@@ -10,8 +10,10 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <title> MIN ALQALB ❤ </title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700&display=swap');
+
         body {
-            font-family: "Cairo", sans-serif;
+            font-family: 'Cairo', sans-serif;
         }
         
         /* Countdown styles */
@@ -72,123 +74,151 @@
             font-size: 12px;
             margin-top: 5px;
         }
+
+        .made {
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+            font-size: 14px;
+        }
     </style>
 </head>
 <div id="rootElement" lang="en">
 
 <body class="">
-    @if($message->lock_type != 'no_lock' && !session('unlocked_' . $message->id))
-    <!-- Code input form for unlocking - only for locked messages -->
-    <div class="app">
-        <div class="app formheartpage contactPage">
-            <div class="header">
-                <img src="{{ asset('message_front/img/black.png') }}" alt="" class="img-fluid logo">
-                <img src="{{ asset('message_front/img/top.png') }}" alt="" class="img-fluid top">
-                <img src="{{ asset('message_front/img/curve2.png') }}" alt="" class="img-fluid curveRight">
-            </div>
-            <img src="{{ asset('message_front/img/back2.png') }}" alt="" class="img-fluid bk">
-            <div class="row justify-content-center">
-                <div class="col-12 col-lg-4">
-                    <div class="All_Button lang contact">
-                        <h3 for="txtSetting" class="localized" data-content="ادخل رمز الإطلاع على التهنئة المكون من 4 أرقام"></h3>
-                        <div class="col-12 col-lg-4">
-                            <div class="All_Button lang sign Login">
-                                <form action="{{ route('unlock.message.code', $message->id) }}" method="POST">
-                                    @csrf
-                                    <div class="form-group">
-                                        <img src="{{ asset('message_front/img/input.png') }}" alt="" class="img-fluid">
-                                        <input type="text" name="code[]" placeholder="🖤" maxlength="1" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <img src="{{ asset('message_front/img/input.png') }}" alt="" class="img-fluid">
-                                        <input type="text" name="code[]" placeholder="🖤" maxlength="1" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <img src="{{ asset('message_front/img/input.png') }}" alt="" class="img-fluid">
-                                        <input type="text" name="code[]" placeholder="🖤" maxlength="1" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <img src="{{ asset('message_front/img/input.png') }}" alt="" class="img-fluid">
-                                        <input type="text" name="code[]" placeholder="🖤" maxlength="1" required>
-                                    </div>
-                                    @if(session('error'))
-                                        <div class="alert alert-danger mt-2">
-                                            {{ session('error') }}
-                                        </div>
-                                    @endif
-                                    <button type="submit" class="border-0 flex items-center justify-center mx-auto text-[18px] !mt-0 w-100 z-[999999] !bg-black text-white p-2 rounded-[15px] hover:bg-white hover:text-black">تنفيذ</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    @else
+    <!-- FIRST CHECK: Is the message scheduled for the future? -->
+    @if(isset($message->scheduled_at) && $message->scheduled_at > now())
+        <!-- Show countdown timer regardless of lock status -->
         <div class="app white messagebox">
             <div class="header">
-                <a href="index.html"><img src="{{ asset('message_front/img/black.png')}}" alt="" class="img-fluid logo"></a>
+                <a href="https://minalqalb.ae/"><img src="{{ asset('message_front/img/black.png')}}" alt="" class="img-fluid logo"></a>
                 <img src="{{ asset('message_front/img/curve.png')}}" alt="" class="img-fluid curve">
                 <img src="{{ asset('message_front/img/curve2.png')}}" alt="" class="img-fluid curveRight">
             </div>
             <img src="{{ asset('message_front/img/back2.png')}}" alt="" class="img-fluid bk">
 
-            <div class="row justify-content-center overflow-y-auto">
-                <div class="col-12 col-lg-4 ">
-                    <div class="All_Button lang Devices w-[100%] h-[100%]">
-                        <div class="w-[100%] h-[93%]">
-                            <div class="rounded-lg w-[100%] h-[100%] px-0 pb-8 w-full">
-                                <!-- Check scheduled time -->
-                                @if(isset($message->scheduled_at) && $message->scheduled_at > now())
-                                    <!-- Show countdown timer -->
-                                    <div class="countdown-container">
-                                        <div class="countdown-date">
-                                            تاريخ ووقت عرض التهنئة
-                                            <br />
-                                            <span id="eventDate">{{ $message->scheduled_at->format('d/m/Y h:i a') }}</span>
-                                        </div>
-                                        <div class="countdown-remaining">
-                                            باقي عن العرض
-                                        </div>
-                                        <div class="countdown-timer flex items-center justify-between flex-col">
-                                            <div class="gap-2 flex items-center justify-between">
-                                                <div class="countdown-box">
-                                                    <div id="years" class="countdown-value">00</div>
-                                                    <div class="countdown-label">سنة</div>
-                                                </div>
-                                                <div class="countdown-box">
-                                                    <div id="months" class="countdown-value">00</div>
-                                                    <div class="countdown-label">شهر</div>
-                                                </div>
-                                                <div class="countdown-box">
-                                                    <div id="days" class="countdown-value">00</div>
-                                                    <div class="countdown-label">يوم</div>
-                                                </div>
-                                            </div>
+            <div class="row justify-content-center">
+                <div class="col-12 col-lg-4">
+                    <div class="All_Button lang Devices">
+                        <div class="countdown-date">
+                            تاريخ ووقت عرض التهنئة
+                            <br />
+                            <span id="eventDate">{{ $message->scheduled_at->format('d/m/Y h:i a') }}</span>
+                        </div>
+                        <div class="countdown-remaining">
+                            باقي عن العرض
+                        </div>
+                        <div class="countdown-timer flex items-center justify-between flex-col">
+                            <div class="gap-2 flex items-center justify-between">
+                                <div class="countdown-box">
+                                    <div id="years" class="countdown-value">00</div>
+                                    <div class="countdown-label">سنة</div>
+                                </div>
+                                <div class="countdown-box">
+                                    <div id="months" class="countdown-value">00</div>
+                                    <div class="countdown-label">شهر</div>
+                                </div>
+                                <div class="countdown-box">
+                                    <div id="days" class="countdown-value">00</div>
+                                    <div class="countdown-label">يوم</div>
+                                </div>
+                            </div>
 
-                                            <div class="gap-2 flex items-center justify-between">
-                                                <div class="countdown-box">
-                                                    <div id="hours" class="countdown-value">00</div>
-                                                    <div class="countdown-label">ساعة</div>
-                                                </div>
-                                                <div class="countdown-box">
-                                                    <div id="minutes" class="countdown-value">00</div>
-                                                    <div class="countdown-label">دقيقة</div>
-                                                </div>
-                                                <div class="countdown-box">
-                                                    <div id="seconds" class="countdown-value">00</div>
-                                                    <div class="countdown-label">ثانية</div>
-                                                </div>
+                            <div class="gap-2 flex items-center justify-between">
+                                <div class="countdown-box">
+                                    <div id="hours" class="countdown-value">00</div>
+                                    <div class="countdown-label">ساعة</div>
+                                </div>
+                                <div class="countdown-box">
+                                    <div id="minutes" class="countdown-value">00</div>
+                                    <div class="countdown-label">دقيقة</div>
+                                </div>
+                                <div class="countdown-box">
+                                    <div id="seconds" class="countdown-value">00</div>
+                                    <div class="countdown-label">ثانية</div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="font-bold mt-4 text-center">
+                            المرسل
+                            <br />
+                            {{ $message->sender_name ?? 'من القلب' }}
+                        </p>
+                        <div class="footer">
+                            <img src="{{ asset('message_front/img/message.png') }}" alt="" class="img-fluid message">
+                        </div>
+                        <div class="made">
+                            <p>www.minalqalb.ae</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @else
+        <!-- SECOND CHECK: Message time has passed, now check lock status -->
+        @if($message->lock_type != 'no_lock' && !session('unlocked_' . $message->id))
+            <!-- Code input form for unlocking -->
+            <div class="app">
+                <div class="app formheartpage contactPage">
+                    <div class="header">
+                        <img src="{{ asset('message_front/img/black.png') }}" alt="" class="img-fluid logo">
+                        <img src="{{ asset('message_front/img/top.png') }}" alt="" class="img-fluid top">
+                        <img src="{{ asset('message_front/img/curve2.png') }}" alt="" class="img-fluid curveRight">
+                    </div>
+                    <img src="{{ asset('message_front/img/back2.png') }}" alt="" class="img-fluid bk">
+                    <div class="row justify-content-center">
+                        <div class="col-12 col-lg-4">
+                            <div class="All_Button lang contact">
+                                <h3 for="txtSetting" class="localized" data-content="ادخل رمز الإطلاع على التهنئة المكون من 4 أرقام"></h3>
+                                <div class="col-12 col-lg-4">
+                                    <div class="All_Button lang sign Login">
+                                        <form action="{{ route('unlock.message.code', $message->id) }}" method="POST">
+                                            @csrf
+                                            <div class="form-group">
+                                                <img src="{{ asset('message_front/img/input.png') }}" alt="" class="img-fluid">
+                                                <input type="text" name="code[]" placeholder="🖤" maxlength="1" required>
                                             </div>
-                                        </div>
-                                        <p class="font-bold mt-4">
-                                            المرسل
-                                            <br />
-                                            {{ $message->sender_name ?? 'من القلب' }}
-                                        </p>
+                                            <div class="form-group">
+                                                <img src="{{ asset('message_front/img/input.png') }}" alt="" class="img-fluid">
+                                                <input type="text" name="code[]" placeholder="🖤" maxlength="1" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <img src="{{ asset('message_front/img/input.png') }}" alt="" class="img-fluid">
+                                                <input type="text" name="code[]" placeholder="🖤" maxlength="1" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <img src="{{ asset('message_front/img/input.png') }}" alt="" class="img-fluid">
+                                                <input type="text" name="code[]" placeholder="🖤" maxlength="1" required>
+                                            </div>
+                                            @if(session('error'))
+                                                <div class="alert alert-danger mt-2">
+                                                    {{ session('error') }}
+                                                </div>
+                                            @endif
+                                            <button type="submit" class="border-0 flex items-center justify-center mx-auto text-[18px] !mt-0 w-100 z-[999999] !bg-black text-white p-2 rounded-[15px] hover:bg-white hover:text-black">تنفيذ</button>
+                                        </form>
                                     </div>
-                                @else
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @else
+            <!-- Show actual message content - no lock or already unlocked -->
+            <div class="app white messagebox">
+                <div class="header">
+                    <a href="https://minalqalb.ae/"><img src="{{ asset('message_front/img/black.png')}}" alt="" class="img-fluid logo"></a>
+                    <img src="{{ asset('message_front/img/curve.png')}}" alt="" class="img-fluid curve">
+                    <img src="{{ asset('message_front/img/curve2.png')}}" alt="" class="img-fluid curveRight">
+                </div>
+                <img src="{{ asset('message_front/img/back2.png')}}" alt="" class="img-fluid bk">
+
+                <div class="row justify-content-center overflow-y-auto">
+                    <div class="col-12 col-lg-4 ">
+                        <div class="All_Button lang Devices w-[100%] h-[100%]">
+                            <div class="w-[100%] h-[93%]">
+                                <div class="rounded-lg w-[100%] h-[100%] px-0 pb-8 w-full">
                                     <!-- Show actual content -->
                                     @if($message->dedication_type_id == 1)
                                         <img class="w-full mx-auto pb-4" src="{{ asset('storage/' . $card->file_path) }}" alt="Greeting card">
@@ -200,36 +230,34 @@
                                     @elseif($message->dedication_type_id == 5)
                                         <img class="w-full mx-auto pb-4" src="{{ asset('storage/' . $card->file_path) }}" alt="Animated greeting card">
                                     @endif
-                                @endif
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            @if(!isset($message->scheduled_at) || $message->scheduled_at <= now())
-            <ul class="Image_define">
-                <li>
-                    <img src="{{ asset('message_front/img/green.png')}}" alt="" style="visibility: hidden;" class="img-fluid">
-                    <a href="https://minalqalb.ae/">
-                        <p for="txtReceived" class="!text-[16px] relative bottom-[11px] localized" data-content="موقع من القلب"></p>
-                    </a>
-                </li>
-                <li>
-                    <img src="{{ asset('message_front/img/red.png')}}" alt="" style="visibility: hidden;" class="img-fluid">
-                    <a href=" {{ route('message.respond.form', $message->readyCardItem->unique_identifier) }}">
-                        <p for="txtSent" class="!text-[16px] relative bottom-[11px] localized" data-content="الرد على التهنئة"></p>
-                    </a>
-                </li>
-                <li>
-                    <img src="{{ asset('message_front/img/orange.png')}}" alt="" style="visibility: hidden;" class="img-fluid">
-                    <a href="{{ route('message.details', $message->readyCardItem->unique_identifier) }}">
-                        <p for="txtRead" class="!text-[16px] relative bottom-[11px] localized" data-content="التهنئة "></p>
-                    </a>
-                </li>
-            </ul>
-            @endif
-        </div>
+                <ul class="Image_define">
+                    <li>
+                        <img src="{{ asset('message_front/img/green.png')}}" alt="" style="visibility: hidden;" class="img-fluid">
+                        <a href="https://minalqalb.ae/">
+                            <p for="txtReceived" class="!text-[16px] relative bottom-[11px] localized" data-content="موقع من القلب"></p>
+                        </a>
+                    </li>
+                    <li>
+                        <img src="{{ asset('message_front/img/red.png')}}" alt="" style="visibility: hidden;" class="img-fluid">
+                        <a href=" {{ route('message.respond.form', $message->readyCardItem->unique_identifier) }}">
+                            <p for="txtSent" class="!text-[16px] relative bottom-[11px] localized" data-content="الرد على التهنئة"></p>
+                        </a>
+                    </li>
+                    <li>
+                        <img src="{{ asset('message_front/img/orange.png')}}" alt="" style="visibility: hidden;" class="img-fluid">
+                        <a href="{{ route('message.details', $message->readyCardItem->unique_identifier) }}">
+                            <p for="txtRead" class="!text-[16px] relative bottom-[11px] localized" data-content="التهنئة "></p>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        @endif
     @endif
 
     <!-- JavaScript for countdown -->
@@ -269,7 +297,7 @@
                     document.getElementById('minutes').innerHTML = '00';
                     document.getElementById('seconds').innerHTML = '00';
                     
-                    // Reload page to show content
+                    // Reload page to show content or lock form
                     location.reload();
                 }
             }
@@ -282,34 +310,36 @@
         @endif
 
         // Auto-focus the first input field for code input
-        @if($message->lock_type != 'no_lock' && !session('unlocked_' . $message->id))
-        document.addEventListener('DOMContentLoaded', function() {
-            const inputs = document.querySelectorAll('input[name="code[]"]');
-            
-            if (inputs.length > 0) {
-                // Focus first input
-                inputs[0].focus();
-                
-                // Auto-focus next input when typing
-                inputs.forEach((input, index) => {
-                    input.addEventListener('input', function() {
-                        if (input.value.length === 1 && index < inputs.length - 1) {
-                            inputs[index + 1].focus();
-                        } else if (input.value.length === 1 && index === inputs.length - 1) {
-                            // Submit form when last input is filled
-                            input.form.submit();
-                        }
-                    });
+        @if(!isset($message->scheduled_at) || $message->scheduled_at <= now())
+            @if($message->lock_type != 'no_lock' && !session('unlocked_' . $message->id))
+                document.addEventListener('DOMContentLoaded', function() {
+                    const inputs = document.querySelectorAll('input[name="code[]"]');
                     
-                    // Allow backspace to go to previous input
-                    input.addEventListener('keydown', function(e) {
-                        if (e.key === 'Backspace' && input.value.length === 0 && index > 0) {
-                            inputs[index - 1].focus();
-                        }
-                    });
+                    if (inputs.length > 0) {
+                        // Focus first input
+                        inputs[0].focus();
+                        
+                        // Auto-focus next input when typing
+                        inputs.forEach((input, index) => {
+                            input.addEventListener('input', function() {
+                                if (input.value.length === 1 && index < inputs.length - 1) {
+                                    inputs[index + 1].focus();
+                                } else if (input.value.length === 1 && index === inputs.length - 1) {
+                                    // Submit form when last input is filled
+                                    input.form.submit();
+                                }
+                            });
+                            
+                            // Allow backspace to go to previous input
+                            input.addEventListener('keydown', function(e) {
+                                if (e.key === 'Backspace' && input.value.length === 0 && index > 0) {
+                                    inputs[index - 1].focus();
+                                }
+                            });
+                        });
+                    }
                 });
-            }
-        });
+            @endif
         @endif
     </script>
 </body>
