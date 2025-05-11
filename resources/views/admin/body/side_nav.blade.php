@@ -126,18 +126,22 @@
     <li class="menu-item {{ Request::is('countries*') ? 'active open' : '' }}" style="margin-bottom: 8px;">
       <a href="javascript:void(0);" class="menu-link menu-toggle">
         <i class="menu-icon tf-icons ri-gallery-line"></i>
-        <div>{{ __('Countries') }}</div>
+        <div>{{ __('Settings') }}</div>
       </a>
       <ul class="menu-sub">
 
 
         <li class="menu-item {{ Request::routeIs('countries.index') ? 'active' : '' }}">
           <a href="{{ route('countries.index') }}" class="menu-link">
-            <div>{{ __('all Countries') }}</div>
+            <div>{{ __('Countries') }}</div>
           </a>
         </li>
-  
         
+        <li class="menu-item {{ Request::routeIs('admin.settings.index') ? 'active' : '' }}">
+          <a href="{{ route('admin.settings.index') }}" class="menu-link">
+            <div>{{ __('Settings') }}</div>
+          </a>
+        </li>
       </ul>
     </li>
     

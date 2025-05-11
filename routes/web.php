@@ -6,6 +6,7 @@ use App\Http\Controllers\LockController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SettingController;
 use App\Http\Controllers\CardTypeController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\GreetingController;
@@ -48,6 +49,11 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+
+// Admin Settings Routes
+Route::middleware(['auth', 'user.type:admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::resource('settings', SettingController::class);
+});
 
 Route::middleware(['auth', 'user.type:admin'])->group(function(){
 
