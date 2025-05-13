@@ -77,16 +77,12 @@
     <li class="menu-item {{ Request::is('cards*') ? 'active open' : '' }}" style="margin-bottom: 8px;">
       <a href="javascript:void(0);" class="menu-link menu-toggle">
         <i class="menu-icon tf-icons ri-gallery-line"></i>
-        <div>{{ __('Cards') }}</div>
+        <div>{{ __('Cards & Locks') }}</div>
       </a>
       <ul class="menu-sub">
 
 
-        <li class="menu-item {{ Request::routeIs('cards.index') ? 'active' : '' }}">
-          <a href="{{ route('cards.index') }}" class="menu-link">
-            <div>{{ __('Manage Cards') }}</div>
-          </a>
-        </li>
+
         
         <li class="menu-item {{ Request::routeIs('locks.index') ? 'active' : '' }}">
           <a href="{{ route('locks.index') }}" class="menu-link">
@@ -108,7 +104,11 @@
         <div>{{ __('Greetings') }}</div>
       </a>
       <ul class="menu-sub">
-
+        <li class="menu-item {{ Request::routeIs('cards.index') ? 'active' : '' }}">
+          <a href="{{ route('cards.index') }}" class="menu-link">
+            <div>{{ __('Ready Greetings') }}</div>
+          </a>
+        </li>
 
         <li class="menu-item {{ Request::routeIs('messages.index') ? 'active' : '' }}">
           <a href="{{ route('messages.index') }}" class="menu-link">

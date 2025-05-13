@@ -28,7 +28,7 @@
                                 <tbody>
                                     @foreach($settings as $setting)
                                         <tr>
-                                            <td>{{ $setting->key }}</td>
+                                            <td>{{ __($setting->key) }}</td>
                                             <td>
                                                 @if($setting->type === 'text')
                                                     {{ $setting->value }}

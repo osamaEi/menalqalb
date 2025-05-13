@@ -51,11 +51,11 @@ Route::middleware('auth')->group(function () {
 require __DIR__.'/auth.php';
 
 // Admin Settings Routes
-Route::middleware(['auth', 'user.type:admin'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['admin.only'])->prefix('admin')->name('admin.')->group(function () {
     Route::resource('settings', SettingController::class);
 });
 
-Route::middleware(['auth', 'user.type:admin'])->group(function(){
+Route::middleware(['admin.only'])->group(function(){
 
     Route::get('/admin/dashboard',[DashboardController::class ,'index'])->name('dashboard.index');
 

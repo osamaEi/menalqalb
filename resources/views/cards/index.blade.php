@@ -12,14 +12,14 @@
         <div class="row">
             <div class="col-12 mb-4">
                 <div class="d-flex justify-content-between align-items-center">
-                    <h4 class="fw-bold py-3 mb-0">{{ __('Card Management') }}</h4>
+                    <h4 class="fw-bold py-3 mb-0">{{ __('Ready Greeting Management') }}</h4>
                     <button
                         class="btn btn-primary"
                         type="button"
                         data-bs-toggle="offcanvas"
                         data-bs-target="#offcanvasAddCard"
                         aria-controls="offcanvasAddCard">
-                        <i class="ri-add-line me-1"></i> {{ __('Add New Card') }}
+                        <i class="ri-add-line me-1"></i> {{ __('Add Ready Greeting') }}
                     </button>
                 </div>
             </div>
