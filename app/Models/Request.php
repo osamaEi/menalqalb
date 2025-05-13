@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Request extends Model
 {
@@ -11,6 +12,7 @@ class Request extends Model
 
     protected $fillable = [
         'locks_w_ready_card_id',
+        'user_id', // Add this
         'name',
         'email',
         'address',
@@ -28,7 +30,10 @@ class Request extends Model
         'created_at' => 'datetime',
         'updated_at' => 'datetime'
     ];
-
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
     // Relationships
     public function locksWReadyCard()
     {

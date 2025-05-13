@@ -2,10 +2,11 @@
 
 namespace App\Models;
 
+use App\Models\Request;
+use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
 //use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
@@ -52,9 +53,24 @@ class User extends Authenticatable
         'whatsapp_verified' => 'boolean',
     ];
 
-    /**
-     * Get the cards created by the user (designer).
-     */
+   // In app/Models/User.php
+
+public function requests()
+{
+    return $this->hasMany(Request::class);
+}
+
+// Add these helper methods
+public function pendingRequests()
+{
+    return $this->requests()->where('status', 'pending');
+}
+
+public function completedRequests()
+{
+    return $this->requests()->where('status', 'completed');
+}
+
     public function cards()
     {
         return $this->hasMany(Card::class);

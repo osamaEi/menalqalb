@@ -68,6 +68,29 @@
                             <div class="card bg-light mb-4">
                                 <div class="card-body">
                                     <h6 class="mb-3">{{ __('Customer Information') }}</h6>
+                                    
+                                    <!-- User Selection Dropdown -->
+                                    <div class="mb-3">
+                                        <label for="user_id" class="form-label">{{ __('Select User') }} <span class="text-danger">*</span></label>
+                                        <select class="form-select @error('user_id') is-invalid @enderror" 
+                                            id="user_id" name="user_id" required>
+                                            <option value="">{{ __('Choose a user...') }}</option>
+                                            @foreach($users as $user)
+                                                <option value="{{ $user->id }}" 
+                                                    data-name="{{ $user->name }}"
+                                                    data-email="{{ $user->email }}"
+                                                    data-phone="{{ $user->phone ?? '' }}"
+                                                    data-address="{{ $user->address ?? '' }}"
+                                                    {{ old('user_id') == $user->id ? 'selected' : '' }}>
+                                                    {{ $user->name }} - {{ $user->email }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        @error('user_id')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    
                                     <div class="row mb-3">
                                         <div class="col-md-6">
                                             <label for="name" class="form-label">{{ __('Full Name') }} <span class="text-danger">*</span></label>
@@ -192,6 +215,31 @@
         const summaryQuantityElement = document.getElementById('summary-quantity');
         const totalPriceElement = document.getElementById('total-price');
         const totalPointsElement = document.getElementById('total-points');
+        const userSelect = document.getElementById('user_id');
+        
+        // Function to update user info
+        function updateUserInfo() {
+            const selectedOption = userSelect.options[userSelect.selectedIndex];
+            
+            if (selectedOption.value) {
+                const name = selectedOption.getAttribute('data-name');
+                const email = selectedOption.getAttribute('data-email');
+                const phone = selectedOption.getAttribute('data-phone');
+                const address = selectedOption.getAttribute('data-address');
+                
+                document.getElementById('name').value = name || '';
+                document.getElementById('email').value = email || '';
+                document.getElementById('phone').value = phone || '';
+                if (address) {
+                    document.getElementById('address').value = address;
+                }
+            } else {
+                document.getElementById('name').value = '';
+                document.getElementById('email').value = '';
+                document.getElementById('phone').value = '';
+                document.getElementById('address').value = '';
+            }
+        }
         
         function updateSummary() {
             const selectedRadio = document.querySelector('.lock-radio:checked');
@@ -217,14 +265,22 @@
             }
         }
         
+        // Event listeners
         lockRadios.forEach(radio => {
             radio.addEventListener('change', updateSummary);
         });
         
         quantityInput.addEventListener('input', updateSummary);
         
+        userSelect.addEventListener('change', updateUserInfo);
+        
         // Initialize
         updateSummary();
+        
+        // Auto-fill user info if selected
+        if (userSelect.value) {
+            updateUserInfo();
+        }
     });
 </script>
 

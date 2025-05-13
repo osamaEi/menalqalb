@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Request;
 use App\Models\LocksWReadyCard;
 use Illuminate\Http\Request as HttpRequest;
@@ -10,7 +11,7 @@ class RequestController extends Controller
 {
     public function index(HttpRequest $request)
     {
-        $query = Request::with('locksWReadyCard');
+        $query = Request::with(['locksWReadyCard', 'user']); // Add user relationship
 
         // Apply filters
         if ($request->has('status') && $request->status != '') {
@@ -19,6 +20,10 @@ class RequestController extends Controller
 
         if ($request->has('item_id') && $request->item_id != '') {
             $query->where('locks_w_ready_card_id', $request->item_id);
+        }
+
+        if ($request->has('user_id') && $request->user_id != '') {
+            $query->where('user_id', $request->user_id);
         }
 
         $requests = $query->recent()->paginate(15);
@@ -38,39 +43,44 @@ class RequestController extends Controller
         ));
     }
 
-  // Add these methods to RequestController.php
+  
 
-public function createLock()
-{
-    $locks = LocksWReadyCard::where('type', 'lock')->active()->get();
-    return view('admin.requests.create-lock', compact('locks'));
-}
-
-public function createReadyCard()
-{
-    $readyCards = LocksWReadyCard::where('type', 'read_card')->active()->get();
-    return view('admin.requests.create-ready-card', compact('readyCards'));
-}
-
-// Update the existing create method to redirect to a selection page
+    // Update the existing create method to redirect to a selection page
 public function create()
 {
     return view('admin.requests.select-type');
 }
-
+    
+    public function createLock()
+    {
+        $locks = LocksWReadyCard::where('type', 'lock')->active()->get();
+        $users = User::all(); // Get all users
+        
+        return view('admin.requests.create-lock', compact('locks', 'users'));
+    }
+    
+    public function createReadyCard()
+    {
+        $readyCards = LocksWReadyCard::where('type', 'read_card')->active()->get();
+        $users = User::all(); // Get all users
+        
+        return view('admin.requests.create-ready-card', compact('readyCards', 'users'));
+    }
+    
     public function store(HttpRequest $request)
     {
         $validated = $request->validate([
             'locks_w_ready_card_id' => 'required|exists:locks_w_ready_cards,id',
+            'user_id' => 'required|exists:users,id', // Add user validation
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
             'address' => 'required|string',
             'phone' => 'required|string|max:20',
             'quantity' => 'required|integer|min:1'
         ]);
-
+    
         $requestModel = Request::create($validated);
-
+    
         return redirect()->route('requests.index')
             ->with('success', 'Request created successfully');
     }
