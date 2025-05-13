@@ -6,6 +6,7 @@ use App\Http\Controllers\LockController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RequestController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\CardTypeController;
 use App\Http\Controllers\CategoryController;
@@ -21,6 +22,7 @@ use App\Http\Controllers\RegisterAppController;
 use App\Http\Controllers\RegisterUserController;
 use App\Http\Controllers\ReadyCardItemController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\LocksWReadyCardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -56,7 +58,17 @@ Route::middleware(['admin.only'])->prefix('admin')->name('admin.')->group(functi
 });
 
 Route::middleware(['admin.only'])->group(function(){
-
+        Route::resource('requests', RequestController::class);
+        
+   // Type-specific create routes
+   Route::get('requests/create/lock', [RequestController::class, 'createLock'])->name('requests.create.lock');
+   Route::get('requests/create/ready-card', [RequestController::class, 'createReadyCard'])->name('requests.create.ready-card');
+   
+   
+   Route::post('requests/{request}/approve', [RequestController::class, 'approve'])->name('requests.approve');
+        Route::post('requests/{request}/reject', [RequestController::class, 'reject'])->name('requests.reject');
+        Route::post('requests/{request}/complete', [RequestController::class, 'markAsCompleted'])->name('requests.complete');
+        Route::post('requests/{request}/status/{status}', [RequestController::class, 'updateStatus'])->name('requests.update.status');
     Route::get('/admin/dashboard',[DashboardController::class ,'index'])->name('dashboard.index');
 
     Route::resource('users', UserController::class);
@@ -138,6 +150,16 @@ Route::post('/messages/{message}/resend', [MessageController::class, 'resendMess
         ->name('messages.send-manual');
 
         Route::resource('countries', \App\Http\Controllers\CountryController::class);
+
+        Route::resource('locks_w_ready_cards', LocksWReadyCardController::class);
+    
+        // Additional filter routes
+        Route::get('locks_w_ready_cards/type/{type}', [LocksWReadyCardController::class, 'filterByType'])->name('locks_w_ready_cards.filter.type');
+        Route::get('locks_w_ready_cards/status/{status}', [LocksWReadyCardController::class, 'filterByStatus'])->name('locks_w_ready_cards.filter.status');
+        
+        // Toggle status route
+        Route::get('locks_w_ready_cards/{locksWReadyCard}/toggle-status', [LocksWReadyCardController::class, 'toggleStatus'])->name('locks_w_ready_cards.toggle.status');
+
 
         Route::get('ready-cards/{readyCard}/items', [ReadyCardController::class, 'getItems'])->name('ready-cards.items');
         Route::post('ready-card-items/{item}/toggle-status', [ReadyCardItemController::class, 'toggleStatus'])->name('ready-card-items.toggle-status');

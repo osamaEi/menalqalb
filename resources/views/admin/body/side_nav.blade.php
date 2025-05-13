@@ -82,8 +82,12 @@
       <ul class="menu-sub">
 
 
-
         
+        <li class="menu-item {{ Request::routeIs('locks_w_ready_cards.index') ? 'active' : '' }}">
+          <a href="{{ route('locks_w_ready_cards.index') }}" class="menu-link">
+            <div>{{ __('Lock and Ready Card') }}</div>
+          </a>
+        </li>
         <li class="menu-item {{ Request::routeIs('locks.index') ? 'active' : '' }}">
           <a href="{{ route('locks.index') }}" class="menu-link">
             <div>{{ __('Lock Management') }}</div>
@@ -144,7 +148,33 @@
         </li>
       </ul>
     </li>
-    
+    <li class="menu-item {{ Request::is('countries*') ? 'active open' : '' }}" style="margin-bottom: 8px;">
+      <a href="javascript:void(0);" class="menu-link menu-toggle">
+        <i class="menu-icon tf-icons ri-gallery-line"></i>
+        <div>{{ __('Requests') }}</div>
+      </a>
+      <ul class="menu-sub">
+
+
+        
+        <li class="menu-item {{ Request::routeIs('requests.index') ? 'active' : '' }}">
+          <a href="{{ route('requests.index') }}" class="menu-link">
+            <div>{{ __('Requests') }}</div>
+          </a>
+        </li>
+
+        {{-- <li class="menu-item {{ Request::routeIs('requests.create.lock') ? 'active' : '' }}">
+          <a href="{{ route('requests.create.lock') }}" class="menu-link">
+            <div>{{ __('Locks Requests') }}</div>
+          </a>
+        </li>
+        <li class="menu-item {{ Request::routeIs('requests.create.ready-card') ? 'active' : '' }}">
+          <a href="{{ route('requests.create.ready-card') }}" class="menu-link">
+            <div>{{ __('Ready card Requests') }}</div>
+          </a>
+        </li> --}}
+      </ul>
+    </li>
     {{-- <!-- Orders & Sales section -->
     <li class="menu-header" style="margin-top: 30px; margin-bottom: 15px;">
       <span class="menu-header-text">{{ __('Orders & Sales') }}</span>

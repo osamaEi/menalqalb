@@ -335,17 +335,7 @@
                 </div>
             </div>
             
-            <div class="mb-3">
-                <div class="form-floating form-floating-outline">
-                    <input type="number" class="form-control @error('quantity') is-invalid @enderror" id="quantity" 
-                        name="quantity" value="{{ old('quantity') }}" required placeholder="{{ __('Quantity') }}">
-                    <label for="quantity">{{ __('Quantity') }}</label>
-                    @error('quantity')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
-            </div>
-            
+        
             <div class="mb-3">
                 <label for="notes" class="form-label">{{ __('Notes') }}</label>
                 <textarea class="form-control @error('notes') is-invalid @enderror" id="notes" 
@@ -355,41 +345,7 @@
                 @enderror
             </div>
             
-            <div class="mb-3">
-                <label for="image" class="form-label">{{ __('Lock Image (Optional)') }}</label>
-                <div class="card">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center justify-content-center mb-2">
-                            <img src="{{ asset('assets/img/default-lock.png') }}" alt="preview" 
-                                class="rounded-3 border" width="100" height="100" id="preview-image">
-                        </div>
-                        <input type="file" class="form-control @error('image') is-invalid @enderror" 
-                            id="image" name="image" accept="image/*">
-                        <small class="form-text">{{ __('Recommended size: 400x400px') }}</small>
-                        @error('image')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                </div>
-            </div>
-            
-            <div class="mb-3">
-                <label for="invoice_image" class="form-label">{{ __('Invoice Image (Optional)') }}</label>
-                <div class="card">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center justify-content-center mb-2">
-                            <img src="{{ asset('assets/img/default-invoice.png') }}" alt="preview" 
-                                class="rounded-3 border" width="100" height="100" id="preview-invoice-image">
-                        </div>
-                        <input type="file" class="form-control @error('invoice_image') is-invalid @enderror" 
-                            id="invoice_image" name="invoice_image" accept="image/*">
-                        <small class="form-text">{{ __('Upload an image of the invoice') }}</small>
-                        @error('invoice_image')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                </div>
-            </div>
+        
             
             <div class="mb-4">
                 <div class="form-check form-switch">
