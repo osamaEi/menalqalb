@@ -33,6 +33,8 @@ class SettingController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
+            'name_ar'=>'nullable',
+            'name_en'=>'nullable',
             'key' => 'required|string|max:255|unique:settings,key',
             'type' => 'required|in:text,image',
             'value' => 'required_if:type,text',

@@ -23,6 +23,15 @@
                         @csrf
                         @method('PUT')
                         
+
+                        <div class="mb-3">
+                            <label for="name_ar" class="form-label">{{ __('Name') }}(Arabic) <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="name_ar" name="name_ar" value="{{ old('name_ar', $setting->name_ar) }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="name_en" class="form-label">{{ __('Name') }} (English)<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="name_en" name="name_en" value="{{ old('name_en', $setting->name_en) }}" required>
+                        </div>
                         <div class="mb-3">
                             <label for="key" class="form-label">{{ __('Key') }} <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="key" name="key" value="{{ old('key', $setting->key) }}" required>

@@ -19,6 +19,8 @@
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
+                                        <th width="25%">{{ __('Name') }}(AR)</th>
+                                        <th width="25%">{{ __('Name') }}(En)</th>
                                         <th width="25%">{{ __('Key') }}</th>
                                         <th width="40%">{{ __('Value') }}</th>
                                         <th width="15%">{{ __('Type') }}</th>
@@ -28,7 +30,10 @@
                                 <tbody>
                                     @foreach($settings as $setting)
                                         <tr>
+                                            <td>{{ __($setting->name_ar) }}</td>
+                                            <td>{{ __($setting->name_en) }}</td>
                                             <td>{{ __($setting->key) }}</td>
+                               
                                             <td>
                                                 @if($setting->type === 'text')
                                                     {{ $setting->value }}

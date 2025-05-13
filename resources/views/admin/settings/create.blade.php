@@ -23,11 +23,18 @@
                         @csrf
                         
                         <div class="mb-3">
+                            <label for="name_ar" class="form-label">{{ __('Name') }}(Arabic) <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="name_ar" name="name_ar" value="{{ old('name_ar') }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="name_en" class="form-label">{{ __('Name') }} (English)<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="name_en" name="name_en" value="{{ old('name_en') }}" required>
+                        </div>
+                        <div class="mb-3">
                             <label for="key" class="form-label">{{ __('Key') }} <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="key" name="key" value="{{ old('key') }}" required>
                             <small class="text-muted">{{ __('Unique identifier for this setting (no spaces, use underscores)') }}</small>
                         </div>
-                        
                         <div class="mb-3">
                             <label for="type" class="form-label">{{ __('Type') }} <span class="text-danger">*</span></label>
                             <select class="form-control" id="type" name="type" required>
