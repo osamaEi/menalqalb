@@ -141,6 +141,12 @@
           </a>
         </li>
         
+        <li class="menu-item {{ Request::routeIs('packages.index') ? 'active' : '' }}">
+          <a href="{{ route('packages.index') }}" class="menu-link">
+            <div>{{ __('Package Management') }}</div>
+          </a>
+        </li>
+        
         <li class="menu-item {{ Request::routeIs('admin.settings.index') ? 'active' : '' }}">
           <a href="{{ route('admin.settings.index') }}" class="menu-link">
             <div>{{ __('Settings') }}</div>

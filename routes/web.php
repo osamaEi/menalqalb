@@ -5,6 +5,7 @@ use App\Http\Controllers\CardController;
 use App\Http\Controllers\LockController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\MessageController;
+use App\Http\Controllers\PackageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RequestController;
 use App\Http\Controllers\SettingController;
@@ -59,7 +60,9 @@ Route::middleware(['admin.only'])->prefix('admin')->name('admin.')->group(functi
 
 Route::middleware(['admin.only'])->group(function(){
         Route::resource('requests', RequestController::class);
-        
+        Route::resource('packages', PackageController::class);
+        Route::get('packages/{package}/toggle-status', [PackageController::class, 'toggleStatus'])->name('packages.toggle.status');
+
    // Type-specific create routes
    Route::get('requests/create/lock', [RequestController::class, 'createLock'])->name('requests.create.lock');
    Route::get('requests/create/ready-card', [RequestController::class, 'createReadyCard'])->name('requests.create.ready-card');
