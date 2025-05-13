@@ -49,7 +49,7 @@
                                 <div class="col-md-6">
                                     <label for="price" class="form-label">{{ __('Price') }} <span class="text-danger">*</span></label>
                                     <div class="input-group">
-                                        <span class="input-group-text">$</span>
+                                        <span class="input-group-text">AED</span>
                                         <input type="number" step="0.01" class="form-control @error('price') is-invalid @enderror" 
                                             id="price" name="price" value="{{ old('price', $package->price) }}" min="0" required>
                                     </div>

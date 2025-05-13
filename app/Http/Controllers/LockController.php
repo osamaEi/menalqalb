@@ -105,26 +105,14 @@ class LockController extends Controller
             'cost' => 'required|numeric|min:0',
             'quantity' => 'required|integer|min:0',
             'notes' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'invoice_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+     
             'is_active' => 'boolean',
         ]);
         
         // Set default values
         $validated['is_active'] = $request->boolean('is_active', true);
         
-        // Handle image upload
-        if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('locks', 'public');
-            $validated['image'] = $path;
-        }
-        
-        // Handle invoice image upload
-        if ($request->hasFile('invoice_image')) {
-            $path = $request->file('invoice_image')->store('lock_invoices', 'public');
-            $validated['invoice_image'] = $path;
-        }
-        
+
         $lock = Locks::create($validated);
         
         return redirect()->route('locks.index')
@@ -211,11 +199,7 @@ class LockController extends Controller
      */
     public function destroy(Locks $lock)
     {
-        // Check if lock has invoice items
-        if ($lock->invoiceItems()->count() > 0) {
-            return redirect()->route('locks.index')
-                ->with('error', __('Cannot delete lock with associated invoice items.'));
-        }
+        
         
         // Delete images if they exist
         if ($lock->image) {

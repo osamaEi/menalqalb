@@ -335,7 +335,17 @@
                 </div>
             </div>
             
-        
+            <div class="mb-3">
+                <div class="form-floating form-floating-outline">
+                    <input type="number" class="form-control @error('quantity') is-invalid @enderror" id="quantity" 
+                        name="quantity" value="{{ old('quantity') }}" required placeholder="{{ __('Quantity') }}">
+                    <label for="quantity">{{ __('Quantity') }}</label>
+                    @error('quantity')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+            </div>
+            
             <div class="mb-3">
                 <label for="notes" class="form-label">{{ __('Notes') }}</label>
                 <textarea class="form-control @error('notes') is-invalid @enderror" id="notes" 
