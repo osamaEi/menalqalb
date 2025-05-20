@@ -24,6 +24,7 @@ use App\Http\Controllers\RegisterUserController;
 use App\Http\Controllers\ReadyCardItemController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\LocksWReadyCardController;
+use App\Http\Controllers\PackagePurchaseController;
 
 /*
 |--------------------------------------------------------------------------
@@ -323,4 +324,26 @@ Route::middleware(['auth'])->prefix('app')->name('app.')->group(function () {
     Route::post('/greetings/{id}/send', [GreetingController::class, 'sendMessage'])->name('greetings.send');
     Route::get('/greetings/{id}/edit', [GreetingController::class, 'edit'])->name('greetings.edit');
 });
+
+Route::middleware(['admin.only'])->group(function () {
+
+    Route::get('admin/purchase', [PackagePurchaseController::class, 'index'])
+        ->name('purchase.index');
+    
+    
+// Process purchase
+Route::post('/purchase/{id}/purchase', [PackagePurchaseController::class, 'purchase'])
+    ->name('purchase.purchase');
+    
+    // Payment callbacks
+    Route::get('/admin/purchase/payment/success', [PackagePurchaseController::class, 'handleSuccess'])
+        ->name('packages.payment.success');
+    
+    Route::get('/admin/purchase/payment/cancel', [PackagePurchaseController::class, 'handleCancel'])
+        ->name('packages.payment.cancel');
+});
+
+// Ziina webhook route
+Route::post('/webhooks/ziina', [ZiinaPaymentController::class, 'handleWebhook'])
+    ->name('ziina.webhook');
 
