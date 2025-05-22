@@ -186,12 +186,9 @@ class PackagePurchaseController extends Controller
                 $payment->status = $paymentIntent['status'] ?? 'unknown';
                 $payment->save();
                 
-                // If payment is successful, credit user
                 if (in_array($paymentIntent['status'], ['completed', 'succeeded'])) {
-                    // Retrieve package_id from session
                     $packageId = Session::get('payment_package_' . $paymentId);
                     
-                    // Clear session data
                     Session::forget('payment_package_' . $paymentId);
                     
                     if ($packageId) {
