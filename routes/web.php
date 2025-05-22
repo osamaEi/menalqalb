@@ -325,24 +325,22 @@ Route::middleware(['auth'])->prefix('app')->name('app.')->group(function () {
     Route::get('/greetings/{id}/edit', [GreetingController::class, 'edit'])->name('greetings.edit');
 });
 
-Route::middleware(['admin.only'])->group(function () {
+Route::middleware(['auth'])->group(function () {
+    // Display available packages
+    Route::get('/packages', [PackagePurchaseController::class, 'index'])
+         ->name('packages.index');
+    
+    // Handle package purchase request
+    Route::post('/packages/purchase/{id}', [PackagePurchaseController::class, 'purchase'])
+         ->name('packages.purchase');
+    
 
-    Route::get('admin/purchase', [PackagePurchaseController::class, 'index'])
-        ->name('purchase.index');
-    
-    
-// Process purchase
-Route::post('/purchase/{id}/purchase', [PackagePurchaseController::class, 'purchase'])
-    ->name('purchase.purchase');
-    
-    // Payment callbacks
-    Route::get('/admin/purchase/payment/success', [PackagePurchaseController::class, 'handleSuccess'])
-        ->name('packages.payment.success');
-    
-    Route::get('/admin/purchase/payment/cancel', [PackagePurchaseController::class, 'handleCancel'])
-        ->name('packages.payment.cancel');
+         Route::get('/packages/payment/success', [PackagePurchaseController::class, 'handleSuccess'])
+         ->name('packages.payment.success');
+    // Payment cancel callback
+    Route::get('/packages/payment/cancel', [PackagePurchaseController::class, 'handleCancel'])
+         ->name('packages.payment.cancel');
 });
-
 // Ziina webhook route
 Route::post('/webhooks/ziina', [ZiinaPaymentController::class, 'handleWebhook'])
     ->name('ziina.webhook');

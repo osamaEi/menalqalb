@@ -123,7 +123,7 @@ $totalItemsCount = \App\Models\ReadyCardItem::whereHas('readyCard', function($qu
                         </a>
                     </div>
                     <div>
-                        <a href="charge.html" class="bg-[#000] text-[#FFF] p-2 rounded-[13px] w-[141px] mx-auto mt-0">
+                        <a href="{{ route('packages.index')}}" class="bg-[#000] text-[#FFF] p-2 rounded-[13px] w-[141px] mx-auto mt-0">
                             تعبئة الرصيد
                         </a>
                     </div>
