@@ -1,0 +1,153 @@
+@extends('app.index')
+
+@section('content')
+<div class="app white messagebox">
+   
+    <h1 class="text-[24px] text-[#242424] font-[900] z-50 relative page-title text-center mt-4">أقفال من القلب</h1>
+
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-4">
+            <div class="All_Button lang Devices">
+                <!-- Buttons -->
+                <div class="flex items-center justify-between">
+                    <div class="newMessage bg-black rounded-[15px] text-center my-2 w-[48%]">
+                        <a href="#" class="text-white border-0">إعداد قفل القلب</a>
+                    </div>
+                    <div class="newMessage bg-black rounded-[15px] text-center my-2 w-[48%]">
+                        <a href="{{ route('min-alqalb.lockers.create') }}" class="text-white border-0">طلب جديد</a>
+                    </div>
+                </div>
+
+                <!-- Purchased Requests Table -->
+                <div class="max-w-6xl mx-auto mt-6">
+                    <div class="flex items-center justify-end mb-4 gap-3">
+                        <select id="statusFilter" class="border border-gray-300 w-[100%] rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
+                            <option value="all">الكل</option>
+                            <option value="available">متوفرة</option>
+                            <option value="used">مستخدمة</option>
+                            <option value="canceled">ملغية</option>
+                        </select>
+                        <span class="font-bold text-gray-700 min-w-[151px]">: تصفية حسب الحالة</span>
+                    </div>
+                    <div class="overflow-x-auto bg-white rounded-lg shadow table-container">
+                        <table id="dataTable" class="min-w-full divide-y divide-gray-200 sticky-header">
+                            <thead class="bg-gray-100">
+                                <tr>
+                                    <th class="px-6 py-3 text-right text-sm font-medium border-b">الحالة</th>
+                                    <th class="px-6 py-3 text-right text-sm font-medium border-b">تاريخ الشراء</th>
+                                    <th class="px-6 py-3 text-right text-sm font-medium border-b">الرقم</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                @foreach($purchasedRequests as $request)
+                                    <tr data-status="{{ $request->status == 'pending' ? 'available' : $request->status }}" class="hover:bg-gray-50">
+                                        <td class="px-6 py-4 whitespace-nowrap text-center">
+                                            <div class="flex justify-center">
+                                                <div class="w-6 h-6" title="{{ $request->status == 'pending' ? 'متوفرة' : ($request->status == 'used' ? 'مستخدمة' : 'ملغية') }}">
+                                                    <img src="{{ asset($request->status == 'pending' ? 'storage/'.$request->locksWReadyCard->photo : ($request->status == 'used' ? 'img/grean-l.png' : 'img/red-l.png')) }}" class="w-[30px]" alt="">                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-center">{{ $request->created_at->format('d/m/Y') }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-center">{{ $request->id }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success/Error/Info Messages -->
+    @if(session('success'))
+        <div class="notification fixed bottom-0 left-0 right-0 bg-green-500 text-white p-4 text-center">
+            <i class="fas fa-check-circle mr-2"></i>
+            {{ session('success') }}
+        </div>
+    @endif
+    @if(session('error'))
+        <div class="notification fixed bottom-0 left-0 right-0 bg-red-500 text-white p-4 text-center">
+            <i class="fas fa-exclamation-circle mr-2"></i>
+            {{ session('error') }}
+        </div>
+    @endif
+    @if(session('info'))
+        <div class="notification fixed bottom-0 left-0 right-0 bg-blue-500 text-white p-4 text-center">
+            <i class="fas fa-info-circle mr-2"></i>
+            {{ session('info') }}
+        </div>
+    @endif
+
+    <style>
+        .table-container {
+            max-height: 500px;
+            overflow-y: auto;
+            position: relative;
+        }
+        .sticky-header thead th {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background-color: #de162b;
+            color: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .sticky-header {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+        .header-logo {
+            transition: transform 0.3s ease;
+        }
+        .header-logo:hover {
+            transform: scale(1.05);
+        }
+        .page-title {
+            position: relative;
+        }
+        .page-title::after {
+            content: "";
+            position: absolute;
+            bottom: -8px;
+            right: 0;
+            width: 60px;
+            height: 4px;
+            background-color: #B62326;
+            border-radius: 2px;
+        }
+    </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const statusFilter = document.getElementById('statusFilter');
+            const tableRows = document.querySelectorAll('#dataTable tbody tr');
+
+            statusFilter.addEventListener('change', filterTable);
+
+            tableRows.forEach(row => {
+                row.addEventListener('click', () => {
+                    window.location.href = '{{ route("min-alqalb.lockers.finish") }}';
+                });
+            });
+
+            function filterTable() {
+                const selectedStatus = statusFilter.value;
+                tableRows.forEach(row => {
+                    const rowStatus = row.getAttribute('data-status');
+                    if (selectedStatus === 'all' || selectedStatus === rowStatus) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            }
+        });
+
+        setTimeout(() => {
+            document.querySelectorAll('.notification').forEach(notification => notification.remove());
+        }, 5000);
+    </script>
+</div>
+@endsection

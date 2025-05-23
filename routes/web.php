@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CardController;
 use App\Http\Controllers\LockController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\AppCardController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\PackageController;
 use App\Http\Controllers\ProfileController;
@@ -16,6 +17,7 @@ use App\Http\Controllers\LoginAppController;
 use App\Http\Controllers\WhatsAppController;
 use App\Http\Controllers\MessageAppContoller;
 use App\Http\Controllers\ReadyCardController;
+use App\Http\Controllers\AppLockersController;
 use App\Http\Controllers\MessageAppController;
 use App\Http\Controllers\ProfileAppController;
 use App\Http\Controllers\CardContentController;
@@ -345,3 +347,29 @@ Route::middleware(['auth'])->group(function () {
 Route::post('/webhooks/ziina', [ZiinaPaymentController::class, 'handleWebhook'])
     ->name('ziina.webhook');
 
+
+Route::middleware(['auth'])->prefix('min-alqalb')->name('min-alqalb.')->group(function () {
+        Route::get('/lockers', [AppLockersController::class, 'index'])->name('lockers.index');
+        Route::get('/lockers/create', [AppLockersController::class, 'createRequest'])->name('lockers.create');
+        Route::post('/lockers/store', [AppLockersController::class, 'storeRequest'])->name('lockers.store');
+        Route::get('/lockers/summary', [AppLockersController::class, 'showSummary'])->name('lockers.summary');
+        Route::post('/lockers/purchase', [AppLockersController::class, 'purchase'])->name('lockers.purchase');
+        Route::get('/lockers/payment/success', [AppLockersController::class, 'handleSuccess'])->name('lockers.payment.success');
+        Route::get('/lockers/payment/cancel', [AppLockersController::class, 'handleCancel'])->name('lockers.payment.cancel');
+        Route::get('/lockers/finish', function () {
+            return view('app.lockers.finish');
+        })->name('lockers.finish');
+    });
+
+    Route::middleware(['auth'])->prefix('min-alqalb')->name('min-alqalb.')->group(function () {
+        Route::get('/cards', [AppCardController::class, 'index'])->name('cards.index');
+        Route::get('/cards/create', [AppCardController::class, 'createRequest'])->name('cards.create');
+        Route::post('/cards/store', [AppCardController::class, 'storeRequest'])->name('cards.store');
+        Route::get('/cards/summary', [AppCardController::class, 'showSummary'])->name('cards.summary');
+        Route::post('/cards/purchase', [AppCardController::class, 'purchase'])->name('cards.purchase');
+        Route::get('/cards/payment/success', [AppCardController::class, 'handleSuccess'])->name('cards.payment.success');
+        Route::get('/cards/payment/cancel', [AppCardController::class, 'handleCancel'])->name('cards.payment.cancel');
+        Route::get('/cards/finish', function () {
+            return view('app.cards.finish');
+        })->name('cards.finish');
+    });

@@ -137,7 +137,7 @@ $totalItemsCount = \App\Models\ReadyCardItem::whereHas('readyCard', function($qu
                 <div style="border-top-right-radius: 13px; border-bottom-left-radius: 13px;"
                     class="w-[162px] h-[80px] bg-[#B62326] flex flex-col text-white text-center items-between justify-between py-2">
                     <p>
-                        <a href="message.html">
+                        <a href="{{ route('min-alqalb.cards.index')}}">
                             البطاقات الخاصة
                         </a>
                     </p>
@@ -172,7 +172,7 @@ $totalItemsCount = \App\Models\ReadyCardItem::whereHas('readyCard', function($qu
                 <div style="border-top-right-radius: 13px; border-bottom-left-radius: 13px;"
                     class="w-[162px] h-[80px] bg-[#B62326] flex flex-col text-white text-center items-between justify-between py-2">
                     <p>
-                        <a href="lock.html">
+                        <a href="{{ route('min-alqalb.lockers.index')}}">
                             الاقفال
                         </a>
                     </p>

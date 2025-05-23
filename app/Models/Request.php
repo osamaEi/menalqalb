@@ -17,6 +17,7 @@ class Request extends Model
         'email',
         'address',
         'phone',
+        'type',
         'quantity',
         'status',
         'total_price',
