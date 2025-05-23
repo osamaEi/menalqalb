@@ -93,6 +93,7 @@ Route::middleware(['admin.only'])->group(function(){
     Route::get('users/{user}/block', [UserController::class, 'blockUser'])->name('users.block');
     Route::get('users/{user}/verify-email', [UserController::class, 'verifyEmail'])->name('users.verify.email');
     Route::get('users/{user}/verify-whatsapp', [UserController::class, 'verifyWhatsapp'])->name('users.verify.whatsapp');
+    Route::post('users/{id}/restore', [UserController::class, 'restore'])->name('users.restore');
 
     Route::get('api/users/{id}', [UserController::class, 'getUser'])->name('api.users.get');
 

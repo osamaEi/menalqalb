@@ -11,56 +11,55 @@ use Illuminate\Validation\Rule;
 class UserController extends Controller
 {
     /**
-     * Display a listing of the users with dashboard statistics.
+     * Display a listing of the users with dashboard statistics and filters.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-   /**
- * Display a listing of the users with dashboard statistics and filters.
- *
- * @param  \Illuminate\Http\Request  $request
- * @return \Illuminate\Http\Response
- */
-public function index(Request $request)
-{
-    // Get statistics for dashboard
-    $totalUsers = User::count();
-    $activeUsers = User::active()->count();
-    $inactiveUsers = User::inactive()->count() + User::blocked()->count();
-    $privilegedUsers = User::privilegedUser()->count();
-    
-    // Start with a base query
-    $query = User::query();
-    
-    // Apply filters from query parameters
-    if ($request->has('user_type') && !empty($request->user_type)) {
-        $query->where('user_type', $request->user_type);
-        $filter = __("Showing only :type users", ['type' => str_replace('_', ' ', $request->user_type)]);
+    public function index(Request $request)
+    {
+        // Get statistics for dashboard, including soft-deleted users
+        $totalUsers = User::withTrashed()->count();
+        $activeUsers = User::active()->count();
+        $inactiveUsers = User::inactive()->count() + User::blocked()->count();
+        $privilegedUsers = User::privilegedUser()->count();
+        
+        // Start with a base query including all users (with trashed)
+        $query = User::withTrashed();
+        
+        // Apply filters from query parameters
+        if ($request->has('user_type') && !empty($request->user_type)) {
+            $query->where('user_type', $request->user_type);
+            $filter = __("Showing only :type users", ['type' => str_replace('_', ' ', $request->user_type)]);
+        }
+        
+        if ($request->has('status') && !empty($request->status)) {
+            if ($request->status === 'deleted') {
+                $query->onlyTrashed();
+            } else {
+                $query->where('status', $request->status)->whereNull('deleted_at');
+            }
+            $filter = __("Showing only :status users", ['status' => $request->status]);
+        }
+        
+        if ($request->has('country_id') && !empty($request->country_id)) {
+            $query->where('country_id', $request->country_id);
+            $country = Country::find($request->country_id);
+            $filter = __("Showing only users from :country", ['country' => $country ? $country->name : '']);
+        }
+        
+        $users = $query->paginate(10);
+        $countries = Country::all();
+        
+        return view('users.index', compact(
+            'users', 
+            'countries', 
+            'totalUsers', 
+            'activeUsers', 
+            'inactiveUsers', 
+            'privilegedUsers'
+        ))->with('filter', $filter ?? __('All Users'));
     }
-    
-    if ($request->has('status') && !empty($request->status)) {
-        $query->where('status', $request->status);
-        $filter = __("Showing only :status users", ['status' => $request->status]);
-    }
-    
-    if ($request->has('country_id') && !empty($request->country_id)) {
-        $query->where('country_id', $request->country_id);
-        $country = Country::find($request->country_id);
-        $filter = __("Showing only users from :country", ['country' => $country ? $country->name : '']);
-    }
-    
-    $users = $query->paginate(10);
-    $countries = Country::all();
-    
-    return view('users.index', compact(
-        'users', 
-        'countries', 
-        'totalUsers', 
-        'activeUsers', 
-        'inactiveUsers', 
-        'privilegedUsers'
-    ))->with('filter', $filter ?? __('All Users'));
-}
 
     /**
      * Show the form for creating a new user.
@@ -76,7 +75,12 @@ public function index(Request $request)
         return view('users.create', compact('countries', 'userTypes', 'statuses'));
     }
 
-   
+    /**
+     * Store a newly created user in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -113,7 +117,7 @@ public function index(Request $request)
      */
     public function show(User $user)
     {
-        $user->load( 'cards', 'readyCards');
+        $user->load('cards', 'readyCards');
         return view('users.show', compact('user'));
     }
 
@@ -184,13 +188,27 @@ public function index(Request $request)
      */
     public function destroy(User $user)
     {
-        // Instead of permanently deleting, mark as deleted
-        $user->update(['status' => 'deleted']);
+        $user->delete(); // Soft delete the user
         
         return redirect()->route('users.index')
-            ->with('success', __('User marked as deleted successfully.'));
+            ->with('success', __('User soft deleted successfully.'));
     }
-    
+
+    /**
+     * Restore a soft-deleted user.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function restore($id)
+    {
+        $user = User::onlyTrashed()->findOrFail($id);
+        $user->restore();
+        
+        return redirect()->route('users.index')
+            ->with('success', __('User restored successfully.'));
+    }
+
     /**
      * Filter users by type.
      *
@@ -207,7 +225,7 @@ public function index(Request $request)
         }
         
         // Get statistics for dashboard
-        $totalUsers = User::count();
+        $totalUsers = User::withTrashed()->count();
         $activeUsers = User::active()->count();
         $inactiveUsers = User::inactive()->count() + User::blocked()->count();
         $privilegedUsers = User::privilegedUser()->count();
@@ -224,7 +242,7 @@ public function index(Request $request)
             'privilegedUsers'
         ))->with('filter', __("Showing only :type users", ['type' => str_replace('_', ' ', $type)]));
     }
-    
+
     /**
      * Filter users by status.
      *
@@ -241,12 +259,19 @@ public function index(Request $request)
         }
         
         // Get statistics for dashboard
-        $totalUsers = User::count();
+        $totalUsers = User::withTrashed()->count();
         $activeUsers = User::active()->count();
         $inactiveUsers = User::inactive()->count() + User::blocked()->count();
         $privilegedUsers = User::privilegedUser()->count();
         
-        $users = User::with('country')->where('status', $status)->paginate(10);
+        $query = User::with('country');
+        if ($status === 'deleted') {
+            $query->onlyTrashed();
+        } else {
+            $query->where('status', $status)->whereNull('deleted_at');
+        }
+        
+        $users = $query->paginate(10);
         $countries = Country::all();
         
         return view('users.dashboard', compact(
@@ -258,7 +283,7 @@ public function index(Request $request)
             'privilegedUsers'
         ))->with('filter', __("Showing only :status users", ['status' => $status]));
     }
-    
+
     /**
      * Filter users by country.
      *
@@ -275,7 +300,7 @@ public function index(Request $request)
         }
         
         // Get statistics for dashboard
-        $totalUsers = User::count();
+        $totalUsers = User::withTrashed()->count();
         $activeUsers = User::active()->count();
         $inactiveUsers = User::inactive()->count() + User::blocked()->count();
         $privilegedUsers = User::privilegedUser()->count();
@@ -292,7 +317,7 @@ public function index(Request $request)
             'privilegedUsers'
         ))->with('filter', __("Showing only users from :country", ['country' => $country->name]));
     }
-    
+
     /**
      * Get User model.
      * 
@@ -309,7 +334,7 @@ public function index(Request $request)
         
         return response()->json($user);
     }
-    
+
     /** 
      * Toggle user active status.
      *
@@ -328,7 +353,7 @@ public function index(Request $request)
         
         return redirect()->back()->with('success', $message);
     }
-    
+
     /**
      * Block a user.
      *
@@ -341,7 +366,7 @@ public function index(Request $request)
         
         return redirect()->back()->with('success', __('User has been blocked.'));
     }
-    
+
     /**
      * Verify user email.
      *
@@ -357,7 +382,7 @@ public function index(Request $request)
         
         return redirect()->back()->with('success', __('Email has been verified.'));
     }
-    
+
     /**
      * Verify user WhatsApp.
      *

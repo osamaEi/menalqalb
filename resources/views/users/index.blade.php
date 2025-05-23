@@ -265,24 +265,30 @@
                                         <a class="dropdown-item" href="{{ route('users.edit', $user->id) }}">
                                             <i class="ri-pencil-line text-primary me-2"></i>{{ __('Edit') }}
                                         </a>
-                                        @if($user->status === 'active')
-                                            <a class="dropdown-item" href="{{ route('users.toggle.status', $user->id) }}">
-                                                <i class="ri-user-unfollow-line text-secondary me-2"></i>{{ __('Deactivate') }}
+                                        @if($user->deleted_at)
+                                            <a class="dropdown-item" href="{{ route('users.restore', $user->id) }}">
+                                                <i class="ri-restart-line text-success me-2"></i>{{ __('Restore') }}
                                             </a>
                                         @else
-                                            <a class="dropdown-item" href="{{ route('users.toggle.status', $user->id) }}">
-                                                <i class="ri-user-follow-line text-success me-2"></i>{{ __('Activate') }}
+                                            @if($user->status === 'active')
+                                                <a class="dropdown-item" href="{{ route('users.toggle.status', $user->id) }}">
+                                                    <i class="ri-user-unfollow-line text-secondary me-2"></i>{{ __('Deactivate') }}
+                                                </a>
+                                            @else
+                                                <a class="dropdown-item" href="{{ route('users.toggle.status', $user->id) }}">
+                                                    <i class="ri-user-follow-line text-success me-2"></i>{{ __('Activate') }}
+                                                </a>
+                                            @endif
+                                            @if($user->status !== 'blocked')
+                                                <a class="dropdown-item" href="{{ route('users.block', $user->id) }}">
+                                                    <i class="ri-shield-user-line text-warning me-2"></i>{{ __('Block') }}
+                                                </a>
+                                            @endif
+                                            <a class="dropdown-item delete-record" href="javascript:void(0);" 
+                                                data-bs-toggle="modal" data-bs-target="#deleteModal" data-id="{{ $user->id }}">
+                                                <i class="ri-delete-bin-line text-danger me-2"></i>{{ __('Delete') }}
                                             </a>
                                         @endif
-                                        @if($user->status !== 'blocked')
-                                            <a class="dropdown-item" href="{{ route('users.block', $user->id) }}">
-                                                <i class="ri-shield-user-line text-warning me-2"></i>{{ __('Block') }}
-                                            </a>
-                                        @endif
-                                        <a class="dropdown-item delete-record" href="javascript:void(0);" 
-                                            data-bs-toggle="modal" data-bs-target="#deleteModal" data-id="{{ $user->id }}">
-                                            <i class="ri-delete-bin-line text-danger me-2"></i>{{ __('Delete') }}
-                                        </a>
                                     </div>
                                 </div>
                             </td>
@@ -479,9 +485,8 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-
 <script>
-  $(function() {
+$(function() {
     // Initialize DataTable with proper configuration
     var dataTable = $('.datatables-users').DataTable({
         ordering: true,
@@ -507,23 +512,23 @@ document.addEventListener('DOMContentLoaded', function() {
         return params;
     }
     
- // Function to build URL with filters
-function buildFilterUrl(filterType, filterValue) {
-    // Base routes for each filter type
-    const routes = {
-        'user_type': routeUsersFilterType,  // Should be something like '/users/type/'
-        'status': routeUsersFilterStatus,   // Should be something like '/users/status/'
-        'country_id': routeUsersFilterCountry  // Should be something like '/users/country/'
-    };
-    
-    // If we have a value and a proper route, build the URL with the segment
-    if (filterValue && routes[filterType]) {
-        return routes[filterType] + '/' + filterValue;
-    } else {
-        // Return to index if no filter is selected
-        return routeUsers;
+    // Function to build URL with filters
+    function buildFilterUrl(filterType, filterValue) {
+        // Base routes for each filter type
+        const routes = {
+            'user_type': routeUsersFilterType,  // Should be something like '/users/type/'
+            'status': routeUsersFilterStatus,   // Should be something like '/users/status/'
+            'country_id': routeUsersFilterCountry  // Should be something like '/users/country/'
+        };
+        
+        // If we have a value and a proper route, build the URL with the segment
+        if (filterValue && routes[filterType]) {
+            return routes[filterType] + '/' + filterValue;
+        } else {
+            // Return to index if no filter is selected
+            return routeUsers;
+        }
     }
-}
     
     // User Type Filter
     $('#user-type-filter').on('change', function() {

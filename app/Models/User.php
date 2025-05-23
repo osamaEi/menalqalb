@@ -5,13 +5,14 @@ namespace App\Models;
 use App\Models\Request;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 //use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -51,25 +52,26 @@ class User extends Authenticatable
         'password' => 'hashed',
         'email_verified' => 'boolean',
         'whatsapp_verified' => 'boolean',
+        'deleted_at' => 'datetime',
     ];
 
-   // In app/Models/User.php
+    // In app/Models/User.php
 
-public function requests()
-{
-    return $this->hasMany(Request::class);
-}
+    public function requests()
+    {
+        return $this->hasMany(Request::class);
+    }
 
-// Add these helper methods
-public function pendingRequests()
-{
-    return $this->requests()->where('status', 'pending');
-}
+    // Add these helper methods
+    public function pendingRequests()
+    {
+        return $this->requests()->where('status', 'pending');
+    }
 
-public function completedRequests()
-{
-    return $this->requests()->where('status', 'completed');
-}
+    public function completedRequests()
+    {
+        return $this->requests()->where('status', 'completed');
+    }
 
     public function cards()
     {
@@ -83,62 +85,6 @@ public function completedRequests()
     {
         return $this->hasMany(ReadyCard::class, 'customer_id');
     }
-
-    /**
-     * Get the invoices belonging to the user.
-     */
-    // public function invoices()
-    // {
-    //     return $this->hasMany(Invoice::class, 'customer_id');
-    // }
-
-    // /**
-    //  * Get the gifts sent by the user.
-    //  */
-    // public function sentGifts()
-    // {
-    //     return $this->hasMany(Gift::class, 'sender_id');
-    // }
-
-    // /**
-    //  * Get the user's balance.
-    //  */
-    // public function balance()
-    // {
-    //     return $this->hasOne(Balance::class);
-    // }
-
-    // /**
-    //  * Get the transactions for the user.
-    //  */
-    // public function transactions()
-    // {
-    //     return $this->hasMany(Transaction::class);
-    // }
-
-    // /**
-    //  * Get the messages sent by the user.
-    //  */
-    // public function sentMessages()
-    // {
-    //     return $this->hasMany(Message::class, 'sender_id');
-    // }
-
-    // /**
-    //  * Get the messages received by the user.
-    //  */
-    // public function receivedMessages()
-    // {
-    //     return $this->hasMany(Message::class, 'receiver_id');
-    // }
-
-    // /**
-    //  * Get the payments for the designer.
-    //  */
-    // public function designerPayments()
-    // {
-    //     return $this->hasMany(DesignerPayment::class, 'designer_id');
-    // }
 
     /**
      * Scope a query to only include admin users.
