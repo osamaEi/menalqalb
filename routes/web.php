@@ -17,6 +17,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\GreetingController;
 use App\Http\Controllers\LoginAppController;
 use App\Http\Controllers\WhatsAppController;
+use App\Http\Controllers\AdminBillController;
 use App\Http\Controllers\MessageAppContoller;
 use App\Http\Controllers\ReadyCardController;
 use App\Http\Controllers\AppLockersController;
@@ -24,6 +25,7 @@ use App\Http\Controllers\MessageAppController;
 use App\Http\Controllers\ProfileAppController;
 use App\Http\Controllers\CardContentController;
 use App\Http\Controllers\RegisterAppController;
+use App\Http\Controllers\AdminPaymentController;
 use App\Http\Controllers\RegisterUserController;
 use App\Http\Controllers\ReadyCardItemController;
 use App\Http\Controllers\Admin\DashboardController;
@@ -251,7 +253,7 @@ Route::prefix('app')->name('app.')->group(function () {
     Route::get('forgot-password/otp', [LoginAppController::class, 'showOtpForm'])->name('forgot-password.otp');
     Route::post('forgot-password/verify', [LoginAppController::class, 'verifyOtp'])->name('forgot-password.verify');
     Route::get('forgot-password/reset', [LoginAppController::class, 'showResetPasswordForm'])->name('forgot-password.reset');
-    Route::post('forgot-password/reset', [LoginAppController::class, 'resetPassword'])->name('forgot-password.reset');
+    Route::post('forgot-password/reset', [LoginAppController::class, 'resetPassword'])->name('forgot-password.reset.store');
     Route::post('forgot-password/resend', [LoginAppController::class, 'resendOtp'])->name('forgot-password.resend');});
 // Routes that require authentication
 Route::middleware(['auth'])->prefix('app')->name('app.')->group(function () {
@@ -389,4 +391,12 @@ Route::middleware('auth')->prefix('app')->name('app.')->group(function () {
 Route::prefix('app')->name('app.')->group(function () {
     Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
     Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
+});
+
+
+Route::middleware(['admin.only'])->prefix('admin')->group(function () {
+    Route::get('/bills', [AdminBillController::class, 'index'])->name('admin.bills.index');
+    Route::get('/bills/{bill}', [AdminBillController::class, 'show'])->name('admin.bills.show');
+    Route::get('/bills/{bill}/pdf', [AdminBillController::class, 'generatePdf'])->name('admin.bills.pdf');
+    Route::get('/payments', [AdminPaymentController::class, 'index'])->name('admin.payments.index');
 });

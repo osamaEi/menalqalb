@@ -11,7 +11,7 @@
                         @if (session('error'))
                             <div class="text-red-500 text-center mb-4">{{ session('error') }}</div>
                         @endif
-                        <form class="space-y-6" method="POST" action="{{ route('app.forgot-password.reset') }}">
+                        <form class="space-y-6" method="POST" action="{{ route('app.forgot-password.reset.store') }}">
                             @csrf
                             <div class="bg-[#F9F9F9] h-[55px] relative mt-0 rounded-[39px] border !border-[#000000]">
                                 <input type="password" name="password" id="passwordInput" class="w-full h-full text-center bg-transparent px-4 text-lg focus:outline-none" placeholder="كلمة المرور" required>
