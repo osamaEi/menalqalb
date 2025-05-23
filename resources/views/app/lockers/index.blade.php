@@ -48,7 +48,7 @@
                                             </div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-center">{{ $request->created_at->format('d/m/Y') }}</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-center">{{ $request->id }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-center">{{ $request->quantity }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>

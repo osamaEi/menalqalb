@@ -76,12 +76,7 @@ public function index(Request $request)
         return view('users.create', compact('countries', 'userTypes', 'statuses'));
     }
 
-    /**
-     * Store a newly created user in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+   
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -118,7 +113,7 @@ public function index(Request $request)
      */
     public function show(User $user)
     {
-        $user->load('country', 'cards', 'readyCards');
+        $user->load( 'cards', 'readyCards');
         return view('users.show', compact('user'));
     }
 

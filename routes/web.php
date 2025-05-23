@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\BillController;
 use App\Http\Controllers\CardController;
 use App\Http\Controllers\LockController;
 use App\Http\Controllers\UserController;
@@ -373,3 +374,10 @@ Route::middleware(['auth'])->prefix('min-alqalb')->name('min-alqalb.')->group(fu
             return view('app.cards.finish');
         })->name('cards.finish');
     });
+
+
+Route::middleware('auth')->prefix('app')->name('app.')->group(function () {
+    Route::get('/bills', [BillController::class, 'index'])->name('bills.index');
+    Route::get('/bills/{bill}', [BillController::class, 'show'])->name('bills.show');
+    Route::get('/bills/{bill}/pdf', [BillController::class, 'generatePdf'])->name('bills.pdf');
+});

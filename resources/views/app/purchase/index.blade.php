@@ -8,7 +8,7 @@
             تعبئة الرصيد
         </p>
         <p class="text-center text-[16px] leading-[29px] max-w-[327px] mx-auto font-[400] text-[#5B186B] z-50 mt-2 relative">
-            الرصيد المتوفر: {{ number_format(auth()->user()->credit_package ?? 0) }} نقطة
+            الرصيد المتوفر: {{ number_format(auth()->user()->credits_package ?? 0) }} نقطة
         </p>
 
         <!-- Packages -->

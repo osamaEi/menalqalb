@@ -111,7 +111,7 @@ $totalItemsCount = \App\Models\ReadyCardItem::whereHas('readyCard', function($qu
             <div
                 class="bg-[#B62326] rounded-[12px] w-[330px] h-[48px] mx-auto flex items-center justify-between px-3 mt-3">
                 <span class="text-[#FFF] text-[15px]">نقطة</span>
-                <span class="text-[#FFF] text-[32px]">20000</span>
+                <span class="text-[#FFF] text-[32px]">{{auth()->user()->credits_package}}</span>
                 <span class="text-[#FFF] text-[15px]">النقاط المتوفر</span>
             </div>
             <div class="flex flex-col items-center justify-between p-3 m-0 text-center mx-2 relative">
@@ -163,7 +163,7 @@ $totalItemsCount = \App\Models\ReadyCardItem::whereHas('readyCard', function($qu
                 <div style="border-top-right-radius: 13px; border-bottom-left-radius: 13px;"
                     class="w-[162px] h-[80px] bg-[#B62326] flex flex-col text-white text-center items-between justify-between py-2">
                     <p>
-                        <a href="invoice.html">
+                        <a href="{{ route('app.bills.index')}}">
                             الفواتير
                         </a>
                     </p>

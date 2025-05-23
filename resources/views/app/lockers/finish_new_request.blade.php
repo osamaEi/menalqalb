@@ -12,7 +12,7 @@
                 <!-- Card Name -->
                 <div class="flex justify-between items-center">
                     <p class="text-xl font-bold text-gray-800">{{ $locker->name_ar }}</p>
-                    <p class="text-lg font-bold text-gray-700">: إسم البطاقة المختارة</p>
+                    <p class="text-lg font-bold text-gray-700">: إسم القفل المختارة</p>
                 </div>
 
                 <!-- Divider -->
@@ -37,7 +37,7 @@
                 <!-- Desired Cards -->
                 <div class="flex justify-between items-center">
                     <p class="text-xl font-bold text-gray-800">{{ $quantity }}</p>
-                    <p class="text-lg font-bold text-gray-700">: عدد البطاقات المختارة</p>
+                    <p class="text-lg font-bold text-gray-700">: عدد الاقفال المختارة</p>
                 </div>
             </div>
         </div>
