@@ -6,6 +6,7 @@ use App\Http\Controllers\CardController;
 use App\Http\Controllers\LockController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AppCardController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\PackageController;
 use App\Http\Controllers\ProfileController;
@@ -380,4 +381,9 @@ Route::middleware('auth')->prefix('app')->name('app.')->group(function () {
     Route::get('/bills', [BillController::class, 'index'])->name('bills.index');
     Route::get('/bills/{bill}', [BillController::class, 'show'])->name('bills.show');
     Route::get('/bills/{bill}/pdf', [BillController::class, 'generatePdf'])->name('bills.pdf');
+});
+
+Route::prefix('app')->name('app.')->group(function () {
+    Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
+    Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 });
