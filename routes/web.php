@@ -248,8 +248,11 @@ Route::prefix('app')->name('app.')->group(function () {
     // Forgot password routes
     Route::get('/forgot-password', [LoginAppController::class, 'showForgotPasswordForm'])->name('forgot-password');
     Route::post('/forgot-password', [LoginAppController::class, 'forgotPassword'])->name('forgot-password.post');
-
-});
+    Route::get('forgot-password/otp', [LoginAppController::class, 'showOtpForm'])->name('forgot-password.otp');
+    Route::post('forgot-password/verify', [LoginAppController::class, 'verifyOtp'])->name('forgot-password.verify');
+    Route::get('forgot-password/reset', [LoginAppController::class, 'showResetPasswordForm'])->name('forgot-password.reset');
+    Route::post('forgot-password/reset', [LoginAppController::class, 'resetPassword'])->name('forgot-password.reset');
+    Route::post('forgot-password/resend', [LoginAppController::class, 'resendOtp'])->name('forgot-password.resend');});
 // Routes that require authentication
 Route::middleware(['auth'])->prefix('app')->name('app.')->group(function () {
     // Home route

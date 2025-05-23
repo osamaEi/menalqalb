@@ -15,7 +15,7 @@ class RegisterAppController extends Controller
     public function __construct(WhatsAppService $whatsAppService)
     {
         $this->whatsAppService = $whatsAppService;
-    }
+    } 
 
     /**
      * Step 1: Show the initial registration form
@@ -114,37 +114,24 @@ class RegisterAppController extends Controller
         $validated = $request->validate([
             'otp' => 'required',
         ]);
-
-        // Combine the individual OTP digits
-        $submittedOtp = '';
-        for ($i = 0; $i < 4; $i++) {
-            $submittedOtp .= $request->input("otp$i", '');
-        }
-
-        // If the form combines the OTP, use that instead
-        if (!empty($validated['otp'])) {
-            $submittedOtp = $validated['otp'];
-        }
-
-        // Get the stored OTP and generation time
-        $storedOtp = Session::get('otp');
+    
+        $submittedOtp = $validated['otp'];
+        $storedOtp = Session::get('password_reset_otp');
         $otpGeneratedAt = Session::get('otp_generated_at');
-
-        // Check if the OTP has expired (e.g., after 5 minutes)
+    
+        // Check if OTP has expired (5 minutes)
         if (now()->diffInMinutes($otpGeneratedAt) > 5) {
-            return back()->withErrors(['otp' => 'OTP has expired. Please request a new one.']);
+            return back()->withErrors(['otp' => 'انتهت صلاحية رمز التحقق. الرجاء طلب رمز جديد.']);
         }
-
+    
         // Check if the OTP matches
         if ((int)$submittedOtp !== (int)$storedOtp) {
-            return back()->withErrors(['otp' => 'Invalid OTP. Please try again.']);
+            return back()->withErrors(['otp' => 'رمز التحقق غير صحيح. حاول مرة أخرى.']);
         }
-
-        // Mark phone as verified
+    
+        // Mark as verified
         Session::put('whatsapp_verified', true);
-
-        // Redirect to set password
-        return redirect()->route('app.register.password');
+        return redirect()->route('app.forgot-password.reset');
     }
 
     /**
