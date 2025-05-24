@@ -84,7 +84,7 @@ $totalItemsCount = \App\Models\ReadyCardItem::whereHas('readyCard', function($qu
                         {{__('Registration Date')}}
                     </p>
                     <p class="font-bold text-[#4B4B4B]">
-                        {{auth()->user()->created_at}}
+                        {{auth()->user()->created_at->toDateString();}}
                     </p>
                 </div>
                 <div class="h-[90px] w-[1px] bg-[#C5C5C5]"></div>

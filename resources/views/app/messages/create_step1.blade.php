@@ -102,7 +102,7 @@
                 <img src="{{ asset('app/img/step1.png') }}" class="w-[303px] mx-auto" alt="">
                 <div class="bg-[#B62326] rounded-[12px] w-[330px] h-[48px] mx-auto flex items-center justify-between px-3 mt-3">
                     <span class="text-[#FFF] text-[15px]">نقطة</span>
-                    <span class="text-[#FFF] text-[32px]">{{ number_format(Auth::user()->points ?? 20000) }}</span>
+                    <span class="text-[#FFF] text-[32px]">{{ number_format(Auth::user()->credits_package ?? 20000) }}</span>
                     <span class="text-[#FFF] text-[15px]">النقاط المتوفر</span>
                 </div>
                 <!-- <img src="img/back2.png" alt="" class="img-fluid bk"> -->

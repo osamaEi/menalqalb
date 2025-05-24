@@ -26,7 +26,7 @@
 
                             <!-- Name Field -->
                             <div class="!mt-1">
-                                <label for="name" class="localized" data-content="الاسم">الاسم</label>
+                                <label for="name" class="localized" data-content="الاسم"></label>
                             </div>
                             <div class="bg-[#F9F9F9] max-h-[59px] relative rounded-[35px] mt-0 border !border-black">
                                 <div class="flex items-center">
@@ -52,7 +52,7 @@
 
                             <!-- Email Field -->
                             <div class="!mt-3">
-                                <label for="email" class="localized" data-content="البريد الإلكتروني">البريد الإلكتروني</label>
+                                <label for="email" class="localized" data-content="البريد الإلكتروني"> </label>
                             </div>
                             <div class="bg-[#F9F9F9] max-h-[59px] relative rounded-[35px] mt-0 border !border-black">
                                 <div class="flex items-center">
@@ -66,7 +66,7 @@
                             @enderror
 
                             <!-- Phone Field -->
-                            <label for="whatsapp" class="!mt-3 localized" data-content="رقم الهاتف">رقم الهاتف</label>
+                            <label for="whatsapp" class="!mt-3 localized" data-content="رقم الهاتف"> </label>
                             <div class="bg-transparent !mt-1 h-[59px] relative rounded-[31px] border !border-black">
                                 <div class="flex items-center">
                                     <!-- Country Flag and Code -->

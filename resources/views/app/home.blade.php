@@ -1,7 +1,6 @@
 @extends('app.index')
 
 @section('content')
-<img src="{{ asset('img/back2.png') }}" alt="" class="img-fluid bk">
 <div class="row justify-content-center">
     <div class="col-12 col-lg-4 ">
         <div class="All_Button lang Devices">
@@ -41,7 +40,7 @@
                 </div>
             </div>
             <div class="made">
-                <img src="{{ asset('img/omda logo.svg') }}" class="h-[129px] mx-auto d-block" alt="">
+                <img src="{{ asset('app/img/omda logo.svg') }}" class="h-[129px] mx-auto d-block" alt="">
             </div>
         </div>
     </div>

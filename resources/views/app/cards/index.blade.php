@@ -3,7 +3,7 @@
 @section('content')
 <div class="app white messagebox">
    
-    <h1 class="text-[24px] text-[#242424] font-[900] z-50 relative page-title text-center mt-4">الكروت من القلب</h1>
+    <h1 >الكروت من القلب</h1>
 
     <div class="row justify-content-center">
         <div class="col-12 col-lg-4">

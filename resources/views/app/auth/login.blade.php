@@ -148,7 +148,7 @@
 
                         <!-- Forgot Password Link -->
                         <div class="text-center border-0 p-0 m-0 right-[20px] relative !text-right">
-                            <a href="{{ route('app.forgot-password') }}" class="text-[12px] border-0 font-[400] p-0 !text-[#5b186bcc] text-lg text-purple-700 font-semibold">نسيت كلمة المرور</a>
+                            <a href="{{ route('app.forgot-password') }}" class="text-[10px] border-0 font-[400] p-0 !text-[#5b186bcc] text-lg text-purple-700 font-semibold" style="  font-size: 0.8em;">نسيت كلمة المرور</a>
                         </div>
                         
                         <!-- Submit Button -->
@@ -165,10 +165,10 @@
                 </div>
 
                 <div class="footer">
-                    <img src="{{ asset('img/message.png') }}" alt="" class="img-fluid message">
+                    <img src="{{ asset('app/img/message.png') }}" alt="" class="img-fluid message">
                 </div>
                 <div class="made">
-                    <img src="{{ asset('img/omda logo.svg') }}" class="h-[129px] mx-auto d-block" alt="">
+                    <img src="{{ asset('app/img/omda logo.svg') }}" class="h-[129px] mx-auto d-block" alt="">
                 </div>
             </div>
         </div>

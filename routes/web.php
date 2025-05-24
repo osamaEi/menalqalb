@@ -6,6 +6,7 @@ use App\Http\Controllers\CardController;
 use App\Http\Controllers\LockController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AppCardController;
+use App\Http\Controllers\AppPageController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\PackageController;
@@ -353,8 +354,8 @@ Route::middleware(['auth'])->group(function () {
          ->name('packages.payment.cancel');
 });
 // Ziina webhook route
-Route::post('/webhooks/ziina', [ZiinaPaymentController::class, 'handleWebhook'])
-    ->name('ziina.webhook');
+// Route::post('/webhooks/ziina', [ZiinaPaymentController::class, 'handleWebhook'])
+//     ->name('ziina.webhook');
 
 
 Route::middleware(['auth'])->prefix('min-alqalb')->name('min-alqalb.')->group(function () {
@@ -407,4 +408,16 @@ Route::middleware(['admin.only'])->prefix('admin')->group(function () {
 Route::middleware(['admin.only'])->prefix('admin')->name('admin.')->group(function () {
 
 Route::resource('pages', PageController::class);
+});
+
+
+
+Route::prefix('app')->name('app.')->group(function () {
+    Route::get('/privacy', [AppPageController::class, 'privacy'])->name('privacy');
+    Route::get('/terms', [AppPageController::class, 'terms'])->name('terms');
+    Route::get('/benefits', [AppPageController::class, 'benefits'])->name('benefits');
+    Route::get('/prices', [AppPageController::class, 'prices'])->name('prices');
+    Route::get('/balances', [AppPageController::class, 'balances'])->name('balances');
+    Route::get('/locks/page', [AppPageController::class, 'locks'])->name('locks');
+    Route::get('/cards/page', [AppPageController::class, 'cards'])->name('cards');
 });
