@@ -149,6 +149,24 @@
         </li>
       </ul>
     </li>
+
+    <li class="menu-item {{ Request::is('admin.page*') ? 'active open' : '' }}" style="margin-bottom: 8px;">
+      <a href="javascript:void(0);" class="menu-link menu-toggle">
+        <i class="menu-icon tf-icons ri-gallery-line"></i>
+        <div>{{ __('Pages') }}</div>
+      </a>
+      <ul class="menu-sub">
+
+
+        <li class="menu-item">
+          <a href="{{ route('admin.pages.index') }}" class="menu-link">
+            <div>{{ __('Pages') }}</div>
+          </a>
+        </li>
+        
+   
+      </ul>
+    </li>
     <li class="menu-item {{ Request::is('countries*') ? 'active open' : '' }}" style="margin-bottom: 8px;">
       <a href="javascript:void(0);" class="menu-link menu-toggle">
         <i class="menu-icon tf-icons ri-gallery-line"></i>

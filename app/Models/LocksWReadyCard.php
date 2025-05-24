@@ -27,7 +27,6 @@ class LocksWReadyCard extends Model
         'is_active' => 'boolean'
     ];
 
-    // Accessors
     public function getNameAttribute()
     {
         return app()->getLocale() == 'ar' ? $this->name_ar : $this->name_en;

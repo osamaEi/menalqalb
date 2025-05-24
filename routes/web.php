@@ -20,6 +20,7 @@ use App\Http\Controllers\WhatsAppController;
 use App\Http\Controllers\AdminBillController;
 use App\Http\Controllers\MessageAppContoller;
 use App\Http\Controllers\ReadyCardController;
+use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\AppLockersController;
 use App\Http\Controllers\MessageAppController;
 use App\Http\Controllers\ProfileAppController;
@@ -397,7 +398,13 @@ Route::prefix('app')->name('app.')->group(function () {
 
 Route::middleware(['admin.only'])->prefix('admin')->group(function () {
     Route::get('/bills', [AdminBillController::class, 'index'])->name('admin.bills.index');
+
+
     Route::get('/bills/{bill}', [AdminBillController::class, 'show'])->name('admin.bills.show');
     Route::get('/bills/{bill}/pdf', [AdminBillController::class, 'generatePdf'])->name('admin.bills.pdf');
     Route::get('/payments', [AdminPaymentController::class, 'index'])->name('admin.payments.index');
+});
+Route::middleware(['admin.only'])->prefix('admin')->name('admin.')->group(function () {
+
+Route::resource('pages', PageController::class);
 });
