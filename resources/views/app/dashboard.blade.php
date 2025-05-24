@@ -44,18 +44,17 @@
             </div>
             <p
                 class="text-center text-[16px] leading-[29px] max-w-[327px] mx-auto font-[400] text-[#4B4B4B] z-50 mt-0 relative">
-                لوحة تحكم
+                {{__('Control Panel')}}
             </p>
 
             <div
                 class="flex items-center justify-between !bg-transparent p-3 text-center shadow-lg mt-0 rounded-[13px] mx-2 relative">
 
                 <div>
-                    <p class="relative font-bold text-[#B62326]"> البطاقات الخاصة</p>
+                    <p class="relative font-bold text-[#B62326]">{{__('Special Cards')}}</p>
                     <p class="font-bold text-[#4B4B4B]">
 
                      @php
-
 $totalItemsCount = \App\Models\ReadyCardItem::whereHas('readyCard', function($query) {
     $query->where('customer_id', auth()->user()->id);
 })->count();                         
@@ -65,7 +64,7 @@ $totalItemsCount = \App\Models\ReadyCardItem::whereHas('readyCard', function($qu
                         
                     </p>
                     <p class="relative mt-1 font-bold text-[#B62326]">
-                        نوع الحساب
+                        {{__('Account Type')}}
                     </p>
                     <p class="font-bold text-[#4B4B4B]">
                         {{ __(auth()->user()->user_type)}}
@@ -73,7 +72,7 @@ $totalItemsCount = \App\Models\ReadyCardItem::whereHas('readyCard', function($qu
                 </div>
                 <div class="h-[90px] w-[1px] bg-[#C5C5C5]"></div>
                 <div>
-                    <p class="relative font-bold text-[#B62326]">عدد التهاني</p>
+                    <p class="relative font-bold text-[#B62326]">{{__('Greetings Count')}}</p>
                     <p class="font-bold text-[#4B4B4B]">
 
                         @php
@@ -82,7 +81,7 @@ $totalItemsCount = \App\Models\ReadyCardItem::whereHas('readyCard', function($qu
                       {{ $messagesCount}}
                     </p>
                     <p class="relative mt-1 font-bold text-[#B62326]">
-                        تاريخ التسجيل
+                        {{__('Registration Date')}}
                     </p>
                     <p class="font-bold text-[#4B4B4B]">
                         {{auth()->user()->created_at}}
@@ -92,9 +91,9 @@ $totalItemsCount = \App\Models\ReadyCardItem::whereHas('readyCard', function($qu
 
                 <div>
                     <p class="bg-[#B62326] text-[#FFF] p-2 relative right-[-16px] top-[-20px]"
-                        style="border-top-right-radius: 13px; border-bottom-left-radius: 13px;">لوحة البيانات</p>
+                        style="border-top-right-radius: 13px; border-bottom-left-radius: 13px;">{{__('Dashboard')}}</p>
                     <p class="relative top-[-6px] font-bold text-[#B62326]">
-                        رقم العضوية
+                        {{__('Membership Number')}}
                     </p>
                     <p class="font-bold text-[#4B4B4B]">#100123</p>
                 </div>
@@ -103,33 +102,33 @@ $totalItemsCount = \App\Models\ReadyCardItem::whereHas('readyCard', function($qu
                 class="flex items-center justify-between !bg-transparent p-3 text-center shadow-lg rounded-[13px] mx-2 relative">
                 <a href="{{ route('app.profile.edit')}}" class="bg-[#000] text-[#FFF] p-2"
                     style="border-top-right-radius: 13px; border-bottom-left-radius: 13px;">
-                    تعديل الملف الشخصي
+                    {{__('Edit Profile')}}
                 </a>
                 {{auth()->user()->name}}
             </div>
 
             <div
                 class="bg-[#B62326] rounded-[12px] w-[330px] h-[48px] mx-auto flex items-center justify-between px-3 mt-3">
-                <span class="text-[#FFF] text-[15px]">نقطة</span>
+                <span class="text-[#FFF] text-[15px]">{{__('Point')}}</span>
                 <span class="text-[#FFF] text-[32px]">{{auth()->user()->credits_package}}</span>
-                <span class="text-[#FFF] text-[15px]">النقاط المتوفر</span>
+                <span class="text-[#FFF] text-[15px]">{{__('Available Points')}}</span>
             </div>
             <div class="flex flex-col items-center justify-between p-3 m-0 text-center mx-2 relative">
                 <div class="flex gap-3 justify-between items-center h-[30px]">
                     <div>
                         <a href="{{ route('app.profile.delete-confirmation') }}"
                             class="bg-[#000] text-[#FFF] p-2 rounded-[13px] w-[141px] mx-auto mt-0">
-                            حذف الحساب
+                            {{__('Delete Account')}}
                         </a>
                     </div>
                     <div>
                         <a href="{{ route('packages.index')}}" class="bg-[#000] text-[#FFF] p-2 rounded-[13px] w-[141px] mx-auto mt-0">
-                            تعبئة الرصيد
+                            {{__('Recharge Balance')}}
                         </a>
                     </div>
                 </div>
                 <a href="#" class="text-[#B62326] mx-auto mt-3">
-                    اجمالي عدد التهاني {{$messagesCount}}
+                    {{__('Total Greetings Count')}} {{$messagesCount}}
                 </a>
             </div>
 
@@ -138,24 +137,29 @@ $totalItemsCount = \App\Models\ReadyCardItem::whereHas('readyCard', function($qu
                     class="w-[162px] h-[80px] bg-[#B62326] flex flex-col text-white text-center items-between justify-between py-2">
                     <p>
                         <a href="{{ route('min-alqalb.cards.index')}}">
-                            البطاقات الخاصة
+                            {{__('Special Cards')}}
                         </a>
                     </p>
-                    <p>123</p>
+
+                    @php
+                    $read_cards = \App\Models\ReadyCard::where('customer_id', Auth::id())->get();
+    
+                    // Fetch ReadyCardItem records related to the user's ReadyCards
+                    $ready_card_items = \App\Models\ReadyCardItem::whereIn('ready_card_id', $read_cards->pluck('id'))->get();
+
+                    @endphp
+                    
+                    <p>{{$ready_card_items->count() }}</p>
                 </div>
                 <div style="border-top-right-radius: 13px; border-bottom-left-radius: 13px;"
                     class="w-[162px] h-[80px] bg-[#B62326] flex flex-col text-white text-center items-between justify-between py-2">
                     <p>
                         <a href="{{ route('app.greetings.index')}}">
-                            التهاني المرسلة
+                            {{__('Sent Greetings')}}
                         </a>
-
                     </p>
                     <p>
-                    
                         {{ $messagesCount}}
-
-
                     </p>
                 </div>
             </div>
@@ -164,16 +168,22 @@ $totalItemsCount = \App\Models\ReadyCardItem::whereHas('readyCard', function($qu
                     class="w-[162px] h-[80px] bg-[#B62326] flex flex-col text-white text-center items-between justify-between py-2">
                     <p>
                         <a href="{{ route('app.bills.index')}}">
-                            الفواتير
+                            {{__('Bills')}}
                         </a>
                     </p>
-                    <p>123</p>
-                </div>
+                    @php
+                    $user = auth()->user()->load('bills');
+                    @endphp
+
+
+<p>{{ $user->bills->count() }}</p>
+
+</div>
                 <div style="border-top-right-radius: 13px; border-bottom-left-radius: 13px;"
                     class="w-[162px] h-[80px] bg-[#B62326] flex flex-col text-white text-center items-between justify-between py-2">
                     <p>
                         <a href="{{ route('min-alqalb.lockers.index')}}">
-                            الاقفال
+                            {{__('Locks')}}
                         </a>
                     </p>
                     <p>123</p>

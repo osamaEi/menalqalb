@@ -3,17 +3,15 @@
 @section('content')
 <div class="app white messagebox">
    
-    <h1 class="text-[24px] text-[#242424] font-[900] z-50 relative page-title text-center mt-4">أقفال من القلب</h1>
+    <h1 class="text-[24px] text-[#242424] font-[900] z-50 relative page-title text-center mt-4">الكروت من القلب</h1>
 
     <div class="row justify-content-center">
         <div class="col-12 col-lg-4">
             <div class="All_Button lang Devices">
                 <!-- Buttons -->
                 <div class="flex items-center justify-between">
-                    <div class="newMessage bg-black rounded-[15px] text-center my-2 w-[48%]">
-                        <a href="#" class="text-white border-0">إعداد قفل القلب</a>
-                    </div>
-                    <div class="newMessage bg-black rounded-[15px] text-center my-2 w-[48%]">
+          
+                    <div class="newMessage bg-black rounded-[15px] text-center my-2 w-[100%]">
                         <a href="{{ route('min-alqalb.cards.create') }}" class="text-white border-0">طلب جديد</a>
                     </div>
                 </div>
@@ -34,23 +32,24 @@
                             <thead class="bg-gray-100">
                                 <tr>
                                     <th class="px-6 py-3 text-right text-sm font-medium border-b">الحالة</th>
-                                    <th class="px-6 py-3 text-right text-sm font-medium border-b">تاريخ الشراء</th>
+                                    <th class="px-6 py-3 text-right text-sm font-medium border-b">رقم التفعيل</th>
                                     <th class="px-6 py-3 text-right text-sm font-medium border-b">الرقم</th>
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
-                                @foreach($purchasedRequests as $request)
-                                    <tr data-status="{{ $request->status == 'pending' ? 'available' : $request->status }}" class="hover:bg-gray-50">
-                                        <td class="px-6 py-4 whitespace-nowrap text-center">
-                                            <div class="flex justify-center">
-                                                <div class="w-6 h-6" title="{{ $request->status == 'pending' ? 'متوفرة' : ($request->status == 'used' ? 'مستخدمة' : 'ملغية') }}">
-                                                    <img src="{{ asset($request->status == 'pending' ? 'storage/'.$request->locksWReadyCard->photo : ($request->status == 'used' ? 'img/grean-l.png' : 'img/red-l.png')) }}" class="w-[30px]" alt="">                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-center">{{ $request->created_at->format('d/m/Y') }}</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-center">{{ $request->id }}</td>
-                                    </tr>
-                                @endforeach
+                                    @foreach ($ready_card_items as $item)
+                                        <tr data-status="{{ $item->status }}" class="hover:bg-gray-50">
+                                            <td class="px-6 py-4 whitespace-nowrap text-center">
+                                                <div class="flex justify-center">
+                                                    <div class="w-6 h-6" title="{{ $item->status === 'open' ? 'متوفرة' : ($item->status === 'closed' ? 'مستخدمة' : 'ملغية') }}">
+                                                        <img src="{{ asset($item->status === 'open' ? 'app/img/orange.png' : ($item->status === 'closed' ? 'app/img/green.png' : 'app/img/red.png')) }}" class="w-[30px]" alt="" class="img-fluid">
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-center">{{ $item->identity_number  }}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-center">{{ $item->created_at->format('d/m/Y') }}</td>
+                                        </tr>
+                                    @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -78,7 +77,24 @@
             {{ session('info') }}
         </div>
     @endif
-
+    <ul class="Image_define" style="width: 438px;">
+        <li>
+            <img src="{{ asset('app/img/red.png') }}" alt="" class="img-fluid">
+            <p for="txtReceived" class="localized" data-content="ملغية"></p>
+            <p for="txtReceived" class="localized" data-content="{{ $counts['canceled'] }}"></p>
+        </li>
+        <li>
+            <img src="{{ asset('app/img/green.png') }}" alt="" class="img-fluid">
+            <p for="txtSent" class="localized" data-content="مستخدمة"></p>
+            <p for="txtSent" class="localized" data-content="{{ $counts['closed'] }}"></p>
+        </li>
+        <li>
+            <img src="{{ asset('app/img/orange.png') }}" alt="" class="img-fluid">
+            <p for="txtRead" class="localized" data-content="متوفره"></p>
+            <p for="txtRead" class="localized" data-content="{{ $counts['open'] }}"></p>
+        </li>
+    </ul>
+</div>
     <style>
         .table-container {
             max-height: 500px;

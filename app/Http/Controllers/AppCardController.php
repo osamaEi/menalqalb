@@ -6,7 +6,9 @@ use Exception;
 use App\Models\User;
 use App\Models\Locker;
 use App\Models\Payment;
+use App\Models\ReadyCard;
 use Illuminate\Http\Request;
+use App\Models\ReadyCardItem;
 use App\Models\LocksWReadyCard;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -22,10 +24,24 @@ class AppCardController extends Controller
 
     public function index()
     {
-        $lockers = LocksWReadyCard::where('type','read_card')->where('is_active', true)->get();
-        $purchasedRequests = \App\Models\Request::where('user_id', Auth::id())->where('type','ready_card')->get();
-
-        return view('app.cards.index', compact('lockers', 'purchasedRequests'));
+        // Fetch lockers (unchanged)
+        $lockers = LocksWReadyCard::where('type', 'read_card')->where('is_active', true)->get();
+    
+        // Fetch ReadyCard records for the authenticated user
+        $read_cards = ReadyCard::where('customer_id', Auth::id())->get();
+    
+        // Fetch ReadyCardItem records related to the user's ReadyCards
+        $ready_card_items = ReadyCardItem::whereIn('ready_card_id', $read_cards->pluck('id'))->get();
+    
+        // Calculate counts for each status
+        $counts = [
+            'open' => $ready_card_items->where('status', 'open')->count(),
+            'closed' => $ready_card_items->where('status', 'closed')->count(),
+            'canceled' => $ready_card_items->where('status', 'canceled')->count(),
+        ];
+    
+        // Pass the data to the view
+        return view('app.cards.index', compact('lockers', 'ready_card_items', 'counts'));
     }
 
     public function createRequest()

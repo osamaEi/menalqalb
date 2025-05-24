@@ -233,7 +233,7 @@
                     </thead>
                     <tbody>
                         @foreach($recentCards as $card)
-                        <tr>
+                        <tr> 
                             <td>{{ $card->id }}</td>
                             <td>
                                 <div class="avatar me-2">

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Bill;
 use App\Models\Request;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
@@ -126,9 +127,10 @@ class User extends Authenticatable
         return $query->where('user_type', 'sales_point');
     }
 
-    /**
-     * Scope a query to only include active users.
-     */
+   public function bills(){
+
+   return $this->hasMany(Bill::class ,'user_id');
+   }
     public function scopeActive($query)
     {
         return $query->where('status', 'active');
