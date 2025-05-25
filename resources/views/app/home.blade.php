@@ -1,4 +1,4 @@
-@extends('app.index')
+@extends('app.home2')
 
 @section('content')
 <div class="row justify-content-center">
@@ -7,7 +7,7 @@
             <div>
                 <div class="rounded-lg px-0 pb-8 w-full">
                     <div>
-                        <img src="{{ asset('app/img/logos.png') }}" class="h-[289px] mx-auto" alt="">
+                        <img src="{{ asset('app/img/logos.png') }}" class="h-[289px] mx-auto" alt="" style="  margin-top: 39px;">
                     </div>
                 
                     <!-- Arabic Slogan -->
@@ -49,12 +49,4 @@
         </div>
     </div>
 </div>
-@endsection
-
-@section('extra-styles')
-<style>
-    #rootElement, body {
-        background-color: #ffffff !important;
-    }
-</style>
 @endsection
