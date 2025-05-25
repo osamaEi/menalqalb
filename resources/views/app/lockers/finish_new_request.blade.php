@@ -2,9 +2,7 @@
 
 @section('content')
 <div class="app white messagebox">
-
-
-    <h1 class="text-[24px] text-[#242424] font-[900] z-50 relative page-title text-center mt-4">إتمام الطلب</h1>
+    <h1 class="text-[24px] text-[#242424] font-[900] z-50 relative page-title text-center mt-4">{{ __('Complete the order') }}</h1>
 
     <div class="overflow-y-auto max-h-[500px] px-4">
         <div class="card-details p-6 mb-6">
@@ -12,7 +10,7 @@
                 <!-- Card Name -->
                 <div class="flex justify-between items-center">
                     <p class="text-xl font-bold text-gray-800">{{ $locker->name_ar }}</p>
-                    <p class="text-lg font-bold text-gray-700">: إسم القفل المختارة</p>
+                    <p class="text-lg font-bold text-gray-700">{{ __('Selected locker name:') }}</p>
                 </div>
 
                 <!-- Divider -->
@@ -28,7 +26,7 @@
                             <path d="M6.5 13H12.5H18.5" stroke="#17191C" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
                         </svg>
                     </div>
-                    <p class="text-lg font-bold text-gray-700">: المبلغ</p>
+                    <p class="text-lg font-bold text-gray-700">{{ __('Amount:') }}</p>
                 </div>
 
                 <!-- Divider -->
@@ -37,7 +35,7 @@
                 <!-- Desired Cards -->
                 <div class="flex justify-between items-center">
                     <p class="text-xl font-bold text-gray-800">{{ $quantity }}</p>
-                    <p class="text-lg font-bold text-gray-700">: عدد الاقفال المختارة</p>
+                    <p class="text-lg font-bold text-gray-700">{{ __('Number of selected lockers:') }}</p>
                 </div>
             </div>
         </div>
@@ -46,7 +44,7 @@
         <form action="{{ route('min-alqalb.lockers.purchase') }}" method="POST">
             @csrf
             <button type="submit" class="confirm-button w-[200px] mx-auto mt-[170px] h-14 rounded-full flex items-center justify-center text-center mb-4">
-                <span class="text-white font-bold text-lg">تأكيد الدفع</span>
+                <span class="text-white font-bold text-lg">{{ __('Confirm payment') }}</span>
             </button>
         </form>
 
@@ -55,7 +53,7 @@
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
             </svg>
-            <span>جميع المعاملات مشفرة وآمنة</span>
+            <span>{{ __('All transactions are encrypted and secure') }}</span>
         </div>
     </div>
 

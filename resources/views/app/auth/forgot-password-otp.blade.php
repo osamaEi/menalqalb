@@ -1,10 +1,9 @@
-<!DOCTYPE html>
 @extends('app.index')
 
 @section('content')
-        <h1 class="text-[24px] text-[#242424] font-[900] z-50 relative">تحقق من رمز الواتساب</h1>
+        <h1 class="text-[24px] text-[#242424] font-[900] z-50 relative">{{__('Verify the WhatsApp code')}}</h1>
         <p class="text-center text-[14px] leading-[29px] max-w-[327px] mx-auto font-[400] text-[#4B4B4B] z-50 mt-4 relative">
-            أدخل رمز التحقق المكون من 4 أرقام الذي أرسلناه إلى رقم الواتساب الخاص بك {{ $phone }}
+            {{__('Enter the 4-digit verification code we sent to your WhatsApp number')}} {{ $phone }}
         </p>
         <div class="row justify-content-center">
             <div class="col-12 col-lg-4">
@@ -27,14 +26,14 @@
                             @enderror
                             <div class="flex justify-center">
                                 <button type="submit" class="!m-0 !h-[55px] !w-[100%] mt-0 !font-[400] flex items-center justify-center !bg-[#B62326] text-white font-bold !rounded-full hover:bg-[#B62326]-700 transition-colors focus:outline-none focus:ring-2 focus:ring-[#B62326]-500 focus:ring-offset-2">
-                                    تحقق
+                                    {{__('Verify')}}
                                 </button>
                             </div>
                         </form>
                         <div class="text-center mt-5">
                             <form method="POST" action="{{ route('app.forgot-password.resend') }}" class="inline">
                                 @csrf
-                                <button type="submit" class="!text-[#B62326] !border-0 text-[16px] !font-[400]">إعادة إرسال الرمز</button>
+                                <button type="submit" class="!text-[#B62326] !border-0 text-[16px] !font-[400]">{{__('Resend the code')}}</button>
                             </form>
                         </div>
                     </div>

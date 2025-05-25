@@ -1,3 +1,99 @@
 {
+    "select_greeting_card": "Select Greeting Card",
+    "main_category": "Main Category",
+    "sub_category": "Sub Category",
+    "arabic": "Arabic",
+    "english": "English",
+    "dedication_type": "Dedication Type",
+    "points": "Point",
+    "video_not_supported": "Your browser does not support the video tag.",
+    "view": "View",
+    "select": "Select",
+    "no_cards_found": "No cards found in this category",
+    "next": "Next",
+    
+        "delete_confirmation": "Delete Confirmation",
+        "delete_warning": "Warning before deleting your account: Please make sure you have saved any important data or information linked to your account. All related data may be lost and cannot be recovered once the account is deleted. This action is irreversible, so please consider carefully before proceeding.",
+        "delete": "Delete",
+        "no": "No",
+        
+            "total_points": "Total Points",
+      
+        
+        
+            "change_password": "Change Password",
+            "enter_current_new_password": "Please enter your current and new password",
+            "current_password": "Current Password",
+            "new_password": "New Password",
+            "confirm_new_password": "Confirm New Password",
+            "change_profile": "Edit Profile",
+        
+        
+            "sender_name": "Sender Name",
+            "email": "Email",
+            "phone": "Phone",
+            "account_type": "Account Type",
+            "message": "Message",
+            "send": "Send",
+        
+        
+            "it_means_a_lot_ar": "It Means A Lot",
+            "it_means_a_lot_en": "IT MEANS A LOT",
+            "new_greeting": "New Greeting",
+            "dashboard": "Dashboard",
+            "logout": "Logout",
+          
+          
+        "recharge_balance": "Recharge Balance",
+        "available_balance": "Available Balance: :points points",
+        "points_count": "Points Count",
+        "price": "Price",
+        "points": "Points",
+        "recharge": "Recharge",
+        "congratulations": "Congratulations!",
+        "congratulations_prepared": "The greeting has been prepared",
+        "points_deducted": "200 points have been deducted as a greeting card fee",
+        "dashboard": "Dashboard",
+        "home": "Home",
+      
+      
+        "new_congratulation": "Congratulations!",
+        "point": "Point",
+        "available_points": "Available Points",
+        "confirm_data_before_card": "Please confirm the details before sending the card",
+        "private_message": "Your private message",
+        "main_category": "Main Category",
+        "message_language": "Message Language",
+        "sub_category": "Sub Category",
+        "heart_lock": "Heart Lock",
+        "lock_code": "Lock Code",
+        "dedication_type": "Dedication Type",
+        "recipient": "Recipient",
+        "sender": "Sender",
+        "phone_number": "Phone Number",
+        "sending_cost": "Sending Cost",
+        "preview_card": "Preview Card",
+        "confirm_input": "Confirm Input",
+        "card_preview": "Card Preview",
+        "selected_card": "Selected Card",
+        "from": "From",
+        "to": "To",
+        "close": "Close",
+        "undefined": "Undefined",
+    
+    
+        "Private Message": "Private Message",
+        "Recipient Name": "Recipient Name",
+        "Name": "Name",
+        "Recipient Phone": "Recipient Phone",
+        "Search for a country...": "Search for a country...",
+        "Scheduled Send Time": "Scheduled Send Time",
+        "Add Heart Lock": "Add Heart Lock",
+        "Please choose": "Please choose",
+        "Yes without heart lock": "Yes without heart lock",
+        "Yes with heart lock": "Yes with heart lock",
+        "No": "No",
+        "Previous": "Previous",
+        "Next": "Next"
     
 }

@@ -1,9 +1,9 @@
 @extends('app.index')
 
 @section('content')
-<h1 class="text-[24px] text-[#242424] font-[900] z-50 relative">مبروك! تم إنشاء حسابك بنجاح</h1>
+<h1 class="text-[24px] text-[#242424] font-[900] z-50 relative">{{__('Congratulations! Your account has been successfully created')}}</h1>
 <p class="text-center text-[14px] leading-[29px] max-w-[327px] mx-auto font-[400] text-[#4B4B4B] z-50 mt-4 relative">
-    يمكنك الآن تسجيل الدخول واستخدام جميع مميزات تطبيقنا
+    {{__('You can now log in and use all the features of our application')}}
 </p>
 
 <div class="row justify-content-center">
@@ -18,7 +18,7 @@
                 !bg-[#B62326] text-white font-bold
                 !rounded-full font-bold hover:bg-[#B62326]-700 transition-colors 
                 focus:outline-none focus:ring-2 focus:ring-[#B62326]-500 focus:ring-offset-2">
-                    تسجيل الدخول
+                    {{__('Log in')}}
                 </a>
             </div>
         </div>

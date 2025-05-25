@@ -26,7 +26,6 @@
             background-size: cover;
         }
     </style>
-    @yield('extra-styles')
 </head>
 
 <div id="rootElement" lang="en_US">
@@ -47,8 +46,8 @@
         <!-- Packages -->
         <div class="px-3 mt-6">
             <div class="rounded flex mb-2 text-[16px] font-[400] items-center justify-between p-2 bg-[#f7ecd9]">
-                <p class="ml-[96px]">عدد النقاط</p>
-                <p>السعر</p>
+                <p class="ml-[5px]">{{__('total_points')}} </p>
+                <p>{{__('price')}}</p>
             </div>
             <form id="packageForm" action="" method="POST">
                 @csrf
@@ -58,9 +57,8 @@
                         <div class="package-card rounded flex text-[16px] font-[400] items-center justify-between p-2 {{ $index % 2 == 0 ? 'bg-[#B6232630]' : 'bg-[#E0D4E37A]' }}"
                              onclick="selectPackage(this, {{ $package->id }})">
                        
-                            <p class="flex flex-row-reverse gap-1">
-                                <span>{{ number_format($package->amount) }}</span>
-                                <span>نقاط</span>
+                            <p class="flex flex-row-reverse">
+                                <span>{{ number_format($package->amount) }}</span> 
                             </p>
                             <p class="flex flex-row-reverse gap-1">
                                 <span>{{ number_format($package->price) }}</span>

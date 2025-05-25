@@ -97,15 +97,15 @@
         <body class="">
             <div class="app white messagebox">
                 <p class="text-center text-[16px] leading-[29px] max-w-[327px] mx-auto font-[400] text-[#4B4B4B] z-50 mt-0 relative">
-                    ارسال تهنئة جديدة
+                    {{__('Send new greeting')}}
                 </p>
                 <img src="{{ asset('app/img/step1.png') }}" class="w-[303px] mx-auto" alt="">
                 <div class="bg-[#B62326] rounded-[12px] w-[330px] h-[48px] mx-auto flex items-center justify-between px-3 mt-3">
-                    <span class="text-[#FFF] text-[15px]">نقطة</span>
+                    <span class="text-[#FFF] text-[15px]">{{__('Points')}}</span>
                     <span class="text-[#FFF] text-[32px]">{{ number_format(Auth::user()->credits_package ?? 20000) }}</span>
-                    <span class="text-[#FFF] text-[15px]">النقاط المتوفر</span>
+                    <span class="text-[#FFF] text-[15px]">{{__('Available points')}}</span>
                 </div>
-                <!-- <img src="img/back2.png" alt="" class="img-fluid bk"> -->
+                
                 <div class="row justify-content-center overflow-y-auto h-[100%]">
                     <div class="col-12 col-lg-4">
                         <div class="All_Button lang Devices">
@@ -121,30 +121,29 @@
                                             </ul>
                                         </div>
                                     @endif
-
+        
                                     <!-- Session messages -->
                                     @if(session('error'))
                                         <div class="alert alert-danger mt-3">
                                             {{ session('error') }}
                                         </div>
                                     @endif
-
+        
                                     @if(session('success'))
                                         <div class="alert alert-success mt-3">
                                             {{ session('success') }}
                                         </div>
                                     @endif
-
+        
                                     <form method="POST" action="{{ route('app.messages.post.step1') }}" class="space-y-6">
                                         @csrf
                                         
                                         <!-- Language Selection -->
                                         <div class="relative !mt-3">
-                                            <label for="recipient_language" class="block text-lg font-medium text-[#4B4B4B] bg-transparent text-center">لغة
-                                                التهنئة</label>
+                                            <label for="recipient_language" class="block text-lg font-medium text-[#4B4B4B] bg-transparent text-center">{{__('Greeting Language')}}</label>
                                             <select id="recipient_language" name="recipient_language" 
                                                 class="text-[#4B4B4B] bg-transparent text-center block appearance-none w-[99%] border !border-[#4B4B4B] rounded-full py-3 px-4 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-                                                <option value="">اختر اللغة</option>
+                                                <option value="">{{__('Select Language')}}</option>
                                                 @foreach($languages as $code => $name)
                                                     <option value="{{ $code }}" {{ (old('recipient_language', $sessionData['recipient_language'] ?? '') == $code) ? 'selected' : '' }}>
                                                         {{ $name }}
@@ -158,14 +157,13 @@
                                                 </svg>
                                             </div>
                                         </div>
-
+        
                                         <!-- Main Category -->
                                         <div class="relative !mt-3">
-                                            <label for="main_category_id" class="block text-lg font-medium text-[#4B4B4B] bg-transparent text-center">التصنيفات
-                                                الرئيسي</label>
+                                            <label for="main_category_id" class="block text-lg font-medium text-[#4B4B4B] bg-transparent text-center">{{__('Main Categories')}}</label>
                                             <select id="main_category_id" name="main_category_id" 
                                                 class="text-[#4B4B4B] bg-transparent text-center block appearance-none w-[99%] border !border-[#4B4B4B] rounded-full py-3 px-4 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-                                                <option value="">اختر التصنيف الرئيسي</option>
+                                                <option value="">{{__('Select Main Category')}}</option>
                                                 @foreach($mainCategories as $category)
                                                     <option value="{{ $category->id }}" {{ (old('main_category_id', $sessionData['main_category_id'] ?? '') == $category->id) ? 'selected' : '' }}>
                                                         {{ $category->name }}
@@ -179,14 +177,14 @@
                                                 </svg>
                                             </div>
                                         </div>
-
+        
                                         <!-- Sub Category -->
                                         <div class="relative !mt-3">
                                             <label for="sub_category_id" class="block text-lg font-medium text-[#4B4B4B] bg-transparent text-center">
-                                                اختر التصنيف الفرعي</label>
+                                                {{__('Select Sub Category')}}</label>
                                             <select id="sub_category_id" name="sub_category_id" 
                                                 class="text-[#4B4B4B] bg-transparent text-center block appearance-none w-[99%] border !border-[#4B4B4B] rounded-full py-3 px-4 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-                                                <option value="">اختر التصنيف الفرعي</option>
+                                                <option value="">{{__('Select Sub Category')}}</option>
                                                 <!-- Will be populated via JavaScript -->
                                             </select>
                                             <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center px-4 text-gray-700 top-8">
@@ -196,14 +194,14 @@
                                                 </svg>
                                             </div>
                                         </div>
-
+        
                                         <!-- Dedication Type -->
                                         <div class="relative !mt-3">
                                             <label for="dedication_type_id" class="block text-lg font-medium text-[#4B4B4B] bg-transparent text-center">
-                                                اختر نوع الاهداء</label>
+                                                {{__('Select Dedication Type')}}</label>
                                             <select id="dedication_type_id" name="dedication_type_id" 
                                                 class="text-[#4B4B4B] bg-transparent text-center block appearance-none w-[99%] border !border-[#4B4B4B] rounded-full py-3 px-4 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-                                                <option value="">اختر نوع الاهداء</option>
+                                                <option value="">{{__('Select Dedication Type')}}</option>
                                                 @foreach($dedicationTypes as $type)
                                                     <option value="{{ $type->id }}" {{ (old('dedication_type_id', $sessionData['dedication_type_id'] ?? '') == $type->id) ? 'selected' : '' }}>
                                                         {{ __($type->type) }}
@@ -217,10 +215,10 @@
                                                 </svg>
                                             </div>
                                         </div>
-
+        
                                         <!-- Card Number Field -->
                                         <div class="!mt-1">
-                                            <label for="card_number" class="localized" data-content="رقم البطاقة"></label>
+                                            <label for="card_number" class="localized" data-content="{{__('Card Number')}}"></label>
                                         </div>
                                         <div class="bg-[#F9F9F9] max-h-[59px] relative rounded-[35px] mt-0 border !border-black">
                                             <div class="flex items-center">
@@ -239,14 +237,14 @@
                                                 </div>
                                             </div>
                                         </div>
-
+        
                                         <!-- Submit Button -->
                                         <div class="flex justify-center">
                                             <button type="submit" class="!m-0 !h-[55px] !text-[14px] !w-[100%] mt-0 !font-[500] flex items-center justify-center 
                                                 !bg-[#B62326] text-white font-bold
                                                 !rounded-full font-bold hover:bg-[#B62326]-700 transition-colors 
                                                 focus:outline-none focus:ring-2 focus:ring-[#B62326]-500 focus:ring-offset-2">
-                                                التالي
+                                                {{__('Next')}}
                                             </button>
                                         </div>
                                     </form>

@@ -8,21 +8,18 @@
         </a>
     </div>
     <p class="text-center text-[16px] mb-2 leading-[29px] max-w-[327px] mx-auto font-[400] text-[#4B4B4B] z-50 mt-0 relative">
-        لوحة تحكم البطاقات الخاصة
+        {{ __('Private cards control panel') }}
     </p>
     
     <div class="flex flex-col items-end justify-end !bg-transparent p-3 text-center shadow-lg mt-0 rounded-[13px] mx-2 relative">
         <p class="relative font-bold text-[#242424]">
-            {{ $message->mainCategory ? $message->mainCategory->name : 'غير محدد' }}
+            {{ $message->mainCategory ? $message->mainCategory->name : __('Not specified') }}
         </p>
         
         @if($message->card && $message->card->file_path)
-
-        <img src="{{ asset('storage/'. $message->card->file_path) }}" class="h-[450px] w-[100%] rounded-[15px] mt-[20px]" alt="صورة البطاقة">
+        <img src="{{ asset('storage/'. $message->card->file_path) }}" class="h-[450px] w-[100%] rounded-[15px] mt-[20px]" alt="{{ __('Card image') }}">
         @else
-
-
-        <img src="{{ asset('app/img/show-card.png') }}" class="h-[450px] w-[100%] rounded-[15px] mt-[20px]" alt="صورة البطاقة افتراضية">
+        <img src="{{ asset('app/img/show-card.png') }}" class="h-[450px] w-[100%] rounded-[15px] mt-[20px]" alt="{{ __('Default card image') }}">
         @endif
     </div>
 </div>

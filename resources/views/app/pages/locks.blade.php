@@ -1,48 +1,77 @@
-@extends('app.index')
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="{{ url('app/img/black.png') }}" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="{{ asset('app/sass/style.css') }}" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>MIN ALQALB ❤ من القلب</title>
+    <style>
+        body,
+        html {
+            font-family: 'Cairo' !important;
+        }
 
-@section('content')
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap');
+
+        body ,h1{
+            font-family: 'Cairo', sans-serif;
+        }
+
+        .flag-icon { 
+            width: 40px;
+            height: 24px;
+            background-size: cover;
+        }
+    </style>
+</head>
+
+<div id="rootElement" lang="en_US">
+    <img src="{{ asset('app/img/curve2.png')}}" class="z-50 w-[106px] absolute" alt="">
+
+<a href="{{ route('app.prices')}}" class="z-[9999999999999] !p-2 !absolute left-0 !mt-2 icondoor">
+<i class="fas fa-arrow-alt-circle-left text-white text-[19px] pl-3 w-[65px]"></i>
+</a>
+
+    <body class="">
+        <div class="app white messagebox">
+            <div class="header">
+
+                <a href="#"><img src="{{ asset('app/img/black.png') }}" alt="" class="img-fluid logo"></a>
+            </div>
+       
 <div class="app white messagebox">
-    <h1 class="">أقفال من القلب</h1>
+   
+    <h1 class="">{{ __('Locks from the Heart') }}</h1>
 
     <div class="row justify-content-center">
         <div class="col-12 col-lg-4">
             <div class="All_Button lang Devices">
-                <!-- Buttons -->
                 <div class="flex items-center justify-between">
                     <!-- Add any buttons here if needed -->
                 </div>
 
-                <!-- Purchased Requests Cards -->
                 <div class="max-w-6xl mx-auto mt-6">
-                    <div class="flex items-center justify-end mb-4 gap-3">
-                        <select id="statusFilter" class="border border-gray-300 w-[100%] rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
-                            <option value="all">الكل</option>
-                            <option value="available">متوفرة</option>
-                            <option value="used">مستخدمة</option>
-                            <option value="canceled">ملغية</option>
-                        </select>
-                        <span class="font-bold text-gray-700 min-w-[151px]">: تصفية حسب الحالة</span>
-                    </div>
+                   
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                         @foreach($locks as $request)
                             <div data-status="{{ $request->status == 'pending' ? 'available' : $request->status }}" class="bg-white rounded-lg shadow p-6 flex flex-col items-center hover:bg-gray-50 cursor-pointer" onclick="window.location.href='{{ route('min-alqalb.lockers.finish') }}'">
                                 @if ($request->photo)
-                                    <img src="{{ asset('storage/' . $request->photo) }}" alt="Lock Image" class="w-24 h-24 object-cover rounded-full mb-4">
+                                    <img src="{{ asset('storage/' . $request->photo) }}" alt="{{ __('Lock Image') }}" class="w-24 h-24 object-cover rounded-full mb-4">
                                 @else
-                                    <img src="{{ asset($request->status == 'used' ? 'img/grean-l.png' : 'img/red-l.png') }}" alt="Status Icon" class="w-[30px] mb-4">
+                                    <img src="{{ asset($request->status == 'used' ? 'img/grean-l.png' : 'img/red-l.png') }}" alt="{{ __('Status Icon') }}" class="w-[30px] mb-4">
                                 @endif
-                                <h3 class="text-lg font-bold text-gray-800">{{ $request->name_ar ?? 'قفل' }}</h3>
-                                <p class="text-sm text-gray-600">{{ $request->desc_ar ?? 'بدون وصف' }}</p>
+                                <h3 class="text-lg font-bold text-gray-800">{{ $request->name_ar ?? __('Lock') }}</h3>
+                                <p class="text-sm text-gray-600">{{ $request->desc_ar ?? __('No Description') }}</p>
                                 <div class="mt-4 text-right w-full">
-                                  
-                                
-                               
                                     @if ($request->price)
                                         <p class="text-sm font-medium text-gray-700">
-                                            <span class="font-bold">السعر:</span> {{ $request->price }} ريال
+                                            <span class="font-bold">{{ __('Price') }}:</span> {{ $request->price }} {{ __('AED') }}
                                         </p>
                                     @endif
-                                
+                                </div>
                             </div>
                         @endforeach
                     </div>
@@ -50,6 +79,8 @@
             </div>
         </div>
     </div>
+</div>
+
 
     <!-- Success/Error/Info Messages -->
     @if(session('success'))
@@ -118,4 +149,4 @@
         }, 5000);
     </script>
 </div>
-@endsection
+</html>

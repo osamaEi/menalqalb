@@ -3,56 +3,57 @@
 @section('content')
        
 
-        <!-- Balance and Title -->
-        <p class="text-center text-[16px] leading-[29px] max-w-[327px] mx-auto font-[400] text-[#4B4B4B] z-50 mt-4 relative">
-            تعبئة الرصيد
-        </p>
-        <p class="text-center text-[16px] leading-[29px] max-w-[327px] mx-auto font-[400] text-[#5B186B] z-50 mt-2 relative">
-            الرصيد المتوفر: {{ number_format(auth()->user()->credits_package ?? 0) }} نقطة
-        </p>
+       <!-- Balance and Title -->
+<p class="text-center text-[16px] leading-[29px] max-w-[327px] mx-auto font-[400] text-[#4B4B4B] z-50 mt-4 relative">
+    {{ __('recharge_balance') }}
+</p>
+<p class="text-center text-[16px] leading-[29px] max-w-[327px] mx-auto font-[400] text-[#5B186B] z-50 mt-2 relative">
+    {{ __('available_balance', ['points' => number_format(auth()->user()->credits_package ?? 0)]) }}
+</p>
 
-        <!-- Packages -->
-        <div class="px-3 mt-6">
-            <div class="rounded flex mb-2 text-[16px] font-[400] items-center justify-between p-2 bg-[#f7ecd9]">
-                <p class="ml-[96px]">عدد النقاط</p>
-                <p>السعر</p>
-            </div>
-            <form id="packageForm" action="" method="POST">
-                @csrf
-                <input type="hidden" name="package_id" id="selected_package" value="">
-                <div class="grid grid-cols-1 gap-3">
-                    @foreach($packages as $index => $package)
-                        <div class="package-card rounded flex text-[16px] font-[400] items-center justify-between p-2 {{ $index % 2 == 0 ? 'bg-[#B6232630]' : 'bg-[#E0D4E37A]' }}"
-                             onclick="selectPackage(this, {{ $package->id }})">
-                            <div>
-                                <input id="radio-{{ $package->id }}" name="package" type="radio" class="w-[23px] h-[23px]">
-                            </div>
-                            <p class="flex flex-row-reverse gap-1">
-                                <span>{{ number_format($package->amount) }}</span>
-                                <span>نقاط</span>
-                            </p>
-                            <p class="flex flex-row-reverse gap-1">
-                                <span>{{ number_format($package->price) }}</span>
-                                <span>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                        <path d="M8 7V17H12C14.8 17 17 14.8 17 12C17 9.2 14.8 7 12 7H8Z" stroke="#17191C" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
-                                        <path d="M6.5 11H18.5" stroke="#17191C" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
-                                        <path d="M6.5 13H12.5H18.5" stroke="#17191C" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
-                                    </svg>
-                                </span>
-                            </p>
-                        </div>
-                    @endforeach
+<!-- Packages -->
+<div class="px-3 mt-6">
+    <div class="rounded flex mb-2 text-[16px] font-[400] items-center justify-between p-2 bg-[#f7ecd9]">
+        <p class="ml-[96px]">{{ __('points_count') }}</p>
+        <p>{{ __('price') }}</p>
+    </div>
+    <form id="packageForm" action="" method="POST">
+        @csrf
+        <input type="hidden" name="package_id" id="selected_package" value="">
+        <div class="grid grid-cols-1 gap-3">
+            @foreach($packages as $index => $package)
+                <div class="package-card rounded flex text-[16px] font-[400] items-center justify-between p-2 {{ $index % 2 == 0 ? 'bg-[#B6232630]' : 'bg-[#E0D4E37A]' }}"
+                     onclick="selectPackage(this, {{ $package->id }})">
+                    <div>
+                        <input id="radio-{{ $package->id }}" name="package" type="radio" class="w-[23px] h-[23px]">
+                    </div>
+                    <p class="flex flex-row-reverse gap-1">
+                        <span>{{ number_format($package->amount) }}</span>
+                        <span>{{ __('points') }}</span>
+                    </p>
+                    <p class="flex flex-row-reverse gap-1">
+                        <span>{{ number_format($package->price) }}</span>
+                        <span>
+                            <!-- SVG Icon -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none">
+                                <path d="M8 7V17H12C14.8 17 17 14.8 17 12C17 9.2 14.8 7 12 7H8Z" stroke="#17191C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M6.5 11H18.5" stroke="#17191C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M6.5 13H18.5" stroke="#17191C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </span>
+                    </p>
                 </div>
-            </form>
+            @endforeach
         </div>
+    </form>
+</div>
 
-        <!-- Purchase Button -->
-        <div class="items-center justify-center flex mt-6">
-            <button onclick="submitForm()" class="btn-primary text-center text-white p-2 rounded-[13px] w-[141px]">
-                تعبئة
-            </button>
-        </div>
+<!-- Purchase Button -->
+<div class="items-center justify-center flex mt-6">
+    <button onclick="submitForm()" class="btn-primary text-center text-white p-2 rounded-[13px] w-[141px]">
+        {{ __('recharge') }}
+    </button>
+</div>
 
         <!-- Success/Error/Info Messages -->
         @if(session('success'))

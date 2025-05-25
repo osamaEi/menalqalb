@@ -10,36 +10,27 @@ use App\Models\Page; // Assuming AppPage is the model
 
 class AppPageController extends Controller
 {
-    public function privacy()
+    public function showPage($slug)
     {
-        $page = Page::where('slug', 'privacy')->where('is_active', true)->firstOrFail();
+        // Get the page by slug and ensure it's active
+        $page = Page::where('slug', $slug)
+                    ->where('is_active', true)
+                    ->firstOrFail();
+    
+        // Get current locale
         $locale = App::getLocale();
-        $title = $locale === 'ar' ? $page->title_ar : $page->title_en;
-        $description = $locale === 'ar' ? $page->description_ar : $page->description_en;
-
-        return view('app.pages.privacy', compact('title', 'description'));
+    
+        // Prepare data for the view
+        $data = [
+            'title' => $locale === 'ar' ? $page->title_ar : $page->title_en,
+            'content' => $locale === 'ar' ? $page->description_ar : $page->description_en,
+            'page' => $page // pass the entire page object if needed
+        ];
+    
+        return view('app.pages.dynamic', $data);
     }
 
-    public function terms()
-    {
-        $page = Page::where('slug', 'terms')->where('is_active', true)->firstOrFail();
-        $locale = App::getLocale();
-        $title = $locale === 'ar' ? $page->title_ar : $page->title_en;
-        $description = $locale === 'ar' ? $page->description_ar : $page->description_en;
-
-        return view('app.pages.terms', compact('title', 'description'));
-    }
-
-    public function benefits()
-    {
-        $page = Page::where('slug', 'benefits')->where('is_active', true)->firstOrFail();
-        $locale = App::getLocale();
-        $title = $locale === 'ar' ? $page->title_ar : $page->title_en;
-        $description = $locale === 'ar' ? $page->description_ar : $page->description_en;
-
-        return view('app.pages.benefits', compact('title', 'description'));
-    }
-
+   
     public function prices()
     {
 

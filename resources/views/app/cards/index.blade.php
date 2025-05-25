@@ -3,16 +3,15 @@
 @section('content')
 <div class="app white messagebox">
    
-    <h1 >الكروت من القلب</h1>
+    <h1>{{__('Cards from the heart')}}</h1>
 
     <div class="row justify-content-center">
         <div class="col-12 col-lg-4">
             <div class="All_Button lang Devices">
                 <!-- Buttons -->
                 <div class="flex items-center justify-between">
-          
                     <div class="newMessage bg-black rounded-[15px] text-center my-2 w-[100%]">
-                        <a href="{{ route('min-alqalb.cards.create') }}" class="text-white border-0">طلب جديد</a>
+                        <a href="{{ route('min-alqalb.cards.create') }}" class="text-white border-0">{{__('New request')}}</a>
                     </div>
                 </div>
 
@@ -20,20 +19,20 @@
                 <div class="max-w-6xl mx-auto mt-6">
                     <div class="flex items-center justify-end mb-4 gap-3">
                         <select id="statusFilter" class="border border-gray-300 w-[100%] rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
-                            <option value="all">الكل</option>
-                            <option value="available">متوفرة</option>
-                            <option value="used">مستخدمة</option>
-                            <option value="canceled">ملغية</option>
+                            <option value="all">{{__('All')}}</option>
+                            <option value="available">{{__('Available')}}</option>
+                            <option value="used">{{__('Used')}}</option>
+                            <option value="canceled">{{__('Canceled')}}</option>
                         </select>
-                        <span class="font-bold text-gray-700 min-w-[151px]">: تصفية حسب الحالة</span>
+                        <span class="font-bold text-gray-700 min-w-[151px]">{{__('Filter by status:')}}</span>
                     </div>
                     <div class="overflow-x-auto bg-white rounded-lg shadow table-container">
                         <table id="dataTable" class="min-w-full divide-y divide-gray-200 sticky-header">
                             <thead class="bg-gray-100">
                                 <tr>
-                                    <th class="px-6 py-3 text-right text-sm font-medium border-b">الحالة</th>
-                                    <th class="px-6 py-3 text-right text-sm font-medium border-b">رقم التفعيل</th>
-                                    <th class="px-6 py-3 text-right text-sm font-medium border-b">الرقم</th>
+                                    <th class="px-6 py-3 text-right text-sm font-medium border-b">{{__('Status')}}</th>
+                                    <th class="px-6 py-3 text-right text-sm font-medium border-b">{{__('Activation number')}}</th>
+                                    <th class="px-6 py-3 text-right text-sm font-medium border-b">{{__('Number')}}</th>
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
@@ -41,8 +40,8 @@
                                         <tr data-status="{{ $item->status }}" class="hover:bg-gray-50">
                                             <td class="px-6 py-4 whitespace-nowrap text-center">
                                                 <div class="flex justify-center">
-                                                    <div class="w-6 h-6" title="{{ $item->status === 'open' ? 'متوفرة' : ($item->status === 'closed' ? 'مستخدمة' : 'ملغية') }}">
-                                                        <img src="{{ asset($item->status === 'open' ? 'app/img/orange.png' : ($item->status === 'closed' ? 'app/img/green.png' : 'app/img/red.png')) }}" class="w-[30px]" alt="" class="img-fluid">
+                                                    <div class="w-6 h-6" title="{{ $item->status === 'open' ? __('Available') : ($item->status === 'closed' ? __('Used') : __('Canceled')) }}">
+                                                        <img src="{{ asset($item->status === 'open' ? 'app/img/orange.png' : ($item->status === 'closed' ? 'app/img/grepng' : 'app/img/red.png')) }}" class="w-[30px]" alt="" class="img-fluid">
                                                     </div>
                                                 </div>
                                             </td>
@@ -80,17 +79,17 @@
     <ul class="Image_define" style="width: 438px;">
         <li>
             <img src="{{ asset('app/img/red.png') }}" alt="" class="img-fluid">
-            <p for="txtReceived" class="localized" data-content="ملغية"></p>
+            <p for="txtReceived" class="localized" data-content="{{__('Canceled')}}"></p>
             <p for="txtReceived" class="localized" data-content="{{ $counts['canceled'] }}"></p>
         </li>
         <li>
-            <img src="{{ asset('app/img/green.png') }}" alt="" class="img-fluid">
-            <p for="txtSent" class="localized" data-content="مستخدمة"></p>
+            <img src="{{ asset('app/img/grepng') }}" alt="" class="img-fluid">
+            <p for="txtSent" class="localized" data-content="{{__('Used')}}"></p>
             <p for="txtSent" class="localized" data-content="{{ $counts['closed'] }}"></p>
         </li>
         <li>
             <img src="{{ asset('app/img/orange.png') }}" alt="" class="img-fluid">
-            <p for="txtRead" class="localized" data-content="متوفره"></p>
+            <p for="txtRead" class="localized" data-content="{{__('Available')}}"></p>
             <p for="txtRead" class="localized" data-content="{{ $counts['open'] }}"></p>
         </li>
     </ul>

@@ -1,12 +1,10 @@
 @extends('app.index')
 
 @section('content')
-<h1 class="text-[21px] font-[400] z-50 relative" style="font-family: cairo !important;">مرحبا بكم</h1>
-<p class="text-center text-[14px] leading-[29px] font-[400] text-[#6B5E5E] z-50 mt-2 relative">لاستكمال
-    إعداد التهنيئة
-    يجب عليك تسجيل دخولك أولا ً</p>
+<h1 class="text-[21px] font-[400] z-50 relative" style="font-family: cairo !important;">{{__('Welcome')}}</h1>
+<p class="text-center text-[14px] leading-[29px] font-[400] text-[#6B5E5E] z-50 mt-2 relative">{{__('To complete the greeting setup, you must log in first')}}</p>
 <p class="text-center text-[14px] leading-[29px] font-[400] text-[#6B5E5E] z-50 mt-2 relative">
-    تسجيل الدخول بواسطة بيانات الدخول
+    {{__('Log in using your credentials')}}
 </p>
 
 <div class="row justify-content-center">
@@ -47,7 +45,7 @@
                                         <div class="country-dropdown bg-white absolute z-[999999] mt-1 w-64 shadow-lg rounded-[9px] border border-gray-200 hidden" id="countryDropdown">
                                             <!-- Search Box -->
                                             <div class="p-2 border-b border-gray-200">
-                                                <input type="text" placeholder="ابحث عن دولة..." class="w-full p-2 border border-gray-300 rounded-[9px] focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                                <input type="text" placeholder="{{__('Search for a country...')}}" class="w-full p-2 border border-gray-300 rounded-[9px] focus:outline-none focus:ring-2 focus:ring-blue-500">
                                             </div>
 
                                             <!-- Countries List -->
@@ -62,7 +60,7 @@
                                                             <rect width="12" height="24" fill="#ff0000" />
                                                         </svg>
                                                     </div>
-                                                    <span class="text-sm">الإمارات العربية المتحدة</span>
+                                                    <span class="text-sm">{{__('United Arab Emirates')}}</span>
                                                     <span class="text-sm text-gray-500 mr-auto">+971</span>
                                                 </div>
 
@@ -77,7 +75,7 @@
                                                             </g>
                                                         </svg>
                                                     </div>
-                                                    <span class="text-sm">المملكة العربية السعودية</span>
+                                                    <span class="text-sm">{{__('Saudi Arabia')}}</span>
                                                     <span class="text-sm text-gray-500 mr-auto">+966</span>
                                                 </div>
 
@@ -93,7 +91,7 @@
                                                             </g>
                                                         </svg>
                                                     </div>
-                                                    <span class="text-sm">مصر</span>
+                                                    <span class="text-sm">{{__('Egypt')}}</span>
                                                     <span class="text-sm text-gray-500 mr-auto">+20</span>
                                                 </div>
 
@@ -133,7 +131,7 @@
                                 <!-- Password Input -->
                                 <input type="password" id="passwordInput" name="password" required
                                     class="w-[100px] bg-[#F9F9F9] h-[45px] flex-grow text-lg focus:outline-none text-center"
-                                    placeholder="كلمة المرور" />
+                                    placeholder="{{__('Password')}}" />
                                 <!-- Show/Hide Password Icon -->
                                 <div class="px-4">
                                     <svg id="togglePassword" xmlns="http://www.w3.org/2000/svg" class="cursor-pointer h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -148,17 +146,17 @@
 
                         <!-- Forgot Password Link -->
                         <div class="text-center border-0 p-0 m-0 right-[20px] relative !text-right">
-                            <a href="{{ route('app.forgot-password') }}" class="text-[10px] border-0 font-[400] p-0 !text-[#5b186bcc] text-lg text-purple-700 font-semibold" style="  font-size: 0.8em;">نسيت كلمة المرور</a>
+                            <a href="{{ route('app.forgot-password') }}" class="text-[10px] border-0 font-[400] p-0 !text-[#5b186bcc] text-lg text-purple-700 font-semibold" style="font-size: 0.8em;">{{__('Forgot password')}}</a>
                         </div>
                         
                         <!-- Submit Button -->
                         <div class="flex justify-center">
                             <a href="{{ route('app.register') }}" class="mt-0 font-bold flex items-center justify-center bg-green-600 text-black border !border-black !w-[122px] !h-[35px] !rounded-full font-bold hover:bg-green-700 transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
-                                تسجيل جديد
+                                {{__('Register new')}}
                             </a>
 
                             <button type="submit" class="mt-0 !font-[400] flex items-center justify-center !bg-[#B62326] text-white !w-[122px] !h-[35px] !rounded-full font-bold hover:bg-[#B62326]-700 transition-colors focus:outline-none focus:ring-2 focus:ring-[#B62326]-500 focus:ring-offset-2">
-                                تسجيل الدخول
+                                {{__('Log in')}}
                             </button>
                         </div>
                     </form>

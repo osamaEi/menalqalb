@@ -14,11 +14,11 @@
                         @csrf
                         <!-- Name Field -->
                         <div class="!mt-1">
-                            <label for="name" class="block text-lg font-medium text-[#4B4B4B] text-center">اسم المرسل</label>
+                            <label for="name" class="block text-lg font-medium text-[#4B4B4B] text-center">{{__('Sender Name')}}</label>
                         </div>
                         <div class="bg-[#F9F9F9] max-h-[59px] relative rounded-[35px] mt-0 border !border-black">
                             <div class="flex items-center">
-                                <input type="text" id="name" value="{{ $user->name ?? 'Tarek Bn Kalban' }}" disabled class="relative right-[-20px] w-[100px] bg-transparent h-[57px] flex-grow text-lg focus:outline-none text-center" placeholder="الاسم" />
+                                <input type="text" id="name" value="{{ $user->name ?? 'Tarek Bn Kalban' }}" disabled class="relative right-[-20px] w-[100px] bg-transparent h-[57px] flex-grow text-lg focus:outline-none text-center" placeholder="{{__('Name')}}" />
                                 <div class="px-4">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
                                         <path d="M12.1596 11.62C12.1296 11.62 12.1096 11.62 12.0796 11.62C12.0296 11.61 11.9596 11.61 11.8996 11.62C8.99957 11.53 6.80957 9.25 6.80957 6.44C6.80957 3.58 9.13957 1.25 11.9996 1.25C14.8596 1.25 17.1896 3.58 17.1896 6.44C17.1796 9.25 14.9796 11.53 12.1896 11.62C12.1796 11.62 12.1696 11.62 12.1596 11.62ZM11.9996 2.75C9.96957 2.75 8.30957 4.41 8.30957 6.44C8.30957 8.44 9.86957 10.05 11.8596 10.12C11.9096 10.11 12.0496 10.11 12.1796 10.12C14.1396 10.03 15.6796 8.42 15.6896 6.44C15.6896 4.41 14.0296 2.75 11.9996 2.75Z" fill="#4B4B4B" />
@@ -27,7 +27,7 @@
                                 </div>
                             </div>
                         </div>
-
+    
                         <!-- Locker Selection -->
                         <input type="hidden" name="locker_id" id="selected_locker" value="">
                         <ul class="allDevice">
@@ -59,18 +59,18 @@
                                 </li>
                             @endforeach
                         </ul>
-
+    
                         <!-- Quantity -->
                         <div class="relative !mt-3">
-                            <label for="quantity" class="block text-lg font-medium text-[#4B4B4B] bg-transparent text-center">عدد البطاقات المرغوبة</label>
+                            <label for="quantity" class="block text-lg font-medium text-[#4B4B4B] bg-transparent text-center">{{__('Number of desired cards')}}</label>
                             <input type="number" name="quantity" id="quantity" min="1" required
                                 class="text-[#4B4B4B] bg-transparent text-center block w-[99%] border !border-[#4B4B4B] rounded-full py-3 px-4 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                placeholder="أدخل العدد">
+                                placeholder="{{__('Enter quantity')}}">
                         </div>
-
+    
                         <!-- Submit Button -->
                         <div class="h-[57px] newMessage bg-black rounded-full flex items-center justify-center text-center mt-2">
-                            <button type="submit" class="text-white border-0 w-full h-full">التالي</button>
+                            <button type="submit" class="text-white border-0 w-full h-full">{{__('Next')}}</button>
                         </div>
                     </form>
                 </div>

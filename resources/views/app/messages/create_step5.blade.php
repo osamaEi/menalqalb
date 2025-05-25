@@ -53,31 +53,34 @@
                 <div class="col-12 col-lg-4 ">
                     <div class="All_Button lang Devices">
                         <div>
-                            <div class="rounded-lg  px-0 pb-8 w-full">
-                                <img src="{{asset('app/img/success.svg')}}" class="mx-auto" alt="">
-                                <h1 class="text-[24px] text-[#242424] font-[900] z-50 relative my-4">تهانيا!</h1>
-                                <p class="text-center !pb-0 text-[18px] leading-[29px] max-w-[327px] mx-auto font-[400] text-[#4B4B4B]
-                                    z-50 mt-4 relative">
-                                    تم اعداد التهنئة </p>
-                                <p class="text-center text-[18px] leading-[29px] max-w-[327px] mb-4 mx-auto font-[400] text-[#4B4B4B]
-                                                                    z-50 relative">
-                                    تم خصم 200 نقطة رسوم لبطاقة التهنة </p>
-
-                                <a href="{{ route('app.dashboard')}}" type="submit"
+                            <div class="rounded-lg px-0 pb-8 w-full">
+                                <img src="{{ asset('app/img/success.svg') }}" class="mx-auto" alt="">
+                                
+                                <h1 class="text-[24px] text-[#242424] font-[900] z-50 relative my-4">{{ __('congratulations') }}</h1>
+                                
+                                <p class="text-center !pb-0 text-[18px] leading-[29px] max-w-[327px] mx-auto font-[400] text-[#4B4B4B] z-50 mt-4 relative">
+                                    {{ __('congratulations_prepared') }}
+                                </p>
+                                
+                                <p class="text-center text-[18px] leading-[29px] max-w-[327px] mb-4 mx-auto font-[400] text-[#4B4B4B] z-50 relative">
+                                    {{ __('points_deducted') }}
+                                </p>
+                            
+                                <a href="{{ route('app.dashboard') }}" type="submit"
                                     class="!m-0 !h-[55px] !text-[18px] !w-[100%] mt-0 !mb-3 !font-[500] flex items-center justify-center 
-                                                                            !bg-[#000] border-0 text-white font-bold
-                                                                            !rounded-full font-bold hover:bg-[#B62326]-700 transition-colors 
-                                                                            focus:outline-none focus:ring-2 focus:ring-[#B62326]-500 focus:ring-offset-2">
-                                    لوحة التحكم
+                                           !bg-[#000] border-0 text-white font-bold !rounded-full hover:bg-[#B62326]-700 transition-colors 
+                                           focus:outline-none focus:ring-2 focus:ring-[#B62326]-500 focus:ring-offset-2">
+                                    {{ __('dashboard') }}
                                 </a>
-                                <a href="{{ route('app.home')}}" type="submit"
+                            
+                                <a href="{{ route('app.home') }}" type="submit"
                                     class="!m-0 !h-[55px] !text-[18px] !w-[100%] mt-0 !font-[500] flex items-center justify-center 
-                                                                                                            !bg-[#B62326] text-white font-bold
-                                                                                                            !rounded-full font-bold hover:bg-[#B62326]-700 transition-colors 
-                                                                                                            focus:outline-none focus:ring-2 focus:ring-[#B62326]-500 focus:ring-offset-2">
-                                    الرئيسية
+                                           !bg-[#B62326] text-white font-bold !rounded-full hover:bg-[#B62326]-700 transition-colors 
+                                           focus:outline-none focus:ring-2 focus:ring-[#B62326]-500 focus:ring-offset-2">
+                                    {{ __('home') }}
                                 </a>
                             </div>
+                            
                         </div>
                     </div>
                 </div>

@@ -135,7 +135,7 @@
                             
                             <!-- Private Message -->
                             <div class="!mt-1">
-                                <label for="message_content" class="localized" data-content="الرسالة الخاصة"></label>
+                                <label for="message_content" class="localized">{{__('Private Message')}}</label>
                             </div>
                             <div class="bg-[#F9F9F9] max-h-[122px] relative rounded-[50px] mt-0 border !border-black">
                                 <div class="overflow-hidden flex items-center">
@@ -147,18 +147,18 @@
                             
                             <!-- Recipient Name -->
                             <div class="!mt-1">
-                                <label for="recipient_name" class="localized" data-content="اسم المرسل له"></label>
+                                <label for="recipient_name" class="localized">{{__('Recipient Name')}}</label>
                             </div>
                             <div class="bg-[#F9F9F9] max-h-[59px] relative rounded-[35px] mt-0 border !border-black">
                                 <div class="flex items-center">
                                     <input type="text" id="recipient_name" name="recipient_name" required
                                         class="relative right-[-20px] w-[100px] bg-transparent h-[57px] flex-grow text-lg focus:outline-none text-center"
-                                        placeholder="الاسم" value="{{ old('recipient_name', $sessionData['recipient_name'] ?? '') }}" />
+                                        placeholder="{{__('Name')}}" value="{{ old('recipient_name', $sessionData['recipient_name'] ?? '') }}" />
                                 </div>
                             </div>
                             
                             <!-- Recipient Phone -->
-                            <label for="recipient_phone" class="!mt-1 localized recipient-phone-label" data-content="رقم المرسل له"></label>
+                            <label for="recipient_phone" class="!mt-1 localized recipient-phone-label">{{__('Recipient Phone')}}</label>
                             <div class="bg-transparent !mt-1 h-[59px] relative rounded-[31px] border !border-black recipient-phone-container">
                                 <div class="flex items-center">
                                     <!-- Country Flag and Code -->
@@ -185,7 +185,7 @@
                                             <div class="country-dropdown bg-white absolute z-[999999] mt-1 w-64 shadow-lg rounded-[9px] border border-gray-200 hidden" id="recipientCountryDropdown">
                                                 <!-- Search Box -->
                                                 <div class="p-2 border-b border-gray-200">
-                                                    <input type="text" id="recipientCountrySearch" placeholder="ابحث عن دولة..." 
+                                                    <input type="text" id="recipientCountrySearch" placeholder="{{__('Search for a country...')}}" 
                                                         class="w-full p-2 border border-gray-300 rounded-[9px] focus:outline-none">
                                                 </div>
                                                 
@@ -210,11 +210,11 @@
                                     </div>
                                 </div>
                             </div>
-
+                        
                             <!-- Scheduled Date Field -->
                             <div class="relative !mt-3 scheduled-date-container">
                                 <label for="scheduled_at" class="block text-lg font-medium text-[#4B4B4B] bg-transparent text-center scheduled-date-label">
-                                    موعد الإرسال المجدول
+                                    {{__('Scheduled Send Time')}}
                                 </label>
                                 <div class="bg-[#F9F9F9] max-h-[59px] relative rounded-[35px] mt-2 border !border-black">
                                     <div class="flex items-center">
@@ -229,18 +229,18 @@
                                     </div>
                                 </div>
                             </div>
-
+                        
                             <!-- Heart Lock Option -->
                             <div class="relative !mt-3">
                                 <label for="lock_type" class="block text-lg font-medium text-[#4B4B4B] bg-transparent text-center">
-                                    اضافة قفل القلب
+                                    {{__('Add Heart Lock')}}
                                 </label>
                                 <select id="lock_type" name="lock_type" required
                                     class="text-[#4B4B4B] bg-transparent text-center block appearance-none w-[99%] border !border-[#4B4B4B] rounded-full py-3 px-4 text-gray-700 focus:outline-none">
-                                    <option value="">الرجاء الاختيار</option>
-                                    <option value="lock_without_heart" {{ old('lock_type', $sessionData['lock_type'] ?? '') == 'lock_without_heart' ? 'selected' : '' }}>نعم بدون قفل القلب</option>
-                                    <option value="lock_with_heart" {{ old('lock_type', $sessionData['lock_type'] ?? '') == 'lock_with_heart' ? 'selected' : '' }}>نعم بقفل القلب</option>
-                                    <option value="no_lock" {{ old('lock_type', $sessionData['lock_type'] ?? '') == 'no_lock' ? 'selected' : '' }}>لا</option>
+                                    <option value="">{{__('Please choose')}}</option>
+                                    <option value="lock_without_heart" {{ old('lock_type', $sessionData['lock_type'] ?? '') == 'lock_without_heart' ? 'selected' : '' }}>{{__('Yes without heart lock')}}</option>
+                                    <option value="lock_with_heart" {{ old('lock_type', $sessionData['lock_type'] ?? '') == 'lock_with_heart' ? 'selected' : '' }}>{{__('Yes with heart lock')}}</option>
+                                    <option value="no_lock" {{ old('lock_type', $sessionData['lock_type'] ?? '') == 'no_lock' ? 'selected' : '' }}>{{__('No')}}</option>
                                 </select>
                                 <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center px-4 text-gray-700 top-8">
                                     <svg class="fill-current h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -252,10 +252,10 @@
                             <!-- Navigation Buttons -->
                             <div class="grid grid-cols-2 gap-4 px-0 mb-6 !mt-5">
                                 <a href="{{ route('app.messages.create.step2') }}" class="!m-0 !h-[55px] !text-[14px] !w-[100%] flex items-center justify-center text-[#B62326] border border-[#B62326] font-bold rounded-full hover:bg-gray-100 transition-colors">
-                                    <i class="fas fa-arrow-right ml-2"></i> السابق
+                                    <i class="fas fa-arrow-right ml-2"></i> {{__('Previous')}}
                                 </a>
                                 <button type="submit" class="!m-0 !h-[55px] !text-[14px] !w-[100%] flex items-center justify-center !bg-[#B62326] text-white font-bold rounded-full hover:bg-[#a31f22] transition-colors">
-                                    التالي <i class="fas fa-arrow-left mr-2"></i>
+                                    {{__('Next')}} <i class="fas fa-arrow-left mr-2"></i>
                                 </button>
                             </div>
                         </form>

@@ -7,9 +7,9 @@
             <i class="fas fa-arrow-alt-circle-left text-white text-[19px] pl-3 w-[65px]"></i>
         </a>
     </div>
-    <h1 class="text-[24px] text-[#242424] font-[900] z-50 relative text-center">تعديل بيانات البطاقة</h1>
+    <h1 class="text-[24px] text-[#242424] font-[900] z-50 relative text-center">{{__('Edit Card Details')}}</h1>
     <p class="text-center text-[14px] leading-[29px] max-w-[327px] mx-auto font-[400] text-[#4B4B4B] z-50 mt-2 relative">
-        يمكنك تعديل تفاصيل بطاقة التهنئة هنا
+        {{__('You can edit the greeting card details here')}}
     </p>
 
     @if ($errors->any())
@@ -31,38 +31,38 @@
 
                     <!-- Card Information (Read-only) -->
                     <div class="bg-gray-50 p-4 rounded-lg mb-4">
-                        <h3 class="font-bold text-lg mb-2">معلومات البطاقة</h3>
+                        <h3 class="font-bold text-lg mb-2">{{__('Card Information')}}</h3>
                         <div class="flex justify-between mb-2">
-                            <span>التصنيف الرئيسي:</span>
-                            <span>{{ $message->mainCategory ? $message->mainCategory->name : 'غير محدد' }}</span>
+                            <span>{{__('Main Category')}}:</span>
+                            <span>{{ $message->mainCategory ? $message->mainCategory->name : __('Not specified') }}</span>
                         </div>
                         <div class="flex justify-between mb-2">
-                            <span>التصنيف الفرعي:</span>
-                            <span>{{ $message->subCategory ? $message->subCategory->name : 'غير محدد' }}</span>
+                            <span>{{__('Sub Category')}}:</span>
+                            <span>{{ $message->subCategory ? $message->subCategory->name : __('Not specified') }}</span>
                         </div>
                         <div class="flex justify-between">
-                            <span>نوع البطاقة:</span>
-                            <span>{{ $message->card && $message->card->type ? $message->card->type : 'صورة' }}</span>
+                            <span>{{__('Card Type')}}:</span>
+                            <span>{{ $message->card && $message->card->type ? $message->card->type : __('Image') }}</span>
                         </div>
                     </div>
 
                     <!-- Message Content -->
                     <div class="!mt-3">
-                        <label for="message_content" class="block text-lg font-medium text-[#4B4B4B]">الرسالة</label>
+                        <label for="message_content" class="block text-lg font-medium text-[#4B4B4B]">{{__('Message')}}</label>
                         <textarea id="message_content" name="message_content" rows="4" 
                             class="bg-[#F9F9F9] w-full rounded-[15px] mt-1 p-3 border !border-gray-300 text-right"
-                            placeholder="اكتب رسالتك هنا">{{ old('message_content', $message->message_content) }}</textarea>
+                            placeholder="{{__('Write your message here')}}">{{ old('message_content', $message->message_content) }}</textarea>
                     </div>
 
                     <!-- Recipient Name -->
                     <div class="!mt-3">
-                        <label for="recipient_name" class="block text-lg font-medium text-[#4B4B4B]">اسم المستلم</label>
+                        <label for="recipient_name" class="block text-lg font-medium text-[#4B4B4B]">{{__('Recipient Name')}}</label>
                         <div class="bg-[#F9F9F9] max-h-[59px] relative rounded-[35px] mt-1 border !border-gray-300">
                             <div class="flex items-center">
                                 <input value="{{ old('recipient_name', $message->recipient_name) }}" type="text" 
                                     id="recipient_name" name="recipient_name"
                                     class="relative right-[-20px] w-[100px] bg-transparent h-[57px] flex-grow text-lg focus:outline-none text-center"
-                                    placeholder="اسم المستلم" />
+                                    placeholder="{{__('Recipient Name')}}" />
                                 <div class="px-4">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
                                         <path d="M12.1596 11.62C12.1296 11.62 12.1096 11.62 12.0796 11.62C12.0296 11.61 11.9596 11.61 11.8996 11.62C8.99957 11.53 6.80957 9.25 6.80957 6.44C6.80957 3.58 9.13957 1.25 11.9996 1.25C14.8596 1.25 17.1896 3.58 17.1896 6.44C17.1796 9.25 14.9796 11.53 12.1896 11.62C12.1796 11.62 12.1696 11.62 12.1596 11.62ZM11.9996 2.75C9.96957 2.75 8.30957 4.41 8.30957 6.44C8.30957 8.44 9.86957 10.05 11.8596 10.12C11.9096 10.11 12.0496 10.11 12.1796 10.12C14.1396 10.03 15.6796 8.42 15.6896 6.44C15.6896 4.41 14.0296 2.75 11.9996 2.75Z" fill="#4B4B4B" />
@@ -75,18 +75,18 @@
 
                     <!-- Lock Type -->
                     <div class="!mt-3">
-                        <label for="lock_type" class="block text-lg font-medium text-[#4B4B4B]">نوع القفل</label>
+                        <label for="lock_type" class="block text-lg font-medium text-[#4B4B4B]">{{__('Lock Type')}}</label>
                         <select id="lock_type" name="lock_type" 
                             class="bg-[#F9F9F9] text-center block appearance-none w-full rounded-[35px] py-3 px-4 mt-1 text-lg border !border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <option value="no_lock" {{ old('lock_type', $message->lock_type) == 'no_lock' ? 'selected' : '' }}>لا</option>
-                            <option value="lock_without_heart" {{ old('lock_type', $message->lock_type) == 'lock_without_heart' ? 'selected' : '' }}>نعم بدون قفل قلب</option>
-                            <option value="lock_with_heart" {{ old('lock_type', $message->lock_type) == 'lock_with_heart' ? 'selected' : '' }}>نعم مع قفل قلب</option>
+                            <option value="no_lock" {{ old('lock_type', $message->lock_type) == 'no_lock' ? 'selected' : '' }}>{{__('No')}}</option>
+                            <option value="lock_without_heart" {{ old('lock_type', $message->lock_type) == 'lock_without_heart' ? 'selected' : '' }}>{{__('Yes without heart lock')}}</option>
+                            <option value="lock_with_heart" {{ old('lock_type', $message->lock_type) == 'lock_with_heart' ? 'selected' : '' }}>{{__('Yes with heart lock')}}</option>
                         </select>
                     </div>
 
                     <!-- Recipient Phone (Conditional) -->
                     <div id="recipient_phone_container" class="!mt-3 {{ old('lock_type', $message->lock_type) == 'no_lock' ? 'hidden' : '' }}">
-                        <label for="recipient_phone" class="block text-lg font-medium text-[#4B4B4B]">رقم هاتف المستلم</label>
+                        <label for="recipient_phone" class="block text-lg font-medium text-[#4B4B4B]">{{__('Recipient Phone')}}</label>
                         <div class="bg-[#F9F9F9] max-h-[59px] relative rounded-[35px] mt-1 border !border-gray-300">
                             <div class="flex items-center">
                                 <input value="{{ old('recipient_phone', $message->recipient_phone) }}" type="text" 
@@ -104,13 +104,13 @@
 
                     <!-- Unlock Code (Conditional) -->
                     <div id="unlock_code_container" class="!mt-3 {{ old('lock_type', $message->lock_type) == 'no_lock' ? 'hidden' : '' }}">
-                        <label for="unlock_code" class="block text-lg font-medium text-[#4B4B4B]">رمز فتح القفل</label>
+                        <label for="unlock_code" class="block text-lg font-medium text-[#4B4B4B]">{{__('Unlock Code')}}</label>
                         <div class="bg-[#F9F9F9] max-h-[59px] relative rounded-[35px] mt-1 border !border-gray-300">
                             <div class="flex items-center">
                                 <input value="{{ old('unlock_code', $message->unlock_code) }}" type="text" 
                                     id="unlock_code" name="unlock_code"
                                     class="relative right-[-20px] w-[100px] bg-transparent h-[57px] flex-grow text-lg focus:outline-none text-center"
-                                    placeholder="رمز فتح القفل" />
+                                    placeholder="{{__('Unlock Code')}}" />
                                 <div class="px-4">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
@@ -118,12 +118,12 @@
                                 </div>
                             </div>
                         </div>
-                        <p class="text-sm text-gray-500 mt-1">اترك هذا الحقل فارغًا إذا كنت لا ترغب في تغيير رمز فتح القفل</p>
+                        <p class="text-sm text-gray-500 mt-1">{{__('Leave this field empty if you do not want to change the unlock code')}}</p>
                     </div>
 
                     <!-- Scheduled Time -->
                     <div class="!mt-3">
-                        <label for="scheduled_at" class="block text-lg font-medium text-[#4B4B4B]">موعد الإرسال</label>
+                        <label for="scheduled_at" class="block text-lg font-medium text-[#4B4B4B]">{{__('Sending Time')}}</label>
                         <div class="bg-[#F9F9F9] max-h-[59px] relative rounded-[35px] mt-1 border !border-gray-300">
                             <div class="flex items-center">
                                 <input value="{{ old('scheduled_at', $message->scheduled_at ? $message->scheduled_at->format('Y-m-d\TH:i') : '') }}" 
@@ -145,7 +145,7 @@
                                 !bg-[#B62326] text-white font-bold
                                 !rounded-full font-bold hover:bg-[#B62326]-700 transition-colors 
                                 focus:outline-none focus:ring-2 focus:ring-[#B62326]-500 focus:ring-offset-2">
-                            حفظ التغييرات
+                            {{__('Save Changes')}}
                         </button>
                     </div>
                 </form>
@@ -160,7 +160,6 @@
         const recipientPhoneContainer = document.getElementById('recipient_phone_container');
         const unlockCodeContainer = document.getElementById('unlock_code_container');
         
-        // Function to toggle visibility of conditional fields
         function toggleConditionalFields() {
             if (lockTypeSelect.value === 'no_lock') {
                 recipientPhoneContainer.classList.add('hidden');
@@ -171,10 +170,7 @@
             }
         }
         
-        // Set initial state
         toggleConditionalFields();
-        
-        // Add change event listener
         lockTypeSelect.addEventListener('change', toggleConditionalFields);
     });
 </script>

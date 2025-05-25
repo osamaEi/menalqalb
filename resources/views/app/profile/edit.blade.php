@@ -3,7 +3,7 @@
 @section('content')
 
   
-    <h1 class="text-[24px] text-[#242424] font-[900] z-50 relative">الملف الشخصي</h1>
+    <h1 class="text-[24px] text-[#242424] font-[900] z-50 relative">{{__('change_profile')}}</h1>
     <p class="text-center text-[14px] leading-[29px] max-w-[327px] mx-auto font-[400] text-[#4B4B4B] z-50 mt-4 relative">
         {{ auth()->user()->user_type == 'sales_point' ? 'منفذ بيع' : 'مستخدم' }}
     </p>
@@ -26,7 +26,7 @@
 
                             <!-- Name Field -->
                             <div class="!mt-1">
-                                <label for="name" class="localized" data-content="الاسم"></label>
+                                <label for="name" class="localized" data-content="{{__('name')}}"></label>
                             </div>
                             <div class="bg-[#F9F9F9] max-h-[59px] relative rounded-[35px] mt-0 border !border-black">
                                 <div class="flex items-center">
@@ -52,7 +52,7 @@
 
                             <!-- Email Field -->
                             <div class="!mt-3">
-                                <label for="email" class="localized" data-content="البريد الإلكتروني"> </label>
+                                <label for="email" class="localized" data-content="{{__('email')}}"> </label>
                             </div>
                             <div class="bg-[#F9F9F9] max-h-[59px] relative rounded-[35px] mt-0 border !border-black">
                                 <div class="flex items-center">
@@ -66,7 +66,7 @@
                             @enderror
 
                             <!-- Phone Field -->
-                            <label for="whatsapp" class="!mt-3 localized" data-content="رقم الهاتف"> </label>
+                            <label for="whatsapp" class="!mt-3 localized" data-content="{{__('phone')}}"> </label>
                             <div class="bg-transparent !mt-1 h-[59px] relative rounded-[31px] border !border-black">
                                 <div class="flex items-center">
                                     <!-- Country Flag and Code -->
@@ -165,7 +165,7 @@
                             <!-- Country -->
                             <div class="relative !mt-3">
                                 <label for="country_id"
-                                    class="block text-lg font-medium text-[#4B4B4B] bg-transparent text-center">الدولة</label>
+                                    class="block text-lg font-medium text-[#4B4B4B] bg-transparent text-center">{{__('country')}}</label>
                                 <select id="country_id" name="country_id"
                                     class="text-[#4B4B4B] bg-transparent text-center block appearance-none w-[99%] border !border-[#4B4B4B] rounded-full py-3 px-4 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
                                     @foreach ($countries as $country)
@@ -213,7 +213,7 @@
 
                             <!-- Business Name Field (Conditionally displayed) -->
                             <div id="businessNameField" class="!mt-3" style="{{ old('user_type', auth()->user()->user_type) == 'sales_point' ? 'display: block;' : 'display: none;' }}">
-                                <label for="company_name" class="localized" data-content="الاسم التجاري">الاسم التجاري</label>
+                                <label for="company_name" class="localized" data-content="{{__('Commercial Name')}}"> </label>
                                 <div class="bg-[#F9F9F9] max-h-[59px] relative rounded-[35px] mt-0 border !border-black">
                                     <div class="flex items-center">
                                         <input type="text" id="company_name" name="company_name"
@@ -245,15 +245,14 @@
                                             !bg-[#B62326] text-white font-bold
                                             !rounded-full font-bold hover:bg-[#B62326]-700 transition-colors 
                                             focus:outline-none focus:ring-2 focus:ring-[#B62326]-500 focus:ring-offset-2">
-                                    تحديث الحساب
+                                            {{__('change')}}
                                 </button>
                             </div>
                         </form>
                         
                         <!-- Password Change Link -->
                         <a href="{{ route('app.profile.change-password') }}" class="block text-center border-0 !font-[400] !pt-3 !text-[#4B4B4B]">
-                            تغيير كلمة المرور
-                        </a>
+                            {{__('change_password')}}                        </a>
                     </div>
                 </div>
             </div>

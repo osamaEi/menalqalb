@@ -408,7 +408,6 @@
                             <label for="checkbox">تذكرني</label>
                         </div>
                         
-                        <a href="{{ route('password.request') }}" class="forgot-link">نسيت كلمة المرور؟</a>
                     </div>
                     
                     <button type="submit" class="form-button" id="loginButton">

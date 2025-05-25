@@ -204,6 +204,7 @@ Route::get('language/{locale}', function ($locale) {
 });
 
 // This should be at the very bottom of your routes file
+Route::middleware(['language'])->group(function () {
 
 Route::get('/{unique_identifier}', [CardContentController::class, 'showCardContent'])
     ->name('greetings.front.show');
@@ -244,10 +245,13 @@ Route::prefix('app')->name('app.')->group(function () {
     Route::get('/register/complete', [RegisterAppController::class, 'showCompletePage'])->name('register.complete');
 });
 
-Route::prefix('app')->name('app.')->group(function () {
+Route::middleware('guest')->prefix('app')->name('app.')->group(function () {
+    
     // Login routes
     Route::get('/login', [LoginAppController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [LoginAppController::class, 'login']);
+
+    
     Route::post('/logout', [LoginAppController::class, 'logout'])->name('logout');
     
     // Forgot password routes
@@ -258,7 +262,8 @@ Route::prefix('app')->name('app.')->group(function () {
     Route::get('forgot-password/reset', [LoginAppController::class, 'showResetPasswordForm'])->name('forgot-password.reset');
     Route::post('forgot-password/reset', [LoginAppController::class, 'resetPassword'])->name('forgot-password.reset.store');
     Route::post('forgot-password/resend', [LoginAppController::class, 'resendOtp'])->name('forgot-password.resend');});
-// Routes that require authentication
+});
+
 Route::middleware(['auth'])->prefix('app')->name('app.')->group(function () {
     // Home route
     Route::get('/home', function() {
@@ -420,4 +425,11 @@ Route::prefix('app')->name('app.')->group(function () {
     Route::get('/balances', [AppPageController::class, 'balances'])->name('balances');
     Route::get('/locks/page', [AppPageController::class, 'locks'])->name('locks');
     Route::get('/cards/page', [AppPageController::class, 'cards'])->name('cards');
+});
+Route::prefix('app')->name('app.')->group(function () {
+
+Route::get('/{slug}', [AppPageController::class, 'showPage'])
+    ->where('slug', '[a-z0-9-]+') // Basic slug validation
+    ->name('dynamic.page');
+
 });

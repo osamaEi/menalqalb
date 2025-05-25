@@ -3,7 +3,7 @@
 @section('content')
 <div class="app white messagebox">
    
-    <h1>أقفال من القلب</h1>
+    <h1>{{__('Locks from the Heart')}}</h1>
 
     <div class="row justify-content-center">
         <div class="col-12 col-lg-4">
@@ -11,10 +11,10 @@
                 <!-- Buttons -->
                 <div class="flex items-center justify-between">
                     <div class="newMessage bg-black rounded-[15px] text-center my-2 w-[48%]">
-                        <a href="#" class="text-white border-0">إعداد قفل القلب</a>
+                        <a href="#" class="text-white border-0">{{__('Heart Lock Setup')}}</a>
                     </div>
                     <div class="newMessage bg-black rounded-[15px] text-center my-2 w-[48%]">
-                        <a href="{{ route('min-alqalb.lockers.create') }}" class="text-white border-0">طلب جديد</a>
+                        <a href="{{ route('min-alqalb.lockers.create') }}" class="text-white border-0">{{__('New Request')}}</a>
                     </div>
                 </div>
 
@@ -22,20 +22,20 @@
                 <div class="max-w-6xl mx-auto mt-6">
                     <div class="flex items-center justify-end mb-4 gap-3">
                         <select id="statusFilter" class="border border-gray-300 w-[100%] rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
-                            <option value="all">الكل</option>
-                            <option value="available">متوفرة</option>
-                            <option value="used">مستخدمة</option>
-                            <option value="canceled">ملغية</option>
+                            <option value="all">{{__('All')}}</option>
+                            <option value="available">{{__('Available')}}</option>
+                            <option value="used">{{__('Used')}}</option>
+                            <option value="canceled">{{__('Canceled')}}</option>
                         </select>
-                        <span class="font-bold text-gray-700 min-w-[151px]">: تصفية حسب الحالة</span>
+                        <span class="font-bold text-gray-700 min-w-[151px]">{{__('Filter by status:')}}</span>
                     </div>
                     <div class="overflow-x-auto bg-white rounded-lg shadow table-container">
                         <table id="dataTable" class="min-w-full divide-y divide-gray-200 sticky-header">
                             <thead class="bg-gray-100">
                                 <tr>
-                                    <th class="px-6 py-3 text-right text-sm font-medium border-b">الحالة</th>
-                                    <th class="px-6 py-3 text-right text-sm font-medium border-b">تاريخ الشراء</th>
-                                    <th class="px-6 py-3 text-right text-sm font-medium border-b">الرقم</th>
+                                    <th class="px-6 py-3 text-right text-sm font-medium border-b">{{__('Status')}}</th>
+                                    <th class="px-6 py-3 text-right text-sm font-medium border-b">{{__('Purchase Date')}}</th>
+                                    <th class="px-6 py-3 text-right text-sm font-medium border-b">{{__('Number')}}</th>
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
@@ -43,7 +43,7 @@
                                     <tr data-status="{{ $request->status == 'pending' ? 'available' : $request->status }}" class="hover:bg-gray-50">
                                         <td class="px-6 py-4 whitespace-nowrap text-center">
                                             <div class="flex justify-center">
-                                                <div class="w-6 h-6" title="{{ $request->status == 'pending' ? 'متوفرة' : ($request->status == 'used' ? 'مستخدمة' : 'ملغية') }}">
+                                                <div class="w-6 h-6" title="{{ $request->status == 'pending' ? __('Available') : ($request->status == 'used' ? __('Used') : __('Canceled')) }}">
                                                     <img src="{{ asset($request->status == 'pending' ? 'storage/'.$request->locksWReadyCard->photo : ($request->status == 'used' ? 'img/grean-l.png' : 'img/red-l.png')) }}" class="w-[30px]" alt="">                                                </div>
                                             </div>
                                         </td>

@@ -8,9 +8,12 @@
                 <div class="rounded-lg px-0 pb-8 w-full">
                     <div>
                     </div>
+
+                    
                     <p class="text-center text-[24px] leading-[29px] max-w-[327px] my-2 mx-auto font-[900] text-[#242424] z-50 relative">
                        {{__('Prices')}}
                     </p>
+
 
                     <p class="text-center mb-2 text-[14px] leading-[29px] max-w-[327px] mx-auto font-[400] text-[#4B4B4B] z-50 relative">
                     </p>

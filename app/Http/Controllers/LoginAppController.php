@@ -66,7 +66,7 @@ class LoginAppController extends Controller
         return redirect()->route('app.login');
     }
 
-    /**
+    /** 
      * Show forgot password form
      */
     public function showForgotPasswordForm()

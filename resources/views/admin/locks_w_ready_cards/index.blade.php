@@ -171,7 +171,7 @@
                             <th>{{ __('Name (AR)') }}</th>
                             <th>{{ __('Type') }}</th>
                             <th>{{ __('Price') }}</th>
-                            <th>{{ __('Points') }}</th>
+                            <th>{{ __('quantity') }}</th>
                             <th>{{ __('Status') }}</th>
                             <th>{{ __('Actions') }}</th>
                         </tr>

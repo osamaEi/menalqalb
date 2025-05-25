@@ -3,9 +3,9 @@
 @section('content')
 <div class="app white messagebox">
     
-    <h1 class="text-[24px] text-[#242424] font-[900] z-50 relative">تغيير كلمة المرور</h1>
+    <h1 class="text-[24px] text-[#242424] font-[900] z-50 relative">{{__('change_password')}}</h1>
     <p class="text-center text-[14px] leading-[29px] max-w-[327px] mx-auto font-[400] text-[#4B4B4B] z-50 mt-4 relative">
-        يرجى إدخال كلمة المرور الحالية وكلمة المرور الجديدة
+        {{__('enter_current_new_password')}}
     </p>
 
     <div class="row justify-content-center overflow-y-auto h-[100%]">
@@ -25,7 +25,7 @@
 
                             <!-- Current Password -->
                             <div class="!mt-1">
-                                <label for="current_password">كلمة المرور الحالية</label>
+                                <label for="current_password">{{__('current_password')}}</label>
                             </div>
                             <div class="bg-[#F9F9F9] max-h-[59px] relative rounded-[35px] mt-0 border !border-black">
                                 <div class="flex items-center">
@@ -46,7 +46,7 @@
 
                             <!-- New Password -->
                             <div class="!mt-3">
-                                <label for="password">كلمة المرور الجديدة</label>
+                                <label for="password">{{__('new_password')}}</label>
                             </div>
                             <div class="bg-[#F9F9F9] max-h-[59px] relative rounded-[35px] mt-0 border !border-black">
                                 <div class="flex items-center">
@@ -67,7 +67,7 @@
 
                             <!-- Confirm Password -->
                             <div class="!mt-3">
-                                <label for="password_confirmation">تأكيد كلمة المرور الجديدة</label>
+                                <label for="password_confirmation">{{__('confirm_new_password')}}</label>
                             </div>
                             <div class="bg-[#F9F9F9] max-h-[59px] relative rounded-[35px] mt-0 border !border-black">
                                 <div class="flex items-center">
@@ -90,14 +90,14 @@
                                         !bg-[#B62326] text-white font-bold
                                         !rounded-full font-bold hover:bg-[#B62326]-700 transition-colors 
                                         focus:outline-none focus:ring-2 focus:ring-[#B62326]-500 focus:ring-offset-2">
-                                    تغيير كلمة المرور
+                                        {{__('change_password')}}  
                                 </button>
                             </div>
                         </form>
                         
                         <!-- Back to Profile Link -->
                         <a href="{{ route('app.profile.edit') }}" class="block text-center border-0 !font-[400] !pt-3 !text-[#4B4B4B]">
-                            العودة إلى الملف الشخصي
+                            {{__('change_profile')}}
                         </a>
                     </div>
                 </div>

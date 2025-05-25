@@ -1,14 +1,14 @@
 @extends('app.index')
 
 @section('content')
-<h1 class="text-[24px] text-[#242424] font-[900] z-50 relative">إنضم لعائلتنا</h1>
+<h1 class="text-[24px] text-[#242424] font-[900] z-50 relative">{{__('Join our family')}}</h1>
 <p class="text-center text-[14px] leading-[29px] max-w-[327px] mx-auto font-[400] text-[#4B4B4B] z-50 mt-4 relative">
-    معلومات بسيطة تفصلك عن الاستمتاع بخدماتنا
-<p class="font-bold mx-auto text-center">الخطوة الثانية</p>
+    {{__('Simple information separates you from enjoying our services')}}
+<p class="font-bold mx-auto text-center">{{__('The second step')}}</p>
 </p>
 <p class="flex items-center justify-center text-center text-[14px] leading-[29px] 
     max-w-[327px] mx-auto font-[400] text-[#4B4B4B] z-50 relative">
-    دخل رقم هاتف مسجل في تطبيق الواتساب ليصلك رمز التأكيد
+    {{__('Enter a phone number registered with WhatsApp to receive the verification code')}}
 </p>
 
 <div class="row justify-content-center">
@@ -19,7 +19,7 @@
                     <form class="space-y-6" method="POST" action="{{ route('app.register.phone') }}">
                         @csrf
                         <!-- Phone Field -->
-                        <label for="phone_number" class="localized" data-content="رقم الهاتف"></label>
+                        <label for="phone_number" class="localized" data-content="{{__('Phone number')}}"></label>
                         <div class="bg-[#F9F9F9] h-[55px] relative mt-0 rounded-[39px] border !border-[#000000]">
                             <div class="flex items-center mt-1">
                                 <!-- Country Flag and Code -->
@@ -44,7 +44,7 @@
                                         <div class="country-dropdown bg-white absolute z-[999999] mt-1 w-64 shadow-lg rounded-[9px] border border-gray-200 hidden" id="countryDropdown">
                                             <!-- Search Box -->
                                             <div class="p-2 border-b border-gray-200">
-                                                <input type="text" placeholder="ابحث عن دولة..." class="w-full p-2 border border-gray-300 rounded-[9px] focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                                <input type="text" placeholder="{{__('Search for a country...')}}" class="w-full p-2 border border-gray-300 rounded-[9px] focus:outline-none focus:ring-2 focus:ring-blue-500">
                                             </div>
 
                                             <!-- Countries List -->
@@ -59,7 +59,7 @@
                                                             <rect width="12" height="24" fill="#ff0000" />
                                                         </svg>
                                                     </div>
-                                                    <span class="text-sm">الإمارات العربية المتحدة</span>
+                                                    <span class="text-sm">{{__('United Arab Emirates')}}</span>
                                                     <span class="text-sm text-gray-500 mr-auto">+971</span>
                                                 </div>
 
@@ -74,7 +74,7 @@
                                                             </g>
                                                         </svg>
                                                     </div>
-                                                    <span class="text-sm">المملكة العربية السعودية</span>
+                                                    <span class="text-sm">{{__('Saudi Arabia')}}</span>
                                                     <span class="text-sm text-gray-500 mr-auto">+966</span>
                                                 </div>
 
@@ -90,7 +90,7 @@
                                                             </g>
                                                         </svg>
                                                     </div>
-                                                    <span class="text-sm">مصر</span>
+                                                    <span class="text-sm">{{__('Egypt')}}</span>
                                                     <span class="text-sm text-gray-500 mr-auto">+2</span>
                                                 </div>
                                             </div>
@@ -125,13 +125,13 @@
                             !bg-[#B62326] text-white font-bold
                             !rounded-full font-bold hover:bg-[#B62326]-700 transition-colors 
                             focus:outline-none focus:ring-2 focus:ring-[#B62326]-500 focus:ring-offset-2">
-                                استمرار
+                                {{__('Continue')}}
                             </button>
                         </div>
                     </form>
                     <div class="!mt-5 ">
-                        <a href="{{ route('login') }}" class="border-0 !font-[400] !pt-3 !text-[#4B4B4B]"> لديك حساب ؟
-                            <span class="text-[#B62326] font-bold">تسجيل دخول</span>
+                        <a href="{{ route('login') }}" class="border-0 !font-[400] !pt-3 !text-[#4B4B4B]">{{__('Do you have an account?')}}
+                            <span class="text-[#B62326] font-bold">{{__('Log in')}}</span>
                         </a>
                     </div>
                 </div>

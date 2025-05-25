@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>فاتورة #{{ $bill->id }}</title>
+    <title>{{ __('Invoice #') }}{{ $bill->id }}</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700&display=swap');
         
@@ -131,15 +131,15 @@
     <div class="container">
         <div class="header">
             <div>
-                <h1 class="invoice-title">فاتورة #{{ $bill->id }}</h1>
-                <p>تاريخ الفاتورة: {{ $date }}</p>
+                <h1 class="invoice-title">{{ __('Invoice #') }}{{ $bill->id }}</h1>
+                <p>{{ __('Invoice date:') }} {{ $date }}</p>
             </div>
-            <img src="{{ public_path('app/img/logo.png') }}" class="logo" alt="Logo">
+            <img src="{{ public_path('app/img/logo.png') }}" class="logo" alt="{{ __('Logo') }}">
         </div>
         
         <div class="invoice-info">
             <div class="info-box">
-                <div class="info-title">معلومات العميل</div>
+                <div class="info-title">{{ __('Client information') }}</div>
                 <p>{{ $bill->user->name }}</p>
                 <p>{{ $bill->user->email }}</p>
                 @if($bill->user->phone)
@@ -148,12 +148,12 @@
             </div>
             
             <div class="info-box">
-                <div class="info-title">حالة الفاتورة</div>
+                <div class="info-title">{{ __('Invoice status') }}</div>
                 <span class="status status-{{ str_replace(' ', '-', $status) }}">{{ $status }}</span>
                 
                 @if($bill->payment)
                     <div style="margin-top: 15px;">
-                        <div class="info-title">طريقة الدفع</div>
+                        <div class="info-title">{{ __('Payment method') }}</div>
                         <p>{{ $bill->payment->method }}</p>
                     </div>
                 @endif
@@ -163,10 +163,10 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th>الوصف</th>
-                    <th>الكمية</th>
-                    <th>السعر</th>
-                    <th>المجموع</th>
+                    <th>{{ __('Description') }}</th>
+                    <th>{{ __('Quantity') }}</th>
+                    <th>{{ __('Price') }}</th>
+                    <th>{{ __('Total') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -177,15 +177,15 @@
                     <td>{{ number_format($bill->amount, 2) }} {{ strtoupper($bill->currency) }}</td>
                 </tr>
                 <tr class="total-row">
-                    <td colspan="3" style="text-align: left;">المجموع الكلي</td>
+                    <td colspan="3" style="text-align: left;">{{ __('Grand total') }}</td>
                     <td>{{ number_format($bill->amount, 2) }} {{ strtoupper($bill->currency) }}</td>
                 </tr>
             </tbody>
         </table>
         
         <div class="footer">
-            <p>شكراً لاستخدامك خدماتنا</p>
-            <p>لأي استفسارات، يرجى التواصل مع الدعم الفني</p>
+            <p>{{ __('Thank you for using our services') }}</p>
+            <p>{{ __('For any inquiries, please contact technical support') }}</p>
             <p>Min AlQalb © {{ date('Y') }}</p>
         </div>
         

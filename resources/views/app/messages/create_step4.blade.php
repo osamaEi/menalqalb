@@ -111,9 +111,8 @@
             <img src="{{ asset('app/img/black.png') }}" alt="" class="img-fluid logo">
         </a>
     </div>
-    
     <p class="text-center text-[16px] leading-[29px] max-w-[327px] mx-auto font-[400] text-[#4B4B4B] z-50 mt-0 relative">
-        ارسال تهنئة جديدة
+        {{__('new_congratulation')}}
     </p>
     
     <img src="{{ asset('app/img/step4.png') }}" class="w-[303px] mx-auto" alt="">
@@ -121,12 +120,12 @@
     <a href="{{ route('app.messages.create.step3') }}" class="z-50 !p-2 !absolute left-5 top-5 icondoor">
         <i class="fas fa-arrow-alt-circle-left text-[#4B4B4B] text-[19px] pl-3 w-[65px]"></i>
     </a>
-
+    
     <!-- Points Display -->
     <div class="bg-[#B62326] rounded-[12px] w-[330px] h-[48px] mx-auto flex items-center justify-between px-3 mt-3 mb-5">
-        <span class="text-[#FFF] text-[15px]">نقطة</span>
+        <span class="text-[#FFF] text-[15px]">{{__('point')}}</span>
         <span class="text-[#FFF] text-[32px]">{{ number_format(Auth::user()->points ?? 20000) }}</span>
-        <span class="text-[#FFF] text-[15px]">النقاط المتوفرة</span>
+        <span class="text-[#FFF] text-[15px]">{{__('available_points')}}</span>
     </div>
     
     <div class="row justify-content-center overflow-y-auto">
@@ -143,7 +142,7 @@
                             </ul>
                         </div>
                     @endif
-
+    
                     <!-- Session messages -->
                     @if(session('error'))
                         <div class="alert alert-danger mt-3 mx-3">
@@ -153,12 +152,12 @@
                     
                     <div class="rounded-lg px-0 pb-8 w-full">
                         <p class="text-center text-[16px] leading-[29px] max-w-[327px] mx-auto font-[400] text-[#4B4B4B] z-50 mt-0 relative">
-                            تأكد من البيانات قبل اعداد البطاقة
+                            {{__('confirm_data_before_card')}}
                         </p>
                         
                         <!-- Message Content Preview -->
                         <p class="text-center text-[16px] leading-[29px] max-w-[327px] mx-auto font-[400] text-[#4B4B4B] z-50 mt-0 relative">
-                            الرسالة الخاصة
+                            {{__('private_message')}}
                         </p>
                         <p class="text-center text-[16px] leading-[29px] max-w-[327px] mx-auto font-[400] text-[#B62326] z-50 mt-0 relative">
                             {{ $step3Data['message_content'] }}
@@ -167,54 +166,54 @@
                         <!-- Details Grid - Top Row -->
                         <div class="flex items-center justify-between my-3 mb-2 px-3">
                             <div class="w-[113px]">
-                                <p>التصنيف الرئيسي</p>
-                                <p class="text-[#B62326]">{{ $mainCategory->name ?? 'غير محدد' }}</p>
+                                <p>{{__('main_category')}}</p>
+                                <p class="text-[#B62326]">{{ $mainCategory->name ?? __('undefined') }}</p>
                             </div>
                             <div class="w-[113px]">
-                                <p>لغة التهنئة</p>
-                                <p class="text-[#B62326]">{{ $languages[$step1Data['recipient_language']] ?? 'غير محدد' }}</p>
+                                <p>{{__('message_language')}}</p>
+                                <p class="text-[#B62326]">{{ $languages[$step1Data['recipient_language']] ?? __('undefined') }}</p>
                             </div>
                         </div>
                         
                         <!-- Details Grid - Second Row -->
                         <div class="flex items-center justify-between my-3 mb-2 px-3">
                             <div class="w-[113px]">
-                                <p>التصنيف الفرعي</p>
-                                <p class="text-[#B62326]">{{ $subCategory->name ?? 'غير محدد' }}</p>
+                                <p>{{__('sub_category')}}</p>
+                                <p class="text-[#B62326]">{{ $subCategory->name ?? __('undefined') }}</p>
                             </div>
                             <div class="w-[113px]">
-                                <p>قفل القلب</p>
-                                <p class="text-[#B62326]">{{ $lockTypes[$step3Data['lock_type']] ?? 'غير محدد' }}</p>
+                                <p>{{__('heart_lock')}}</p>
+                                <p class="text-[#B62326]">{{ $lockTypes[$step3Data['lock_type']] ?? __('undefined') }}</p>
                             </div>
                         </div>
                         
                         <!-- Details Grid - Third Row -->
                         <div class="flex items-center justify-between my-3 mb-2 px-3">
                             <div class="w-[113px]">
-                                <p>رمز القفل</p>
-                                <p class="text-[#B62326]">{{ $step1Data['card_number'] ?? 'غير محدد' }}</p>
+                                <p>{{__('lock_code')}}</p>
+                                <p class="text-[#B62326]">{{ $step1Data['card_number'] ?? __('undefined') }}</p>
                             </div>
                             <div class="w-[113px]">
-                                <p>نوع الاهداء</p>
-                                <p class="text-[#B62326]">{{ $dedicationType->type ?? 'غير محدد' }}</p>
+                                <p>{{__('dedication_type')}}</p>
+                                <p class="text-[#B62326]">{{ $dedicationType->type ?? __('undefined') }}</p>
                             </div>
                         </div>
                         
                         <!-- Details Grid - Fourth Row -->
                         <div class="flex items-center justify-between my-3 mb-2 px-3">
                             <div class="w-[113px]">
-                                <p>المرسل له</p>
-                                <p class="text-[#B62326]">{{ $step3Data['recipient_name'] ?? 'غير محدد' }}</p>
+                                <p>{{__('recipient')}}</p>
+                                <p class="text-[#B62326]">{{ $step3Data['recipient_name'] ?? __('undefined') }}</p>
                             </div>
                             
                             @if(isset($step3Data['lock_type']) && $step3Data['lock_type'] !== 'no_lock')
                             <div class="w-[113px]">
-                                <p>الرقم</p>
+                                <p>{{__('phone_number')}}</p>
                                 <p class="text-[#B62326]">{{ $step3Data['recipient_phone'] }}</p>
                             </div>
                             @else
                             <div class="w-[113px]">
-                                <p>المرسل</p>
+                                <p>{{__('sender')}}</p>
                                 <p class="text-[#B62326]">{{ $step3Data['sender_name'] ?? Auth::user()->name }}</p>
                             </div>
                             @endif
@@ -223,23 +222,23 @@
                         <!-- Cost Details -->
                         <div class="flex items-center justify-between my-3 mb-2 px-3">
                             <div class="w-full">
-                                <p class="text-center">تكلفة الإرسال</p>
-                                <p class="text-center text-[#B62326] font-bold">200 نقطة</p>
+                                <p class="text-center">{{__('sending_cost')}}</p>
+                                <p class="text-center text-[#B62326] font-bold">200 {{__('point')}}</p>
                             </div>
                         </div>
-
+    
                         <!-- Action Buttons -->
-                        <form method="POST" action="{{ route('app.messages.store') }}" class="px-3">
+                        <form method="POST" action="{{ route('app.store') }}" class="px-3">
                             @csrf
                             
                             <!-- Preview Card Button -->
                             <a href="#" id="previewCardBtn" class="!mb-5 !m-0 !h-[55px] !text-[14px] !w-[100%] mt-0 !font-[500] flex items-center justify-center border-0 !bg-[#000] text-white font-bold !rounded-full hover:bg-gray-800 transition-colors focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2">
-                                <i class="fas fa-eye ml-2"></i> عرض بطاقة التهنئة
+                                <i class="fas fa-eye ml-2"></i> {{__('preview_card')}}
                             </a>
                             
                             <!-- Submit Button -->
                             <button type="submit" class="!mb-4 !m-0 !h-[55px] !text-[14px] !w-[100%] mt-0 !font-[500] flex items-center justify-center !bg-[#B62326] text-white font-bold !rounded-full hover:bg-[#a31f22] transition-colors focus:outline-none focus:ring-2 focus:ring-[#B62326] focus:ring-offset-2">
-                                تأكيد الإدخال <i class="fas fa-check mr-2"></i>
+                                {{__('confirm_input')}} <i class="fas fa-check mr-2"></i>
                             </button>
                         </form>
                     </div>
@@ -247,42 +246,40 @@
             </div>
         </div>
     </div>
-</div>
-
-<!-- Card Preview Modal -->
-<div id="cardPreviewModal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 hidden">
-    <div class="bg-white rounded-lg max-w-md w-full p-4 relative">
-        <button id="closeModalBtn" class="absolute top-4 right-4 text-gray-700 hover:text-gray-900">
-            <i class="fas fa-times"></i>
-        </button>
-        
-        <h3 class="text-xl font-bold text-[#4B4B4B] text-center mb-4">معاينة البطاقة</h3>
-        
-        <div class="flex justify-center mb-4">
-            <img src="{{ asset('storage/'. $card->file_path) ?? asset('img/card-placeholder.png') }}" class="max-h-80 rounded-lg shadow" alt="{{ $card->title ?? 'البطاقة المختارة' }}">
-        </div>
-        
-        <div class="bg-[#F9F9F9] p-4 rounded-lg mb-4">
-            <p class="text-[#B62326] leading-relaxed">{{ $step3Data['message_content'] }}</p>
-        </div>
-        
-        <div class="flex justify-between">
-            <div>
-                <p class="text-sm text-gray-600">من</p>
-                <p class="font-medium">{{ $step3Data['sender_name'] ?? Auth::user()->name }}</p>
+    
+    <!-- Card Preview Modal -->
+    <div id="cardPreviewModal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg max-w-md w-full p-4 relative">
+            <button id="closeModalBtn" class="absolute top-4 right-4 text-gray-700 hover:text-gray-900">
+                <i class="fas fa-times"></i>
+            </button>
+            
+            <h3 class="text-xl font-bold text-[#4B4B4B] text-center mb-4">{{__('card_preview')}}</h3>
+            
+            <div class="flex justify-center mb-4">
+                <img src="{{ asset('storage/'. $card->file_path) ?? asset('img/card-placeholder.png') }}" class="max-h-80 rounded-lg shadow" alt="{{ $card->title ?? __('selected_card') }}">
             </div>
-            <div>
-                <p class="text-sm text-gray-600">إلى</p>
-                <p class="font-medium">{{ $step3Data['recipient_name'] ?? 'غير محدد' }}</p>
+            
+            <div class="bg-[#F9F9F9] p-4 rounded-lg mb-4">
+                <p class="text-[#B62326] leading-relaxed">{{ $step3Data['message_content'] }}</p>
             </div>
+            
+            <div class="flex justify-between">
+                <div>
+                    <p class="text-sm text-gray-600">{{__('from')}}</p>
+                    <p class="font-medium">{{ $step3Data['sender_name'] ?? Auth::user()->name }}</p>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-600">{{__('to')}}</p>
+                    <p class="font-medium">{{ $step3Data['recipient_name'] ?? __('undefined') }}</p>
+                </div>
+            </div>
+            
+            <button id="closeModalBtn2" class="w-full h-12 bg-[#B62326] text-white font-bold rounded-full mt-4">
+                {{__('close')}}
+            </button>
         </div>
-        
-        <button id="closeModalBtn2" class="w-full h-12 bg-[#B62326] text-white font-bold rounded-full mt-4">
-            إغلاق
-        </button>
     </div>
-</div>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {

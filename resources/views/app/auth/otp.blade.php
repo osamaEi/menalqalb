@@ -1,13 +1,13 @@
 @extends('app.index')
 
 @section('content')
-<h1 class="text-[24px] text-[#242424] font-[900] z-50 relative">تم ارسال رمز الدخول</h1>
+<h1 class="text-[24px] text-[#242424] font-[900] z-50 relative">{{__('The login code has been sent')}}</h1>
 <p class="text-center text-[14px] leading-[29px] max-w-[327px] mx-auto font-[400] text-[#4B4B4B] z-50 mt-4 relative">
-    تم ارسال رمز مكون من 4 ارقام الى تطبيق
+    {{__('A 4-digit code has been sent to the application')}}
 </p>
 <p class="flex items-center justify-center text-center text-[14px] leading-[29px] 
     max-w-[327px] mx-auto font-[400] text-[#4B4B4B] z-50 relative">
-    الواتساب
+    {{__('WhatsApp')}}
 </p>
 {{-- {{dd(session()->all())}} --}}
 <div class="row justify-content-center">
@@ -19,7 +19,7 @@
                         @csrf
                         <div class="flex items-center justify-center gap-3">
                             <a href="{{ route('app.register.phone') }}" class="flex items-center justify-center !w-[68px] m-0 p-0 !text-[#B62326] !border-0 text-[16px] !font-[400]">
-                                تغير الرقم
+                                {{__('Change the number')}}
                             </a> 
                             <span class="text-[#C5C6FA]">|</span>
                             <p class="text-[#242424] font-bold">{{ session('whatsapp') }}</p>
@@ -41,7 +41,7 @@
                         <!-- Individual error messages for each OTP digit -->
                         @if($errors->has('otp0') || $errors->has('otp1') || $errors->has('otp2') || $errors->has('otp3'))
                             <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
-                                <span class="block sm:inline">الرجاء إدخال رمز التحقق كاملاً</span>
+                                <span class="block sm:inline">{{__('Please enter the complete verification code')}}</span>
                             </div>
                         @endif
 
@@ -71,13 +71,13 @@
                             !bg-[#B62326] text-white font-bold
                             !rounded-full font-bold hover:bg-[#B62326]-700 transition-colors 
                             focus:outline-none focus:ring-2 focus:ring-[#B62326]-500 focus:ring-offset-2">
-                                ادخال كلمه المرور
+                                {{__('Enter the password')}}
                             </button>
                         </div>
                     </form>
                     
                     <div class="mt-3">
-                        <div>يمكن طلب الرمز مره اخرى بعد</div>
+                        <div>{{__('You can request the code again after')}}</div>
                         <div dir="ltr" class="text-xl font-normal" id="countdown">00 : 60</div>
                     </div>
                     
@@ -89,7 +89,7 @@
                                 <path d="M16.5 9C16.5 13.14 13.14 16.5 9 16.5C4.86 16.5 2.3325 12.33 2.3325 12.33M2.3325 12.33H5.7225M2.3325 12.33V16.08M1.5 9C1.5 4.86 4.83 1.5 9 1.5C14.0025 1.5 16.5 5.67 16.5 5.67M16.5 5.67V1.92M16.5 5.67H13.17"
                                     stroke="#5B186B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
                             </svg>
-                            اعاده ارسال
+                            {{__('Resend')}}
                         </button>
                     </form>
                 </div>
@@ -175,7 +175,7 @@
         // Validate that we have all 4 digits before submitting
         if (combinedValue.length !== 4) {
             e.preventDefault();
-            alert('الرجاء إدخال رمز التحقق المكون من 4 أرقام');
+            alert('{{__('Please enter the 4-digit verification code')}}');
         }
     });
 

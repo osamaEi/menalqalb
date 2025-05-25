@@ -8,7 +8,7 @@
         </a>
     </div>
     <p class="text-center text-[16px] mb-2 leading-[29px] max-w-[327px] mx-auto font-[400] text-[#4B4B4B] z-50 mt-0 relative">
-        لوحة تحكم البطاقات الخاصة
+        {{ __('Private cards control panel') }}
     </p>
 
     @if(session('success'))
@@ -20,51 +20,51 @@
     <div class="flex flex-col items-end justify-end !bg-transparent p-3 text-center shadow-lg mt-0 rounded-[13px] mx-2 relative">
         <div class="flex flex-row justify-end">
             <p class="relative font-bold text-[#242424]">
-                {{ $message->mainCategory ? $message->mainCategory->name : 'غير محدد' }}
+                {{ $message->mainCategory ? $message->mainCategory->name : __('Not specified') }}
             </p>
             <p class="bg-[#B62326] text-[#FFF] p-2 relative right-[-16px] top-[-20px]"
                 style="border-top-right-radius: 13px; border-bottom-left-radius: 13px;">
-                {{ $message->scheduled_at ? $message->scheduled_at->format('d/m/Y') : 'غير محدد' }}
+                {{ $message->scheduled_at ? $message->scheduled_at->format('d/m/Y') : __('Not specified') }}
             </p>
         </div>
         <div>
-            <p>اللغة : {{ $message->recipient_language ?? 'غير محدد' }}</p>
+            <p>{{ __('Language:') }} {{ $message->recipient_language ?? __('Not specified') }}</p>
         </div>
         <div class="w-full flex items-center justify-between gap-2">
-            <p>قفل القلب : {{ $message->lock_type == 'lock_with_heart' ? 'نعم' : 'لا' }}</p>
-            <p>النوع : {{ $message->card && $message->card->type ? $message->card->type : 'صورة' }}</p>
+            <p>{{ __('Heart lock:') }} {{ $message->lock_type == 'lock_with_heart' ? __('Yes') : __('No') }}</p>
+            <p>{{ __('Type:') }} {{ $message->card && $message->card->type ? $message->card->type : __('Image') }}</p>
         </div>
         <div class="w-full flex items-center justify-between gap-2">
-            <p>رمز القفل : {{ $message->masked_unlock_code ?? 'غير محدد' }}</p>
-            <p>قفل البطاقة : {{ $message->lock_type != 'no_lock' ? 'نعم' : 'لا' }}</p>
+            <p>{{ __('Lock code:') }} {{ $message->masked_unlock_code ?? __('Not specified') }}</p>
+            <p>{{ __('Card lock:') }} {{ $message->lock_type != 'no_lock' ? __('Yes') : __('No') }}</p>
         </div>
         <div class="w-100 h-[1px] my-3 bg-[#C5C5C5]"></div>
         <p class="{{ $message->status == 'sent' ? 'text-[#0FA64B]' : 'text-[#B62326]' }} text-[16px] px-3">
-            {{ $message->status == 'sent' ? 'مؤكد' : 'غير مؤكد' }}
+            {{ $message->status == 'sent' ? __('Confirmed') : __('Not confirmed') }}
         </p>
     </div>
     
     <div class="flex items-center justify-between !bg-transparent p-3 text-center rounded-[13px] mx-2 relative">
         <a href="{{ route('app.greetings.show-response', $message->id) }}" class="h-[48px] w-[48%] bg-[#B62326] text-[#FFF] p-2 text-[12px] text-center flex items-center justify-center gap-1"
             style="border-top-right-radius: 13px; border-bottom-left-radius: 13px;">
-            عرض الرد
+            {{ __('View response') }}
         </a>
         <a href="{{ route('app.greetings.show-card', $message->id) }}" class="h-[48px] w-[48%] bg-[#000] text-[#FFF] p-2 text-[12px] text-center flex items-center justify-center gap-1"
             style="border-top-right-radius: 13px; border-bottom-left-radius: 13px;">
-            عرض البطاقة
+            {{ __('View card') }}
         </a>
     </div>
     
     <div class="flex items-center justify-between !bg-transparent px-3 text-center rounded-[13px] mx-2 relative">
         <a href="{{ route('app.greetings.scheduled-time', $message->id) }}" class="h-[48px] w-[48%] bg-[#000] text-[#FFF] p-2 text-[12px] text-center flex items-center justify-center gap-1"
             style="border-top-right-radius: 13px; border-bottom-left-radius: 13px;">
-            وقت ارسال التهنئة
+            {{ __('Greeting send time') }}
             <br />
-            {{ $message->scheduled_at ? $message->scheduled_at->format('d/m/Y H:i:s') : 'غير محدد' }}
+            {{ $message->scheduled_at ? $message->scheduled_at->format('d/m/Y H:i:s') : __('Not specified') }}
         </a>
         <a href="{{ route('app.greetings.private-message', $message->id) }}" class="h-[48px] w-[48%] bg-[#B62326] text-[#FFF] p-2 text-[12px] text-center flex items-center justify-center gap-1"
             style="border-top-right-radius: 13px; border-bottom-left-radius: 13px;">
-            الرسالة الخاصة
+            {{ __('Private message') }}
         </a>
     </div>
     
@@ -74,19 +74,19 @@
             @csrf
             <button type="submit" class="invitation-button w-full h-[48px] bg-[#B62326] text-[#FFF] p-2 text-[12px] text-center flex items-center justify-center gap-1"
                 style="border-top-right-radius: 13px; border-bottom-left-radius: 13px;">
-                ارسال رسالة التهنئة
+                {{ __('Send greeting message') }}
             </button>
         </form>
         @else
         <a href="#" class="invitation-button w-[48%] h-[48px] bg-[#B62326] text-[#FFF] p-2 text-[12px] text-center flex items-center justify-center gap-1 opacity-50 cursor-not-allowed"
             style="border-top-right-radius: 13px; border-bottom-left-radius: 13px;">
-            {{ $message->status == 'sent' ? 'تم الإرسال' : 'بإنتظار وقت الإرسال' }}
+            {{ $message->status == 'sent' ? __('Sent') : __('Awaiting send time') }}
         </a>
         @endif
         
         <a href="{{ route('app.greetings.edit', $message->id) }}" class="h-[48px] w-[48%] bg-[#000] text-[#FFF] p-2 text-[12px] text-center flex items-center justify-center gap-1"
             style="border-top-right-radius: 13px; border-bottom-left-radius: 13px;">
-            تعديل بيانات البطاقة
+            {{ __('Edit card details') }}
         </a>
     </div>
 </div>
@@ -99,9 +99,9 @@
                 <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" fill="#4CAF50" />
             </svg>
         </div>
-        <h3>تم التأكيد</h3>
-        <p>{{ session('success') ?? 'تم إرسال التهنئة بنجاح!' }}</p>
-        <button class="close-button" id="closePopup">إغلاق</button>
+        <h3>{{ __('Confirmed') }}</h3>
+        <p>{{ session('success') ?? __('The greeting was sent successfully!') }}</p>
+        <button class="close-button" id="closePopup">{{ __('Close') }}</button>
     </div>
 </div>
 
