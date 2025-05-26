@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BillController;
 use App\Http\Controllers\CardController;
@@ -34,6 +35,7 @@ use App\Http\Controllers\ReadyCardItemController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\LocksWReadyCardController;
 use App\Http\Controllers\PackagePurchaseController;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 /*
 |--------------------------------------------------------------------------
@@ -239,11 +241,11 @@ Route::prefix('app')->name('app.')->group(function () {
 
     Route::get('/register/otp', [RegisterAppController::class, 'showOtpForm'])->name('register.otp');
     Route::post('/register/otp', [RegisterAppController::class, 'verifyOtp']);
+    Route::post('/verifyForgotPasswordOtp/otp', [RegisterAppController::class, 'verifyForgotPasswordOtp']);
     Route::post('/register/otp/resend', [RegisterAppController::class, 'resendOtp'])->name('register.otp.resend');
 
     Route::get('/register/password', [RegisterAppController::class, 'showPasswordForm'])->name('register.password');
     Route::post('/register/password', [RegisterAppController::class, 'completeRegistration']);
-
     Route::get('/register/complete', [RegisterAppController::class, 'showCompletePage'])->name('register.complete');
 });
 
@@ -438,3 +440,24 @@ Route::get('/{slug}', [AppPageController::class, 'showPage'])
     ->name('dynamic.page');
 
 });
+
+
+Route::get('/email/verify', function () {
+    return view('auth.verify-email');
+})->middleware('auth')->name('verification.notice');
+
+// This route handles the actual verification link
+Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+    $request->fulfill();
+
+    return redirect('/home'); // or any route after verification
+})->middleware(['auth', 'signed'])->name('verification.verify');
+
+// This route can be used to resend verification email
+Route::post('/email/verification-notification', function (Request $request) {
+    $request->user()->sendEmailVerificationNotification();
+
+    return back()->with('success', 'Verification link sent!');
+})->middleware(['auth', 'throttle:6,1'])->name('verification.send');
+
+Route::get('/verify-email/{token}', [RegisterAppController::class, 'verifyEmail'])->name('verify.email');

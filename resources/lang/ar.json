@@ -563,7 +563,14 @@
                                         "Closed": "مغلق",
                                         "Canceled": "ملغى",
                                         "Status": "الحالة",
-                                    
+                                        
+                                            "Verify Your Email": "تحقق من بريدك الإلكتروني",
+                                            "Hello": "مرحبًا",
+                                            "Thanks for registering. Please click the link below to verify your email:": "شكرًا لتسجيلك. الرجاء النقر على الرابط أدناه للتحقق من بريدك الإلكتروني:",
+                                            "Verify Email": "تحقق من البريد الإلكتروني",
+                                            "If you didn’t register, you can safely ignore this email.": "إذا لم تقم بالتسجيل، يمكنك تجاهل هذا البريد الإلكتروني بأمان.",
+                                        
+                                        
                                         "Create New Locker": "إنشاء خزانة جديدة",
                                         "User": "المستخدم",
                                         "Select User": "اختر مستخدم",

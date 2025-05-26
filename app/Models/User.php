@@ -7,11 +7,12 @@ use App\Models\Request;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 //use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
@@ -27,11 +28,15 @@ class User extends Authenticatable
         'country_id',
         'whatsapp',
         'email_verified',
+        'email_verified_at',
         'whatsapp_verified',
         'user_type',
         'company_name',
+        'email_verification_token',
         'status',
+        'unique_id', // add this line
     ];
+    
 
     /**
      * The attributes that should be hidden for serialization.

@@ -9,7 +9,7 @@
     max-w-[327px] mx-auto font-[400] text-[#4B4B4B] z-50 relative">
     {{__('WhatsApp')}}
 </p>
-{{-- {{dd(session()->all())}} --}}
+{{-- {{dd(session()->all())}}  --}}
 <div class="row justify-content-center">
     <div class="col-12 col-lg-4 ">
         <div class="All_Button lang Devices">
@@ -184,27 +184,24 @@
     const countdownDisplay = document.getElementById('countdown');
     const resendBtn = document.getElementById('resendBtn');
 
+  
     function updateCountdown() {
         const minutes = Math.floor(secondsLeft / 60);
         const seconds = secondsLeft % 60;
 
-        // Format the time as MM : SS
         countdownDisplay.textContent = `${minutes.toString().padStart(2, '0')} : ${seconds.toString().padStart(2, '0')}`;
 
         if (secondsLeft <= 0) {
-            // Enable the resend button when countdown reaches zero
             clearInterval(countdownInterval);
             resendBtn.disabled = false;
             resendBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-            resendBtn.classList.add('hover:bg-[#5B186B]-600');
-            countdownDisplay.textContent = '00 : 00';
-        } else {
-            secondsLeft--;
         }
+
+        secondsLeft--;
     }
 
-    // Start the countdown immediately
-    updateCountdown();
     const countdownInterval = setInterval(updateCountdown, 1000);
+    updateCountdown(); // Initial call
+
 </script>
 @endsection

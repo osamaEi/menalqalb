@@ -95,7 +95,7 @@ $totalItemsCount = \App\Models\ReadyCardItem::whereHas('readyCard', function($qu
                     <p class="relative top-[-6px] font-bold text-[#B62326]">
                         {{__('Membership Number')}}
                     </p>
-                    <p class="font-bold text-[#4B4B4B]">#100123</p>
+                    <p class="font-bold text-[#4B4B4B]">{{auth()->user()->unique_id}}</p>
                 </div>
             </div>
             <div

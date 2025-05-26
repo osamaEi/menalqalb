@@ -3,10 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Services\WhatsAppService;
 use Illuminate\Http\Request;
+use App\Services\WhatsAppService;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Str;
+use App\Mail\VerifyEmail;
+
 
 class RegisterAppController extends Controller
 {
@@ -58,6 +63,21 @@ class RegisterAppController extends Controller
         return view('app.auth.phone');
     }
 
+    public function verifyEmail($token)
+    {
+        $user = User::where('email_verification_token', $token)->first();
+    
+        if (!$user) {
+            return redirect()->route('login')->with('error', 'Invalid or expired verification link.');
+        }
+    
+        $user->email_verified = true;
+        $user->email_verification_token = null;
+        $user->save();
+    
+        return redirect()->route('app.login')->with('success', 'Email verified successfully. You can now log in.');
+    }
+    
     /**
      * Step 2: Handle the phone number form submission
      */
@@ -115,11 +135,15 @@ class RegisterAppController extends Controller
             'otp' => 'required',
         ]);
     
-        $submittedOtp = $validated['otp'];
-        $storedOtp = Session::get('password_reset_otp');
+        $submittedOtp = trim($validated['otp']);
+        $storedOtp = trim(Session::get('otp'));
         $otpGeneratedAt = Session::get('otp_generated_at');
     
-        // Check if OTP has expired (5 minutes)
+        if (!$storedOtp || !$otpGeneratedAt) {
+            return back()->withErrors(['otp' => 'حدث خطأ. يرجى طلب رمز جديد.']);
+        }
+    
+        // Check if OTP has expired
         if (now()->diffInMinutes($otpGeneratedAt) > 5) {
             return back()->withErrors(['otp' => 'انتهت صلاحية رمز التحقق. الرجاء طلب رمز جديد.']);
         }
@@ -131,8 +155,41 @@ class RegisterAppController extends Controller
     
         // Mark as verified
         Session::put('whatsapp_verified', true);
-        return redirect()->route('app.forgot-password.reset');
+        return redirect()->route('app.register.password');
     }
+    
+/**
+ * Verify OTP for password reset
+ */
+public function verifyForgotPasswordOtp(Request $request)
+{
+    $validated = $request->validate([
+        'otp' => 'required|numeric',
+    ]);
+
+    $submittedOtp = trim($validated['otp']);
+    $storedOtp = trim(Session::get('password_reset_otp'));
+    $otpGeneratedAt = Session::get('otp_generated_at_reset');
+
+    if (!$storedOtp || !$otpGeneratedAt) {
+        return back()->withErrors(['otp' => 'حدث خطأ. يرجى طلب رمز جديد.']);
+    }
+
+    // Check if OTP expired (5 minutes)
+    if (now()->diffInMinutes($otpGeneratedAt) > 5) {
+        return back()->withErrors(['otp' => 'انتهت صلاحية رمز التحقق. الرجاء طلب رمز جديد.']);
+    }
+
+    // Match OTP
+    if ((int)$submittedOtp !== (int)$storedOtp) {
+        return back()->withErrors(['otp' => 'رمز التحقق غير صحيح. حاول مرة أخرى.']);
+    }
+
+    // Mark phone as verified for password reset
+    Session::put('forgot_password_verified', true);
+
+    return redirect()->route('app.forgot-password.reset'); // Route to the password reset form
+}
 
     /**
      * Step 4: Show the password form
@@ -150,17 +207,19 @@ class RegisterAppController extends Controller
     /**
      * Step 4: Handle the password form submission and complete registration
      */
+
     public function completeRegistration(Request $request)
     {
         $validated = $request->validate([
-            'password' => 'required|string|min:8|confirmed',
+            'password' => 'required|string|min:8',
         ]);
-
-        // Get the stored registration data
+    
         $registrationData = Session::get('registration_data');
         $whatsapp = Session::get('whatsapp');
-
-        // Create the user
+    
+        // Generate a unique email verification token
+        $token = Str::random(64);
+    
         $user = User::create([
             'name' => $registrationData['name'],
             'email' => $registrationData['email'],
@@ -170,16 +229,29 @@ class RegisterAppController extends Controller
             'company_name' => $registrationData['company_name'] ?? null,
             'password' => Hash::make($validated['password']),
             'whatsapp_verified' => true,
-            'email_verified' => false, // Will be verified later
-            'status' => 'inactive', // Default status, admin will activate later
+            'email_verified' => false,
+            'status' => 'inactive',
+            'email_verification_token' => $token,
+            'unique_id' => $this->generateUniqueId(), // Add this line
         ]);
-
-        // Clear the session data
+    
+        // Send custom verification email
+        Mail::to($user->email)->send(new VerifyEmail($user));
+    
         Session::forget(['registration_data', 'whatsapp', 'otp', 'otp_generated_at', 'whatsapp_verified']);
-
-        // Redirect to success page
-        return redirect()->route('app.register.complete');
+    
+        return redirect()->route('app.register.complete')->with('status', 'Check your email to verify your account.');
     }
+
+    private function generateUniqueId()
+{
+    do {
+        $uniqueId = 'U' . strtoupper(Str::random(8)); // e.g., UABC123XY
+    } while (User::where('unique_id', $uniqueId)->exists());
+
+    return $uniqueId;
+}
+
 
     /**
      * Step 5: Show registration complete page
