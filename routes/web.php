@@ -5,6 +5,7 @@ use App\Http\Controllers\BillController;
 use App\Http\Controllers\CardController;
 use App\Http\Controllers\LockController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\LockerController;
 use App\Http\Controllers\AppCardController;
 use App\Http\Controllers\AppPageController;
 use App\Http\Controllers\ContactController;
@@ -65,6 +66,7 @@ require __DIR__.'/auth.php';
 // Admin Settings Routes
 Route::middleware(['admin.only'])->prefix('admin')->name('admin.')->group(function () {
     Route::resource('settings', SettingController::class);
+    Route::resource('lockers', LockerController::class);
 });
 
 Route::middleware(['admin.only'])->group(function(){
