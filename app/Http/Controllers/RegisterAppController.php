@@ -236,7 +236,7 @@ public function verifyForgotPasswordOtp(Request $request)
         ]);
     
         // Send custom verification email
-       // Mail::to($user->email)->send(new VerifyEmail($user));
+        Mail::to($user->email)->send(new VerifyEmail($user));
     
         Session::forget(['registration_data', 'whatsapp', 'otp', 'otp_generated_at', 'whatsapp_verified']);
     
@@ -246,7 +246,7 @@ public function verifyForgotPasswordOtp(Request $request)
     private function generateUniqueId()
 {
     do {
-        $uniqueId = 'U' . strtoupper(Str::random(8)); // e.g., UABC123XY
+        $uniqueId = 'U' . strtoupper(Str::random(5)); // e.g., UABC123XY
     } while (User::where('unique_id', $uniqueId)->exists());
 
     return $uniqueId;

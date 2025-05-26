@@ -41,7 +41,7 @@
                                             <td class="px-6 py-4 whitespace-nowrap text-center">
                                                 <div class="flex justify-center">
                                                     <div class="w-6 h-6" title="{{ $item->status === 'open' ? __('Available') : ($item->status === 'closed' ? __('Used') : __('Canceled')) }}">
-                                                        <img src="{{ asset($item->status === 'open' ? 'app/img/orange.png' : ($item->status === 'closed' ? 'app/img/grepng' : 'app/img/red.png')) }}" class="w-[30px]" alt="" class="img-fluid">
+                                                        <img src="{{ asset($item->status === 'open' ? 'app/img/orange.png' : ($item->status === 'closed' ? 'app/img/green' : 'app/img/red.png')) }}" class="w-[30px]" alt="" class="img-fluid">
                                                     </div>
                                                 </div>
                                             </td>
@@ -83,12 +83,12 @@
             <p for="txtReceived" class="localized" data-content="{{ $counts['canceled'] }}"></p>
         </li>
         <li>
-            <img src="{{ asset('app/img/grepng') }}" alt="" class="img-fluid">
+            <img src="{{ asset('app/img/orange.png') }}" alt="" class="img-fluid">
             <p for="txtSent" class="localized" data-content="{{__('Used')}}"></p>
             <p for="txtSent" class="localized" data-content="{{ $counts['closed'] }}"></p>
         </li>
         <li>
-            <img src="{{ asset('app/img/orange.png') }}" alt="" class="img-fluid">
+            <img src="{{ asset('app/img/green.png') }}" alt="" class="img-fluid">
             <p for="txtRead" class="localized" data-content="{{__('Available')}}"></p>
             <p for="txtRead" class="localized" data-content="{{ $counts['open'] }}"></p>
         </li>

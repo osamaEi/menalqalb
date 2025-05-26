@@ -22,7 +22,7 @@
     <div class="max-w-xl mx-auto my-10">
         <!-- Header with Logo -->
         <div class="gradient-bg py-6 px-6 rounded-t-lg text-center">
-            <img src="{{ url('front/images/logo.png') }}" class="mx-auto h-12" alt="{{ __('Logo') }}">
+            <img src="{{ public_path('front/images/logo.png') }}" class="mx-auto h-12" alt="{{ __('Logo') }}">
         </div>
         
         <!-- Email Content -->
@@ -42,7 +42,6 @@
                 <div class="border-t border-gray-200 pt-6 mt-6">
                     <p class="text-gray-500 text-sm">{{ __('If you did not create an account, no further action is required.') }}</p>
                     <p class="text-gray-500 text-sm mt-2">{{ __('If you\'re having trouble clicking the button, copy and paste the URL below into your web browser:') }}</p>
-                    <p class="text-blue-500 text-sm break-all mt-2">{{ $verificationUrl }}</p>
                 </div>
             </div>
         </div>
