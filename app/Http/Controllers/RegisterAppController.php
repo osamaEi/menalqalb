@@ -68,7 +68,7 @@ class RegisterAppController extends Controller
         $user = User::where('email_verification_token', $token)->first();
     
         if (!$user) {
-            return redirect()->route('login')->with('error', 'Invalid or expired verification link.');
+            return redirect()->route('app.login')->with('error', 'Invalid or expired verification link.');
         }
     
         $user->email_verified = true;
@@ -236,7 +236,7 @@ public function verifyForgotPasswordOtp(Request $request)
         ]);
     
         // Send custom verification email
-        Mail::to($user->email)->send(new VerifyEmail($user));
+       // Mail::to($user->email)->send(new VerifyEmail($user));
     
         Session::forget(['registration_data', 'whatsapp', 'otp', 'otp_generated_at', 'whatsapp_verified']);
     
