@@ -81,23 +81,23 @@ class PackagePurchaseController extends Controller
             ]);
             
             // Log the raw response
-            Log::info('Ziina API response in purchase', [
-                'status' => $response->status(),
-                'body' => $response->json(),
-                'request_body' => [
-                    'amount' => $amountInFils,
-                    'currency_code' => 'AED',
-                    'success_url' => route('packages.payment.success', ['order_id' => 'pkg_' . $payment->id]),
-                    'cancel_url' => route('packages.payment.cancel', ['order_id' => 'pkg_' . $payment->id]),
-                    'description' => 'Package Purchase: Title=' . ($package->title ?? 'Package ' . $package->id),
-                    'test' => config('ziina.test_mode', true),
-                    'metadata' => [
-                        'package_id' => (string)$package->id,
-                        'user_id' => (string)Auth::id(),
-                        'payment_type' => 'package',
-                    ],
-                ],
-            ]);
+            // Log::info('Ziina API response in purchase', [
+            //     'status' => $response->status(),
+            //     'body' => $response->json(),
+            //     'request_body' => [
+            //         'amount' => $amountInFils,
+            //         'currency_code' => 'AED',
+            //         'success_url' => route('packages.payment.success', ['order_id' => 'pkg_' . $payment->id]),
+            //         'cancel_url' => route('packages.payment.cancel', ['order_id' => 'pkg_' . $payment->id]),
+            //         'description' => 'Package Purchase: Title=' . ($package->title ?? 'Package ' . $package->id),
+            //         'test' => config('ziina.test_mode', true),
+            //         'metadata' => [
+            //             'package_id' => (string)$package->id,
+            //             'user_id' => (string)Auth::id(),
+            //             'payment_type' => 'package',
+            //         ],
+            //     ],
+            // ]);
             
             // Check if request was successful
             if ($response->successful()) {
@@ -105,7 +105,7 @@ class PackagePurchaseController extends Controller
                 
                 // Verify payment intent ID and redirect URL
                 if (!isset($paymentIntent['id']) || !isset($paymentIntent['redirect_url'])) {
-                    Log::error('Invalid payment intent response', ['response' => $paymentIntent]);
+                    // Log::error('Invalid payment intent response', ['response' => $paymentIntent]);
                     throw new Exception('فشل في استرجاع معرف نية الدفع أو رابط الإعادة التوجيه');
                 }
                 
@@ -124,15 +124,15 @@ class PackagePurchaseController extends Controller
                     ? (is_array($responseData['message']) ? implode(', ', $responseData['message']) : $responseData['message'])
                     : ($responseData['error'] ?? 'خطأ غير معروف من بوابة الدفع');
                 
-                Log::error('Ziina API error', ['error' => $errorMessage]);
+                // Log::error('Ziina API error', ['error' => $errorMessage]);
                 throw new Exception('خطأ بوابة الدفع: ' . $errorMessage);
             }
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error('Payment processing exception in purchase', [
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ]);
+            // Log::error('Payment processing exception in purchase', [
+            //     'message' => $e->getMessage(),
+            //     'trace' => $e->getTraceAsString(),
+            // ]);
             return redirect()->route('packages.index')
                 ->with('error', 'فشل معالجة الدفع: ' . $e->getMessage());
         }
@@ -146,7 +146,7 @@ class PackagePurchaseController extends Controller
         $paymentId = explode('_', $request->query('order_id', ''))[1] ?? null;
         
         if (!$paymentId) {
-            Log::error('Invalid order_id in handleSuccess', ['order_id' => $request->query('order_id')]);
+            // Log::error('Invalid order_id in handleSuccess', ['order_id' => $request->query('order_id')]);
             return redirect()->route('packages.index')
                 ->with('error', 'معلومات الدفع غير صالحة.');
         }
@@ -157,17 +157,17 @@ class PackagePurchaseController extends Controller
                 ->first();
             
             if (!$payment) {
-                Log::error('Payment record not found or user mismatch', [
-                    'payment_id' => $paymentId,
-                    'user_id' => Auth::id(),
-                ]);
+                // Log::error('Payment record not found or user mismatch', [
+                //     'payment_id' => $paymentId,
+                //     'user_id' => Auth::id(),
+                // ]);
                 return redirect()->route('packages.index')
                     ->with('error', 'سجل الدفع غير موجود أو غير مرتبط بالمستخدم.');
             }
             
             $paymentIntentId = $payment->payment_intent_id;
             if (!$paymentIntentId) {
-                Log::error('No payment_intent_id found in payment record', ['payment_id' => $paymentId]);
+                // Log::error('No payment_intent_id found in payment record', ['payment_id' => $paymentId]);
                 return redirect()->route('packages.index')
                     ->with('error', 'معلومات الدفع غير صالحة.');
             }
@@ -180,7 +180,7 @@ class PackagePurchaseController extends Controller
             
             if ($response->successful()) {
                 $paymentIntent = $response->json();
-                Log::info('Ziina payment intent response', ['response' => $paymentIntent]);
+                // Log::info('Ziina payment intent response', ['response' => $paymentIntent]);
                 
                 // Update payment record
                 $payment->status = $paymentIntent['status'] ?? 'unknown';
@@ -194,13 +194,13 @@ class PackagePurchaseController extends Controller
                     if ($packageId) {
                         $package = Package::find($packageId);
                         if (!$package) {
-                            Log::error('Package not found', ['package_id' => $packageId]);
+                            // Log::error('Package not found', ['package_id' => $packageId]);
                             return redirect()->route('packages.index')
                                 ->with('error', 'الباقة غير موجودة.');
                         }
                         $user = User::find(Auth::id());
                         if (!$user) {
-                            Log::error('User not found', ['user_id' => Auth::id()]);
+                            // Log::error('User not found', ['user_id' => Auth::id()]);
                             return redirect()->route('packages.index')
                                 ->with('error', 'المستخدم غير موجود.');
                         }
@@ -210,33 +210,33 @@ class PackagePurchaseController extends Controller
                         return redirect()->route('packages.index')
                             ->with('success', 'تم شراء الباقة بنجاح! تم إضافة ' . $package->amount . ' نقطة إلى حسابك.');
                     } else {
-                        Log::error('No package_id found in session', [
-                            'payment_id' => $paymentId,
-                            'session_key' => 'payment_package_' . $paymentId,
-                        ]);
+                        // Log::error('No package_id found in session', [
+                        //     'payment_id' => $paymentId,
+                        //     'session_key' => 'payment_package_' . $paymentId,
+                        // ]);
                         return redirect()->route('packages.index')
                             ->with('error', 'معلومات الباقة غير متوفرة. قد انتهت جلسة الدفع.');
                     }
                 }
                 
-                Log::warning('Payment not successful', [
-                    'payment_id' => $paymentId,
-                    'status' => $paymentIntent['status'],
-                ]);
+                // Log::warning('Payment not successful', [
+                //     'payment_id' => $paymentId,
+                //     'status' => $paymentIntent['status'],
+                // ]);
                 return redirect()->route('packages.index')
                     ->with('error', 'لم تكتمل عملية الدفع. يرجى المحاولة مرة أخرى.');
             } else {
-                Log::error('Ziina API request failed', [
-                    'status' => $response->status(),
-                    'body' => $response->json(),
-                ]);
+                // Log::error('Ziina API request failed', [
+                //     'status' => $response->status(),
+                //     'body' => $response->json(),
+                // ]);
                 throw new Exception('فشل التحقق من الدفع: ' . ($response->json()['message'] ?? 'خطأ غير معروف'));
             }
         } catch (Exception $e) {
-            Log::error('Error in handleSuccess', [
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ]);
+            // Log::error('Error in handleSuccess', [
+            //     'message' => $e->getMessage(),
+            //     'trace' => $e->getTraceAsString(),
+            // ]);
             return redirect()->route('packages.index')
                 ->with('error', 'خطأ أثناء التحقق من الدفع: ' . $e->getMessage());
         }

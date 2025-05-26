@@ -52,7 +52,9 @@ Route::middleware(['language'])->group(function () {
 Route::get('/', function () {
     return view('welcome');
 })->name('welcome');
-
+Route::post('/users/{user}/verify-email', [UserController::class, 'verifyEmail'])->name('users.verify.email');
+    Route::post('/users/{user}/verify-whatsapp', [UserController::class, 'verifyWhatsapp'])->name('users.verify.whatsapp');
+    
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
@@ -88,7 +90,7 @@ Route::middleware(['admin.only'])->group(function(){
     Route::get('/admin/dashboard',[DashboardController::class ,'index'])->name('dashboard.index');
 
     Route::resource('users', UserController::class);
-
+    
     // Additional filter routes
     Route::get('users/type/{type}', [UserController::class, 'filterByType'])->name('users.filter.type');
     Route::get('users/status/{status}', [UserController::class, 'filterByStatus'])->name('users.filter.status');
@@ -97,8 +99,6 @@ Route::middleware(['admin.only'])->group(function(){
     // User actions
     Route::get('users/{user}/toggle-status', [UserController::class, 'toggleStatus'])->name('users.toggle.status');
     Route::get('users/{user}/block', [UserController::class, 'blockUser'])->name('users.block');
-    Route::get('users/{user}/verify-email', [UserController::class, 'verifyEmail'])->name('users.verify.email');
-    Route::get('users/{user}/verify-whatsapp', [UserController::class, 'verifyWhatsapp'])->name('users.verify.whatsapp');
     Route::post('users/{id}/restore', [UserController::class, 'restore'])->name('users.restore');
 
     Route::get('api/users/{id}', [UserController::class, 'getUser'])->name('api.users.get');
@@ -256,7 +256,6 @@ Route::middleware('guest')->prefix('app')->name('app.')->group(function () {
     Route::post('/login', [LoginAppController::class, 'login']);
 
     
-    Route::post('/logout', [LoginAppController::class, 'logout'])->name('logout');
     
     // Forgot password routes
     Route::get('/forgot-password', [LoginAppController::class, 'showForgotPasswordForm'])->name('forgot-password');
@@ -291,7 +290,8 @@ Route::middleware(['auth'])->prefix('app')->name('app.')->group(function () {
 Route::middleware(['auth'])->prefix('app')->name('app.')->group(function () {
     // Messages routes
     Route::get('/messages/create', [MessageAppController::class, 'create'])->name('messages.create');
-    
+    Route::post('/logout', [LoginAppController::class, 'logout'])->name('logout');
+
     // API routes for AJAX
     Route::get('/subcategories/{mainCategoryId}', [MessageAppController::class, 'getSubcategories']);
 

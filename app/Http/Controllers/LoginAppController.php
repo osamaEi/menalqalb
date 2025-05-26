@@ -36,25 +36,49 @@ class LoginAppController extends Controller
             'whatsapp' => 'required',
             'password' => 'required',
         ]);
-
-        // Format the phone number if needed
+    
+        // Format the phone number
         $whatsapp = $credentials['whatsapp'];
         if (!empty($request->country_code) && strpos($whatsapp, $request->country_code) !== 0) {
             $whatsapp = $request->country_code . $whatsapp;
         }
-
-        // Attempt to login
-        if (Auth::attempt(['whatsapp' => $whatsapp, 'password' => $credentials['password']])) {
-            $request->session()->regenerate();
-            return redirect()->intended('app/home');
+    
+        // Attempt to find user manually
+        $user = \App\Models\User::where('whatsapp', $whatsapp)->first();
+    
+        if (!$user || !\Hash::check($credentials['password'], $user->password)) {
+            return back()->withErrors([
+                'whatsapp' => __('Invalid login credentials.'),
+            ])->withInput($request->only('whatsapp'));
         }
-
-        // Authentication failed
-        return back()->withErrors([
-            'whatsapp' => 'بيانات الدخول غير صحيحة.',
-        ])->withInput($request->only('whatsapp'));
+    
+        // Check email & whatsapp verification
+        if (!$user->email_verified) {
+            return back()->withErrors([
+                'whatsapp' => __('Please verify your email before logging in.'),
+            ])->withInput($request->only('whatsapp'));
+        }
+    
+        if (!$user->whatsapp_verified) {
+            return back()->withErrors([
+                'whatsapp' => __('Please verify your WhatsApp number before logging in.'),
+            ])->withInput($request->only('whatsapp'));
+        }
+    
+        // Check status
+        if ($user->status !== 'active') {
+            return back()->withErrors([
+                'whatsapp' => __('Your account is not active.'),
+            ])->withInput($request->only('whatsapp'));
+        }
+    
+        // Proceed with login
+        Auth::login($user);
+        $request->session()->regenerate();
+    
+        return redirect()->intended('app/home');
     }
-
+    
     /**
      * Log the user out
      */

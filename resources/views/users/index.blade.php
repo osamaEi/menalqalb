@@ -289,6 +289,25 @@
                                                     <i class="ri-shield-user-line text-warning me-2"></i>{{ __('Block') }}
                                                 </a>
                                             @endif
+
+                                            @if(!$user->email_verified)
+    <form action="{{ route('users.verify.email', $user->id) }}" method="POST" style="display: inline;">
+        @csrf
+        <button type="submit" class="dropdown-item" style="background: none; border: none;">
+            <i class="ri-mail-check-line text-info me-2"></i>{{ __('Verify Email') }}
+        </button>
+    </form>
+@endif
+
+@if(!$user->whatsapp_verified)
+    <form action="{{ route('users.verify.whatsapp', $user->id) }}" method="POST" style="display: inline;">
+        @csrf
+        <button type="submit" class="dropdown-item" style="background: none; border: none;">
+            <i class="ri-whatsapp-line text-success me-2"></i>{{ __('Verify WhatsApp') }}
+        </button>
+    </form>
+@endif
+
                                             <form action="{{ route('users.destroy', $user->id) }}" method="POST" style="display: inline;">
                                                 @csrf
                                                 @method('DELETE')

@@ -569,13 +569,19 @@
                                             "Thanks for registering. Please click the link below to verify your email:": "شكرًا لتسجيلك. الرجاء النقر على الرابط أدناه للتحقق من بريدك الإلكتروني:",
                                             "Verify Email": "تحقق من البريد الإلكتروني",
                                             "If you didn’t register, you can safely ignore this email.": "إذا لم تقم بالتسجيل، يمكنك تجاهل هذا البريد الإلكتروني بأمان.",
-                                        
+                                            
+                                                "Invalid login credentials.": "بيانات الدخول غير صحيحة.",
+                                                "Please verify your email before logging in.": "يرجى تفعيل البريد الإلكتروني قبل تسجيل الدخول.",
+                                                "Please verify your WhatsApp number before logging in.": "يرجى تفعيل رقم الواتساب قبل تسجيل الدخول.",
+                                                "Your account is not active.": "حسابك غير مفعل.",
+                                            
+                                            
                                         
                                         "Create New Locker": "إنشاء خزانة جديدة",
-                                        "User": "المستخدم",
+                                        "you have to verify this email check you email": "يجب ان توثق بريدك الالكتروني",
                                         "Select User": "اختر مستخدم",
-                                        "Quantity": "الكمية",
-                                        "Price": "السعر",
+                                        "Verify WhatsApp": "تحقق من الواتساب",
+                                        "Block": "حظر",
                                         "Photo": "صورة",
                                         "Create Locker": "إنشاء خزانة",
                                         "Cancel": "إلغاء",

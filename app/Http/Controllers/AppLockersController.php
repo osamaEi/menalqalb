@@ -127,16 +127,16 @@ class AppLockersController extends Controller
                 ],
             ]);
             
-            Log::info('Ziina API response in locker purchase', [
-                'status' => $response->status(),
-                'body' => $response->json(),
-            ]);
+            // Log::info('Ziina API response in locker purchase', [
+            //     'status' => $response->status(),
+            //     'body' => $response->json(),
+            // ]);
             
             if ($response->successful()) {
                 $paymentIntent = $response->json();
                 
                 if (!isset($paymentIntent['id']) || !isset($paymentIntent['redirect_url'])) {
-                    Log::error('Invalid payment intent response', ['response' => $paymentIntent]);
+                    // Log::error('Invalid payment intent response', ['response' => $paymentIntent]);
                     throw new Exception('فشل في استرجاع معرف نية الدفع أو رابط الإعادة التوجيه');
                 }
                 
@@ -153,15 +153,15 @@ class AppLockersController extends Controller
                     ? (is_array($responseData['message']) ? implode(', ', $responseData['message']) : $responseData['message'])
                     : ($responseData['error'] ?? 'خطأ غير معروف من بوابة الدفع');
                 
-                Log::error('Ziina API error', ['error' => $errorMessage]);
+                // Log::error('Ziina API error', ['error' => $errorMessage]);
                 throw new Exception('خطأ بوابة الدفع: ' . $errorMessage);
             }
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error('Locker payment processing exception', [
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ]);
+            // Log::error('Locker payment processing exception', [
+            //     'message' => $e->getMessage(),
+            //     'trace' => $e->getTraceAsString(),
+            // ]);
             return redirect()->route('min-alqalb.lockers.create')
                 ->with('error', 'فشل معالجة الدفع: ' . $e->getMessage());
         }
@@ -172,7 +172,7 @@ class AppLockersController extends Controller
         $paymentId = explode('_', $request->query('order_id', ''))[1] ?? null;
         
         if (!$paymentId) {
-            Log::error('Invalid order_id in locker handleSuccess', ['order_id' => $request->query('order_id')]);
+            // Log::error('Invalid order_id in locker handleSuccess', ['order_id' => $request->query('order_id')]);
             return redirect()->route('min-alqalb.lockers.index')
                 ->with('error', 'معلومات الدفع غير صالحة.');
         }
@@ -184,17 +184,17 @@ class AppLockersController extends Controller
                 ->first();
             
             if (!$payment) {
-                Log::error('Locker payment record not found or user mismatch', [
-                    'payment_id' => $paymentId,
-                    'user_id' => Auth::id(),
-                ]);
+                // Log::error('Locker payment record not found or user mismatch', [
+                //     'payment_id' => $paymentId,
+                //     'user_id' => Auth::id(),
+                // ]);
                 return redirect()->route('min-alqalb.lockers.index')
                     ->with('error', 'سجل الدفع غير موجود أو غير مرتبط بالمستخدم.');
             }
             
             $paymentIntentId = $payment->payment_intent_id;
             if (!$paymentIntentId) {
-                Log::error('No payment_intent_id found in locker payment record', ['payment_id' => $paymentId]);
+                // Log::error('No payment_intent_id found in locker payment record', ['payment_id' => $paymentId]);
                 return redirect()->route('min-alqalb.lockers.index')
                     ->with('error', 'معلومات الدفع غير صالحة.');
             }
@@ -206,7 +206,7 @@ class AppLockersController extends Controller
             
             if ($response->successful()) {
                 $paymentIntent = $response->json();
-                Log::info('Ziina payment intent response for locker', ['response' => $paymentIntent]);
+                // Log::info('Ziina payment intent response for locker', ['response' => $paymentIntent]);
                 
                 $payment->status = $paymentIntent['status'] ?? 'unknown';
                 $payment->save();
@@ -219,13 +219,13 @@ class AppLockersController extends Controller
                     if ($lockerData && isset($lockerData['locker_id'])) {
                         $locker = LocksWReadyCard::find($lockerData['locker_id']);
                         if (!$locker) {
-                            Log::error('Locker not found', ['locker_id' => $lockerData['locker_id']]);
+                            // Log::error('Locker not found', ['locker_id' => $lockerData['locker_id']]);
                             return redirect()->route('min-alqalb.lockers.index')
                                 ->with('error', 'القفل غير موجود.');
                         }
                         $user = User::find(Auth::id());
                         if (!$user) {
-                            Log::error('User not found', ['user_id' => Auth::id()]);
+                            // Log::error('User not found', ['user_id' => Auth::id()]);
                             return redirect()->route('min-alqalb.lockers.index')
                                 ->with('error', 'المستخدم غير موجود.');
                         }
@@ -248,33 +248,33 @@ class AppLockersController extends Controller
                         return redirect()->route('min-alqalb.lockers.index')
                             ->with('success', 'تم شراء القفل بنجاح! تم إضافة الطلب إلى قائمتك.');
                     } else {
-                        Log::error('No locker data found in session', [
-                            'payment_id' => $paymentId,
-                            'session_key' => 'locker_payment_' . $paymentId,
-                        ]);
+                        // Log::error('No locker data found in session', [
+                        //     'payment_id' => $paymentId,
+                        //     'session_key' => 'locker_payment_' . $paymentId,
+                        // ]);
                         return redirect()->route('min-alqalb.lockers.index')
                             ->with('error', 'معلومات القفل غير متوفرة. قد انتهت جلسة الدفع.');
                     }
                 }
                 
-                Log::warning('Locker payment not successful', [
-                    'payment_id' => $paymentId,
-                    'status' => $paymentIntent['status'],
-                ]);
+                // Log::warning('Locker payment not successful', [
+                //     'payment_id' => $paymentId,
+                //     'status' => $paymentIntent['status'],
+                // ]);
                 return redirect()->route('min-alqalb.lockers.index')
                     ->with('error', 'لم تكتمل عملية الدفع. يرجى المحاولة مرة أخرى.');
             } else {
-                Log::error('Ziina API request failed for locker', [
-                    'status' => $response->status(),
-                    'body' => $response->json(),
-                ]);
+                // Log::error('Ziina API request failed for locker', [
+                //     'status' => $response->status(),
+                //     'body' => $response->json(),
+                // ]);
                 throw new Exception('فشل التحقق من الدفع: ' . ($response->json()['message'] ?? 'خطأ غير معروف'));
             }
         } catch (Exception $e) {
-            Log::error('Error in locker handleSuccess', [
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ]);
+            // Log::error('Error in locker handleSuccess', [
+            //     'message' => $e->getMessage(),
+            //     'trace' => $e->getTraceAsString(),
+            // ]);
             return redirect()->route('min-alqalb.lockers.index')
                 ->with('error', 'خطأ أثناء التحقق من الدفع: ' . $e->getMessage());
         }

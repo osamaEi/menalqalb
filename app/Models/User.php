@@ -16,11 +16,7 @@ class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
+
     protected $fillable = [
         'name',
         'email',
@@ -28,21 +24,15 @@ class User extends Authenticatable implements MustVerifyEmail
         'country_id',
         'whatsapp',
         'email_verified',
-        'email_verified_at',
         'whatsapp_verified',
         'user_type',
         'company_name',
         'email_verification_token',
         'status',
-        'unique_id', // add this line
+        'unique_id', 
     ];
     
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
     protected $hidden = [
         'password',
         'remember_token',

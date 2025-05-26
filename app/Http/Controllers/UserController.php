@@ -374,15 +374,7 @@ class UserController extends Controller
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function verifyEmail(User $user)
-    {
-        $user->update([
-            'email_verified' => true,
-            'email_verified_at' => now()
-        ]);
-        
-        return redirect()->back()->with('success', __('Email has been verified.'));
-    }
+  
 
     /**
      * Verify user WhatsApp.
@@ -390,10 +382,20 @@ class UserController extends Controller
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function verifyWhatsapp(User $user)
-    {
-        $user->update(['whatsapp_verified' => true]);
-        
-        return redirect()->back()->with('success', __('WhatsApp has been verified.'));
-    }
+   
+
+    public function verifyEmail(User $user)
+{
+    $user->update(['email_verified' => true]);
+
+    return redirect()->back()->with('success', __('Email has been verified successfully.'));
+}
+
+public function verifyWhatsapp(User $user)
+{
+    $user->update(['whatsapp_verified' => true]);
+
+    return redirect()->back()->with('success', __('WhatsApp number has been verified successfully.'));
+}
+
 }
