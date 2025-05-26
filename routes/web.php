@@ -403,6 +403,7 @@ Route::prefix('app')->name('app.')->group(function () {
     Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 });
 
+Route::middleware(['language'])->group(function () {
 
 Route::middleware(['admin.only'])->prefix('admin')->group(function () {
     Route::get('/bills', [AdminBillController::class, 'index'])->name('admin.bills.index');
@@ -411,6 +412,8 @@ Route::middleware(['admin.only'])->prefix('admin')->group(function () {
     Route::get('/bills/{bill}', [AdminBillController::class, 'show'])->name('admin.bills.show');
     Route::get('/bills/{bill}/pdf', [AdminBillController::class, 'generatePdf'])->name('admin.bills.pdf');
     Route::get('/payments', [AdminPaymentController::class, 'index'])->name('admin.payments.index');
+});
+
 });
 Route::middleware(['admin.only'])->prefix('admin')->name('admin.')->group(function () {
 

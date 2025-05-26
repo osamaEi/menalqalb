@@ -266,9 +266,14 @@
                                             <i class="ri-pencil-line text-primary me-2"></i>{{ __('Edit') }}
                                         </a>
                                         @if($user->deleted_at)
-                                            <a class="dropdown-item" href="{{ route('users.restore', $user->id) }}">
-                                                <i class="ri-restart-line text-success me-2"></i>{{ __('Restore') }}
-                                            </a>
+
+                                           <form action="{{ route('users.restore', $user->id) }}" method="POST" style="display: inline;">
+    @csrf
+    <button type="submit" class="dropdown-item" style="background: none; border: none;">
+        <i class="ri-restart-line text-success me-2"></i>{{ __('Restore') }}
+    </button>
+</form>
+
                                         @else
                                             @if($user->status === 'active')
                                                 <a class="dropdown-item" href="{{ route('users.toggle.status', $user->id) }}">
@@ -284,10 +289,14 @@
                                                     <i class="ri-shield-user-line text-warning me-2"></i>{{ __('Block') }}
                                                 </a>
                                             @endif
-                                            <a class="dropdown-item delete-record" href="javascript:void(0);" 
-                                                data-bs-toggle="modal" data-bs-target="#deleteModal" data-id="{{ $user->id }}">
-                                                <i class="ri-delete-bin-line text-danger me-2"></i>{{ __('Delete') }}
-                                            </a>
+                                            <form action="{{ route('users.destroy', $user->id) }}" method="POST" style="display: inline;">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="dropdown-item" style="background: none; border: none;">
+                                                    <i class="ri-delete-bin-line text-danger me-2"></i>{{ __('Delete') }}
+                                                </button>
+                                            </form>
+                                            
                                         @endif
                                     </div>
                                 </div>

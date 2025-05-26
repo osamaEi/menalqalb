@@ -48,36 +48,16 @@ class BillController extends Controller
      */
     public function generatePdf(Bill $bill)
     {
-        try {
-            $bill->load(['user', 'payment']);
-            
-            // Verify font file exists
-            $fontPath = storage_path('fonts/Cairo-Regular.ttf');
-            if (!file_exists($fontPath)) {
-                Log::warning('Cairo font not found, falling back to Helvetica', ['path' => $fontPath]);
-            }
     
-            $pdf = Pdf::loadView('app.bills.pdf', [
+           $bill = $bill->load(['user', 'payment']);
+           
+            return view('app.bills.pdf',[
                 'bill' => $bill,
                 'subject' => $this->getSubject($bill),
                 'status' => $this->getStatus($bill),
                 'date' => $bill->created_at->format('d/m/Y'),
-            ])
-            ->setPaper('a4', 'portrait')
-            ->setOption('isHtml5ParserEnabled', true)
-            ->setOption('isRemoteEnabled', true)
-            ->setOption('defaultFont', 'Cairo' );
-    
-            return $pdf->download('invoice_' . $bill->id . '.pdf');
-        } catch (\Exception $e) {
-            Log::error('Failed to generate PDF for bill', [
-                'bill_id' => $bill->id,
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
             ]);
-            return back()->with('error', 'Failed to generate PDF: ' . $e->getMessage());
         }
-    }
 
     private function getStatus($bill)
     {

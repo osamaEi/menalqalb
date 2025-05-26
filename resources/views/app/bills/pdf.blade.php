@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="{{ app()->getLocale() }}" dir="{{ app()->getLocale() == 'ar' ? 'rtl' : 'ltr' }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -134,7 +134,7 @@
                 <h1 class="invoice-title">{{ __('Invoice #') }}{{ $bill->id }}</h1>
                 <p>{{ __('Invoice date:') }} {{ $date }}</p>
             </div>
-            <img src="{{ public_path('app/img/logo.png') }}" class="logo" alt="{{ __('Logo') }}">
+            <img src="{{ url('front/images/logo.png') }}" class="logo" alt="{{ __('Logo') }}">
         </div>
         
         <div class="invoice-info">
@@ -191,5 +191,19 @@
         
         <div class="watermark">Min AlQalb</div>
     </div>
+    <div style="text-align: center; margin-top: 30px;">
+        <button onclick="window.print()" style="
+            background-color: #de162b;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        ">
+            {{ __('Print Invoice') }}
+        </button>
+    </div>
+    
 </body>
 </html>
