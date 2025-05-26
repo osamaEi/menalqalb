@@ -9,20 +9,22 @@ use Symfony\Component\HttpFoundation\Response;
 
 class Language
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
-     */
-    public function handle(Request $request, Closure $next): Response
-    {
-        if (session()->has('locale')) {
-            $locale = session('locale');
-        } else {
-            $locale = config('app.locale', 'en');
-        }
-        
-        App::setLocale($locale);
-        return $next($request);
+
+
+public function handle(Request $request, Closure $next): Response
+{
+    if (session()->has('locale')) {
+        $locale = session('locale');
+    } elseif ($request->hasHeader('Accept-Language')) {
+        $acceptedLanguages = explode(',', $request->header('Accept-Language'));
+        $locale = strtolower(substr($acceptedLanguages[0], 0, 2));
+    } else {
+        $locale = config('app.locale', 'en');
     }
+
+    App::setLocale($locale);
+
+    return $next($request);
+}
+
 }
