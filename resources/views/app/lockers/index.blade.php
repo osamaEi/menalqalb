@@ -30,36 +30,95 @@
                         <span class="font-bold text-gray-700 min-w-[151px]">{{__('Filter by status:')}}</span>
                     </div>
                     <div class="overflow-x-auto bg-white rounded-lg shadow table-container">
-                        <table id="dataTable" class="min-w-full divide-y divide-gray-200 sticky-header">
-                            <thead class="bg-gray-100">
-                                <tr>
-                                    <th class="px-6 py-3 text-right text-sm font-medium border-b">{{__('Status')}}</th>
-                                    <th class="px-6 py-3 text-right text-sm font-medium border-b">{{__('Purchase Date')}}</th>
-                                    <th class="px-6 py-3 text-right text-sm font-medium border-b">{{__('Number')}}</th>
-                                </tr>
-                            </thead>
-                            <tbody class="bg-white divide-y divide-gray-200">
-                                @foreach($purchasedRequests as $request)
-                                    <tr data-status="{{ $request->status == 'pending' ? 'available' : $request->status }}" class="hover:bg-gray-50">
-                                        <td class="px-6 py-4 whitespace-nowrap text-center">
-                                            <div class="flex justify-center">
-                                                <div class="w-6 h-6" title="{{ $request->status == 'pending' ? __('Available') : ($request->status == 'used' ? __('Used') : __('Canceled')) }}">
-                                                    <img src="{{ asset($request->status == 'pending' ? 'storage/'.$request->locksWReadyCard->photo : ($request->status == 'used' ? 'img/grean-l.png' : 'img/red-l.png')) }}" class="w-[30px]" alt="">                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-center">{{ $request->created_at->format('d/m/Y') }}</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-center">{{ $request->quantity }}</td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
+                        @foreach($lockers as $locker)
+                        <div class="mb-8">
+                            <div class="flex justify-between items-center mb-4">
+                                <h2 class="text-xl font-semibold text-right">
+                                    الخزانة #{{ $locker->id }} 
+                                    <span class="text-sm text-gray-600">({{ $locker->quantity }} عنصر)</span>
+                                </h2>
+                                <div class="text-left">
+                                    <span class="text-gray-700">السعر: ${{ number_format($locker->price, 2) }}</span>
+                                    @if($locker->photo)
+                                        <img src="{{ asset('storage/' . $locker->photo) }}" alt="صورة الخزانة" class="w-16 h-16 object-cover rounded inline-block ml-2">
+                                    @endif
+                                </div>
+                            </div>
+                    
+                            <div class="overflow-x-auto">
+                                <table id="dataTable" class="min-w-full divide-y divide-gray-200 sticky-header">
+                                    <thead class="bg-gray-100">
+                                        <tr>
+                                            <th class="px-6 py-3 text-right text-sm font-medium border-b">الحالة</th>
+                                            <th class="px-6 py-3 text-right text-sm font-medium border-b">تاريخ الشراء</th>
+                                            <th class="px-6 py-3 text-right text-sm font-medium border-b">الرقم</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="bg-white divide-y divide-gray-200">
+                                        @foreach($locker->items as $item)
+                                        <tr data-status="{{ $item->status }}" class="hover:bg-gray-50">
+                                            <td class="px-6 py-4 whitespace-nowrap text-center">
+                                                <div class="flex justify-center">
+                                                    <div class="w-6 h-6" title="">
+                                                        @if($item->status === 'open')
+                                                            <img src="{{ asset('app/img/grean-l.png') }}" class="w-[30px]" alt="متوفرة">
+                                                        @elseif($item->status === 'closed')
+                                                            <img src="{{ asset('app/img/orang-l.png') }}" class="w-[30px]" alt="مستخدمة">
+                                                        @else
+                                                            <img src="{{ asset('app/img/red-l.png') }}" class="w-[30px]" alt="ملغية">
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-center">
+                                                {{ $item->created_at->format('d/m/Y') }}
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-center">
+                                                {{ $item->number_locker }}
+                                            </td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        @endforeach
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Success/Error/Info Messages -->
+    @php
+    $statusMap = [
+        'canceled' => [
+            'label' => 'ملغية',
+            'img' => 'red-l.png',
+            'count' => $locker->items->where('status', 'canceled')->count(),
+        ],
+        'closed' => [
+            'label' => 'مستخدمة',
+            'img' => 'orang-l.png',
+            'count' => $locker->items->where('status', 'closed')->count(),
+        ],
+        'open' => [
+            'label' => 'متوفره',
+            'img' => 'grean-l.png',
+            'count' => $locker->items->where('status', 'open')->count(),
+        ],
+    ];
+@endphp
+
+<ul class="Image_define">
+    @foreach($statusMap as $status => $data)
+        <li>
+            <img src="{{ asset('app/img/' . $data['img']) }}" alt="" class="img-fluid">
+            <p class="localized" data-content="{{ $data['label'] }}"></p>
+            <p class="localized" data-content="{{ $data['count'] }}"></p>
+        </li>
+    @endforeach
+</ul>
+
+   
     @if(session('success'))
         <div class="notification fixed bottom-0 left-0 right-0 bg-green-500 text-white p-4 text-center">
             <i class="fas fa-check-circle mr-2"></i>

@@ -22,10 +22,14 @@ class AppLockersController extends Controller
 
     public function index()
     {
-        $lockers = LocksWReadyCard::where('type','lock')->where('is_active', true)->get();
-        $purchasedRequests = \App\Models\Request::where('user_id', Auth::id())->where('type','lock')->get();
-
-        return view('app.lockers.index', compact('lockers', 'purchasedRequests'));
+        // Get lockers for the authenticated user with their items
+        $lockers = Locker::with(['items' => function($query) {
+                $query->orderBy('number_locker');
+            }])
+            ->where('user_id', auth()->id())
+            ->get();
+    
+        return view('app.lockers.index', compact('lockers'));
     }
 
     public function createRequest()
