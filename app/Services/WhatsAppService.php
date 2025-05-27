@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Facades\Log;
+
 class WhatsAppService 
 {
     private $appId = "ZYyah4jl3QhLkNN32UCtDHA0IO57lh5tu645ULVN";
@@ -209,8 +211,15 @@ public function sendOtpTemplate($phoneNumber, $otp)
         ]
     ];
 
-    return $this->makeRequest($data);
+    Log::info('Sending OTP template via WhatsApp', ['phone' => $phoneNumber, 'otp' => $otp]);
+
+    $response = $this->makeRequest($data);
+
+    Log::info('Response from WhatsApp API', ['response' => $response]);
+
+    return $response;
 }
+
     /**
      * Make a request to the WhatsApp API
      * 

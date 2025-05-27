@@ -174,7 +174,7 @@
                         $sessionData = session()->all();
                     @endphp
                     <!-- Start Form for Card Selection -->
-                    <form method="POST" action="{{ route('app.post.step2') }}" id="cardSelectionForm">
+                    <form method="POST" action="{{ route('app.messages.post.step2') }}" id="cardSelectionForm">
                         @csrf
                         <input type="hidden" id="card_id" name="card_id" value="{{ old('card_id', $sessionData['card_id'] ?? '') }}">
                         

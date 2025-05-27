@@ -11,6 +11,7 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 use App\Mail\VerifyEmail;
+use Illuminate\Support\Facades\Log;
 
 
 class RegisterAppController extends Controller
@@ -81,35 +82,39 @@ class RegisterAppController extends Controller
     /**
      * Step 2: Handle the phone number form submission
      */
+
     public function submitPhoneForm(Request $request)
     {
         $validated = $request->validate([
             'country_code' => 'required|string',
             'phone_number' => 'required|string',
         ]);
-
-        // Format the phone number with the country code
+    
         $fullPhoneNumber = $validated['country_code'] . $validated['phone_number'];
-        
-        // Store the phone number in the session
+        Log::info('Full phone number formatted', ['phone' => $fullPhoneNumber]);
+    
         Session::put('whatsapp', $fullPhoneNumber);
-
-        // Generate a 4-digit OTP
+    
         $otp = rand(1000, 9999);
         Session::put('otp', $otp);
         Session::put('otp_generated_at', now());
-
+    
+        Log::info('OTP generated and stored in session', ['otp' => $otp]);
+    
         // Send the OTP via WhatsApp
         $response = $this->sendOtpViaWhatsApp($fullPhoneNumber, $otp);
-
-        // Check if the WhatsApp message was sent successfully
+    
+        // Log the WhatsApp response
+        Log::info('WhatsApp OTP send response', ['response' => $response]);
+    
         if (!isset($response['success']) || !$response['success']) {
+            Log::error('Failed to send OTP via WhatsApp', ['phone' => $fullPhoneNumber]);
             return back()->withErrors(['phone_number' => 'Failed to send OTP. Please try again.']);
         }
-
-        // Redirect to the OTP verification page
+    
         return redirect()->route('app.register.otp');
     }
+    
 
     /**
      * Step 3: Show the OTP verification form

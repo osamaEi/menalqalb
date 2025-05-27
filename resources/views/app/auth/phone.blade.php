@@ -130,7 +130,7 @@
                         </div>
                     </form>
                     <div class="!mt-5 ">
-                        <a href="{{ route('login') }}" class="border-0 !font-[400] !pt-3 !text-[#4B4B4B]">{{__('Do you have an account?')}}
+                        <a href="{{ route('app.login') }}" class="border-0 !font-[400] !pt-3 !text-[#4B4B4B]">{{__('Do you have an account?')}}
                             <span class="text-[#B62326] font-bold">{{__('Log in')}}</span>
                         </a>
                     </div>
