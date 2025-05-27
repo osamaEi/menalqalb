@@ -99,16 +99,12 @@ class RegisterAppController extends Controller
         Session::put('otp', $otp);
         Session::put('otp_generated_at', now());
     
-        Log::info('OTP generated and stored in session', ['otp' => $otp]);
     
         // Send the OTP via WhatsApp
         $response = $this->sendOtpViaWhatsApp($fullPhoneNumber, $otp);
-    
-        // Log the WhatsApp response
-        Log::info('WhatsApp OTP send response', ['response' => $response]);
+  
     
         if (!isset($response['success']) || !$response['success']) {
-            Log::error('Failed to send OTP via WhatsApp', ['phone' => $fullPhoneNumber]);
             return back()->withErrors(['phone_number' => 'Failed to send OTP. Please try again.']);
         }
     
