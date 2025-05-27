@@ -50,7 +50,13 @@ return [
     |                    "custom", "stack"
     |
     */
-
+    'scheduled_messages' => [
+        'driver' => 'daily',
+        'path' => storage_path('logs/scheduled_messages.log'),
+        'level' => 'debug',
+        'days' => 14,
+    ],
+    
     'channels' => [
         'stack' => [
             'driver' => 'stack',
