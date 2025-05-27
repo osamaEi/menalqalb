@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Card;
+use App\Models\Message;
 use App\Models\CardType;
 use App\Models\Category;
-use App\Models\Message;
-use App\Services\WhatsAppService;
 use Illuminate\Http\Request;
+use App\Services\WhatsAppService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -307,11 +308,20 @@ class MessageAppController extends Controller
             $message->lock_number = sprintf('%03d', mt_rand(100, 999));
             
             // Set recipient phone if lock type requires it
-            if ($step3Data['lock_type'] !== 'no_lock') {
+          
+            if ($request->lock_type !== 'no_lock') {
                 $message->recipient_phone = $step3Data['recipient_phone'];
             }
-            
-            $message->status = 'sent';
+    
+            // Set status based on whether it's scheduled for future or not
+            if ($step3Data['scheduled_at'] && Carbon::parse($step3Data['scheduled_at']) > now()) {
+                $message->status = 'scheduled';
+            } else {
+                $message->status = 'sent';
+
+                //$message->status = $request->has('manually_sent') ? 'pending' : 'sent';
+            }
+
             
             $message->save();
             
@@ -319,36 +329,24 @@ class MessageAppController extends Controller
             $cardItem->status = 'closed';
             $cardItem->save();
             
-            // Send WhatsApp message if there's a recipient phone
-            if ($message->lock_type !== 'no_lock' && $message->recipient_phone) {
-                // Format recipient phone for WhatsApp
-                $recipientPhone = $message->recipient_phone;
-                
-                // Initialize WhatsApp service
-                $whatsAppService = new WhatsAppService();
-                
-                // Get card image URL
-                $card = Card::find($message->card_id);
-                $imageUrl = 'https://minalqalb.ae/message.png'; // Default image URL
-                
-                // Format the scheduled time
-                $formattedScheduledTime = '';
-                if ($message->scheduled_at) {
-                    $dateTime = new \DateTime($message->scheduled_at);
-                    $formattedScheduledTime = $dateTime->format('m/d/Y h:i a');
-                }
-                
-                try {
-                    if ($message->scheduled_at && strtotime($message->scheduled_at) > time()) {
-                        $result = $whatsAppService->sendMinalqalnnewqTemplateHistory(
-                            $recipientPhone,
-                            $imageUrl,
-                            $message->recipient_name,
-                            $user->name,
-                            $message->message_lock,
-                            $formattedScheduledTime
-                        );
-                    } else {
+            if ($message->status == 'sent' && 
+            $message->lock_type !== 'no_lock' && 
+            $message->recipient_phone
+        ) {
+
+
+                if (!$message->scheduled_at || strtotime($message->scheduled_at) <= time()) {
+                    // Format recipient phone for WhatsApp
+                    $recipientPhone = $message->recipient_phone;
+                    
+                    // Initialize WhatsApp service 
+                    $whatsAppService = new WhatsAppService();
+                    
+                    // Get card image URL
+                    $card = Card::find($message->card_id);
+                    $imageUrl = 'https://minalqalb.ae/message.png'; // Default image URL
+                    
+                    try {
                         $result = $whatsAppService->sendMinalqalnnewqTemplate(
                             $recipientPhone,
                             $imageUrl,
@@ -356,19 +354,19 @@ class MessageAppController extends Controller
                             $user->name,
                             $message->message_lock
                         );
+                        
+                        // Store WhatsApp response data with message
+                        if (isset($result['response']['id'])) {
+                            $message->whatsapp_message_id = $result['response']['id'];
+                            $message->whatsapp_status = $result['response']['status'] ?? 'unknown';
+                            $message->save();
+                        }
+                    } catch (\Exception $whatsappException) {
+                        // Continue execution even if WhatsApp fails
                     }
-                    
-                    // Store WhatsApp response data with message
-                    if (isset($result['response']['id'])) {
-                        $message->whatsapp_message_id = $result['response']['id'];
-                        $message->whatsapp_status = $result['response']['status'] ?? 'unknown';
-                        $message->save();
-                    }
-                } catch (\Exception $whatsappException) {
-                    // Continue execution even if WhatsApp fails
                 }
-            }
             
+        }
             // Clear session data
             Session::forget(['message_step1', 'message_step2', 'message_step3']);
             
@@ -386,7 +384,6 @@ class MessageAppController extends Controller
                 ->withInput();
         }
     }
-    
     /**
      * Show success page - Step 5
      */

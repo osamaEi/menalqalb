@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Card;
 use App\Models\Message;
 use App\Models\CardType;
@@ -59,180 +60,166 @@ class MessageController extends Controller
             'isSalesOutlet'
         ));
     }
-
-public function store(Request $request)
-{
-    $user = Auth::user();
-    $isSalesOutlet = $user->role == 'sales_point';
-    
-    // Validate request data
-    $rules = [
-        'recipient_language' => 'required|in:ar,en',
-        'main_category_id' => 'required|exists:categories,id',
-        'sub_category_id' => 'required|exists:categories,id',
-        'dedication_type_id' => 'required|exists:card_types,id',
-        'card_number' => 'required|string|size:4|regex:/^\d{4}$/',
-        'card_id' => 'required|exists:cards,id',
-        'message_content' => 'required|string',
-        'recipient_name' => 'required|string|max:255',
-        'lock_type' => 'required|in:no_lock,lock_without_heart,lock_with_heart',
-        'scheduled_at' => 'nullable|date',
-        'manually_sent' => 'boolean',
-    ];
-    
-    
-    $rules['recipient_phone'] = 'required_if:lock_type,lock_without_heart,lock_with_heart|nullable|string|max:20';
-    
-    $validator = Validator::make($request->all(), $rules);
-    
-    if ($validator->fails()) {
-        return redirect()->back()
-            ->withErrors($validator)
-            ->withInput();
-    }
-    
-    
-    $cardNumber = $request->card_number;
-    $userId = $user->id;
-    
-    $paidReadyCards = \App\Models\ReadyCard::where('customer_id', $userId)
-        ->where('is_paid', true)
-        ->pluck('id');
-    
-    if ($paidReadyCards->isEmpty()) {
-        return redirect()->back()
-            ->withErrors(['card_number' => __('You do not have any paid card packs. Please purchase a card pack first.')])
-            ->withInput();
-    }
-    
-    $cardItem = \App\Models\ReadyCardItem::whereIn('ready_card_id', $paidReadyCards)
-        ->where('identity_number', $cardNumber)
-        ->first();
-    
-    if (!$cardItem) {
-        return redirect()->back()
-            ->withErrors(['card_number' => __('Card number not found in your purchased card packs.')])
-            ->withInput();
-    }
-    
-    if ($cardItem->status !== 'open') {
-        return redirect()->back()
-            ->withErrors(['card_number' => __('This card has already been used. Please use another card.')])
-            ->withInput();
-    }
-    
-    // Begin database transaction
-    DB::beginTransaction();
-    
-    try {
-        // Create message
-        $message = new Message();
-        $message->recipient_language = $request->recipient_language;
-        $message->main_category_id = $request->main_category_id;
-        $message->sub_category_id = $request->sub_category_id;
-        $message->dedication_type_id = $request->dedication_type_id;
-        $message->card_number = $request->card_number;
-        $message->card_id = $request->card_id;
-        $message->message_content = $request->message_content;
-        $message->recipient_name = $request->recipient_name;
-        $message->lock_type = $request->lock_type;
-        $message->scheduled_at = $request->scheduled_at;
-        $message->manually_sent = $request->has('manually_sent');
-        $message->sender_name = $user->name;
-        $message->sender_phone = $user->whatsapp ? $user->whatsapp : 4546456;
-        $message->user_id = $user->id;
-        $message->ready_card_item_id = $cardItem->id; // Store reference to the card item
+    public function store(Request $request)
+    {
+        $user = Auth::user();
+        $isSalesOutlet = $user->role == 'sales_point';
         
-        // Generate 4-digit message_lock code for opening the message
-        $message->message_lock = sprintf('%04d', mt_rand(1000, 9999));
+        // Validate request data
+        $rules = [
+            'recipient_language' => 'required|in:ar,en',
+            'main_category_id' => 'required|exists:categories,id',
+            'sub_category_id' => 'required|exists:categories,id',
+            'dedication_type_id' => 'required|exists:card_types,id',
+            'card_number' => 'required|string|size:4|regex:/^\d{4}$/',
+            'card_id' => 'required|exists:cards,id',
+            'message_content' => 'required|string',
+            'recipient_name' => 'required|string|max:255',
+            'lock_type' => 'required|in:no_lock,lock_without_heart,lock_with_heart',
+            'scheduled_at' => 'nullable|date',
+            'manually_sent' => 'boolean',
+        ];
         
-        // Generate 3-digit lock_number for either lock type
-        $message->lock_number = sprintf('%03d', mt_rand(100, 999));
+        $rules['recipient_phone'] = 'required_if:lock_type,lock_without_heart,lock_with_heart|nullable|string|max:20';
         
-        // Handle lock type
-        if ($request->lock_type !== 'no_lock') {
-            $message->recipient_phone = $request->recipient_phone;
-         
+        $validator = Validator::make($request->all(), $rules);
+        
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
         }
-
-
-
-
-
-        $message->status = $request->has('manually_sent') ? 'pending' : 'sent';
         
-        $message->save();
+        $cardNumber = $request->card_number;
+        $userId = $user->id;
         
-        // Mark the card as used
-        $cardItem->status = 'closed';
-        $cardItem->save();
-      
-            // Format recipient phone for WhatsApp
-            $recipientPhone = $message->recipient_phone;
+        $paidReadyCards = \App\Models\ReadyCard::where('customer_id', $userId)
+            ->where('is_paid', true)
+            ->pluck('id');
+        
+        if ($paidReadyCards->isEmpty()) {
+            return redirect()->back()
+                ->withErrors(['card_number' => __('You do not have any paid card packs. Please purchase a card pack first.')])
+                ->withInput();
+        }
+        
+        $cardItem = \App\Models\ReadyCardItem::whereIn('ready_card_id', $paidReadyCards)
+            ->where('identity_number', $cardNumber)
+            ->first();
+        
+        if (!$cardItem) {
+            return redirect()->back()
+                ->withErrors(['card_number' => __('Card number not found in your purchased card packs.')])
+                ->withInput();
+        }
+        
+        if ($cardItem->status !== 'open') {
+            return redirect()->back()
+                ->withErrors(['card_number' => __('This card has already been used. Please use another card.')])
+                ->withInput();
+        }
+        
+        // Begin database transaction
+        DB::beginTransaction();
+        
+        try {
+            // Create message
+            $message = new Message();
+            $message->recipient_language = $request->recipient_language;
+            $message->main_category_id = $request->main_category_id;
+            $message->sub_category_id = $request->sub_category_id;
+            $message->dedication_type_id = $request->dedication_type_id;
+            $message->card_number = $request->card_number;
+            $message->card_id = $request->card_id;
+            $message->message_content = $request->message_content;
+            $message->recipient_name = $request->recipient_name;
+            $message->lock_type = $request->lock_type;
+            $message->scheduled_at = $request->scheduled_at;
+            $message->manually_sent = $request->has('manually_sent');
+            $message->sender_name = $user->name;
+            $message->sender_phone = $user->whatsapp ? $user->whatsapp : '4546456';
+            $message->user_id = $user->id;
+            $message->ready_card_item_id = $cardItem->id;
             
-            // Initialize WhatsApp service
-            $whatsAppService = new WhatsAppService();
+            // Generate 4-digit message_lock code for opening the message
+            $message->message_lock = sprintf('%04d', mt_rand(1000, 9999));
             
-            // Get card image URL
-            $card = Card::find($message->card_id);
-            $imageUrl =  'https://minalqalb.ae/message.png';
+            // Generate 3-digit lock_number for either lock type
+            $message->lock_number = sprintf('%03d', mt_rand(100, 999));
             
-        // Format the scheduled time
-$formattedScheduledTime = '';
-if ($message->scheduled_at) {
-// Add the backslash to indicate it's in the global namespace
-$dateTime = new \DateTime($message->scheduled_at);
-$formattedScheduledTime = $dateTime->format('m/d/Y h:i a');
-}
-
-if($message->status == 'sent'){
-
-if($message->scheduled_at >now()){
-$result = $whatsAppService->sendMinalqalnnewqTemplateHistory(
-    $recipientPhone,
-    $imageUrl,
-    $message->recipient_name,
-    $user->name,
-    $message->message_lock,
-    $formattedScheduledTime
-);
-}
-else {
-$result = $whatsAppService->sendMinalqalnnewqTemplate(
-    $recipientPhone,
-    $imageUrl,
-    $message->recipient_name,
-    $user->name,
-    $message->message_lock
-);
-    
-}
-}
-           
-            
-            // Store WhatsApp response data with message
-            if (isset($result['response']['id'])) {
-                $message->whatsapp_message_id = $result['response']['id'];
-                $message->whatsapp_status = $result['response']['status'] ?? 'unknown';
-                $message->save();
+            // Handle lock type
+            if ($request->lock_type !== 'no_lock') {
+                $message->recipient_phone = $request->recipient_phone;
             }
-        
-        
-        DB::commit();
-        
-        return redirect()->route('messages.index')
-            ->with('success', __('Message created successfully'));
-    } catch (\Exception $e) {
-        // Something went wrong, rollback transaction
-        DB::rollBack();
-        
-        // Log the error
-        
-        return redirect()->back()
-            ->withErrors(['error' => __('An error occurred while creating the message. Please try again.')])
-            ->withInput();
+    
+            // Set status based on whether it's scheduled for future or not
+            if ($request->scheduled_at && Carbon::parse($request->scheduled_at) > now()) {
+                $message->status = 'scheduled';
+            } else {
+                $message->status = $request->has('manually_sent') ? 'pending' : 'sent';
+            }
+            
+            $message->save();
+            
+            // Mark the card as used
+            $cardItem->status = 'closed';
+            $cardItem->save();
+            
+            // Only send WhatsApp immediately if:
+            // 1. Message is not manually sent (status = 'sent')
+            // 2. Has recipient phone (lock_type is not 'no_lock')
+            // 3. Not scheduled or scheduled time has passed
+            if ($message->status == 'sent' && 
+                $message->lock_type !== 'no_lock' && 
+                $message->recipient_phone
+            ) {
+                // Format recipient phone for WhatsApp
+                $recipientPhone = $message->recipient_phone;
+                
+                // Initialize WhatsApp service
+                $whatsAppService = new WhatsAppService();
+                
+                // Get card image URL
+                $card = Card::find($message->card_id);
+                $imageUrl = 'https://minalqalb.ae/message.png';
+                
+                try {
+                    $result = $whatsAppService->sendMinalqalnnewqTemplate(
+                        $recipientPhone,
+                        $imageUrl,
+                        $message->recipient_name,
+                        $user->name,
+                        $message->message_lock
+                    );
+                    
+                    // Store WhatsApp response data with message
+                    if (isset($result['response']['id'])) {
+                        $message->whatsapp_message_id = $result['response']['id'];
+                        $message->whatsapp_status = $result['response']['status'] ?? 'unknown';
+                        $message->save();
+                    }
+                } catch (\Exception $whatsappException) {
+                    // Continue execution even if WhatsApp fails
+                    \Log::error('WhatsApp sending failed: ' . $whatsappException->getMessage());
+                }
+            }
+            
+            DB::commit();
+            
+            return redirect()->route('messages.index')
+                ->with('success', __('Message created successfully'));
+        } catch (\Exception $e) {
+            // Something went wrong, rollback transaction
+            DB::rollBack();
+            
+            // Log the error
+            \Log::error('Message creation failed: ' . $e->getMessage());
+            
+            return redirect()->back()
+                ->withErrors(['error' => __('An error occurred while creating the message. Please try again.')])
+                ->withInput();
+        }
     }
-}
 public function resendMessage(Message $message)
 {
     // Check if the message has a recipient phone
