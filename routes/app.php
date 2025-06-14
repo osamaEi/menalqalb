@@ -25,7 +25,7 @@ use App\Http\Controllers\PackagePurchaseController;
 |
 */
 
-
+Route::middleware(['language'])->group(function () {
 
 Route::prefix('app')->name('app.')->group(function () {
     // Registration flow
@@ -207,3 +207,4 @@ Route::prefix('app')->name('app.')->group(function () {
 
 
 Route::get('/verify-email/{token}', [RegisterAppController::class, 'verifyEmail'])->name('verify.email');
+});
