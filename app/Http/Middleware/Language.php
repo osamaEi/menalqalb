@@ -9,22 +9,22 @@ use Symfony\Component\HttpFoundation\Response;
 
 class Language
 {
-    public function handle(Request $request, Closure $next): Response
-    {
-        $allowedLocales = ['ar', 'en'];
 
-        if ($request->hasHeader('Accept-Language')) {
-            $acceptedLanguages = explode(',', $request->header('Accept-Language'));
-            $preferred = strtolower(substr($acceptedLanguages[0], 0, 2));
 
-            $locale = in_array($preferred, $allowedLocales) ? $preferred : 'ar';
-        } else {
-            $locale = 'ar';
-        }
-
-        App::setLocale($locale);
-        \Log::info('Mobile Accept-Language: ' . $request->header('Accept-Language'));
-
-        return $next($request);
+public function handle(Request $request, Closure $next): Response
+{
+    if (session()->has('locale')) {
+        $locale = session('locale');
+    } elseif ($request->hasHeader('Accept-Language')) {
+        $acceptedLanguages = explode(',', $request->header('Accept-Language'));
+        $locale = strtolower(substr($acceptedLanguages[0], 0, 2));
+    } else {
+        $locale = config('app.locale', 'en');
     }
+
+    App::setLocale($locale);
+
+    return $next($request);
+}
+
 }
