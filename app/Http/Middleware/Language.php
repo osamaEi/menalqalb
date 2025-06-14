@@ -23,6 +23,7 @@ class Language
         }
 
         App::setLocale($locale);
+        \Log::info('Mobile Accept-Language: ' . $request->header('Accept-Language'));
 
         return $next($request);
     }
